@@ -25,7 +25,7 @@
 	
 	Cuando un agujero negro experimenta un \textit{kick} sobre \'el actuan la fuerza de gravedad, la fricci\'on din\'amica, la acreci\'on y la aceleraci\'on cosmol\'ogica. La fricci\'on din\'amica se debe a la interacci\'on de un cuerpo en movimiento con el espacio no vac\'io circundante, el cual genera arrastre sobre este disminuyendo su velocidad. Por otro lado, dado el campo gravitacional del agujero negro pequeños cuerpos que se encuentren en su trayectoria ser\'an incorporados aumentando la masa del mismo, lo cual ocasiona una disminuci\'on en la velocidad por conservaci\'on del momento. Finalmente, la aceleraci\'on cosmol\'ogica se debe a la expansi\'on del universo y tiene un valor constante para un determinado \textit{redshift} ($z$) \cite{choksi2017recoiling}.
 	
-	El efecto de estos sobre la trayectoria del \textit{kick} ha sido previamente estudiada por Choksi y colaboradores \cite{choksi2017recoiling}. Encontrando que variaciones en el valor de la aceleraci\'on cosmol\'ogica tienen poco efecto sobre las simulaciones. Para la acreci\'on determinaron que el aumento de esta disminuye el tiempo que le toma al agujero negro volver a su pocisi\'on inicial, siendo su efecto m\'as relevante para agujeros negros de masas peque\~nas. Con respecto a la fricci\'on din\'amica optar\'on por una descripci\'on h\'ibrida entre los modelos propuestos por Ostriker y Escala, logrando tener encuenta tanto el rango subs\'onico como el rango \'altamente supers\'onico del arratre \cite{ostriker1999dynamical, escala2005role}. Finalmente, en su estudio consideraron un potencial esf\'ericamente sim\'etrico para el halo de la galaxia, reuniendo las contribuciones de materia oscura y materia visible en el mismo potencial \cite{choksi2017recoiling}.
+	El efecto de estos sobre la trayectoria del \textit{kick} ha sido previamente estudiada por Choksi y colaboradores, encontrando que variaciones en el valor de la aceleraci\'on cosmol\'ogica tienen poco efecto sobre las simulaciones  \cite{choksi2017recoiling}. Para la acreci\'on determinaron que el aumento de esta disminuye el tiempo que le toma al agujero negro volver a su pocisi\'on inicial, siendo su efecto m\'as relevante para agujeros negros de masas peque\~nas. Con respecto a la fricci\'on din\'amica optaron por una descripci\'on h\'ibrida entre los modelos propuestos por Ostriker y Escala, logrando tener encuenta tanto el rango subs\'onico como el rango \'altamente supers\'onico del arratre \cite{ostriker1999dynamical, escala2005role}. Finalmente, en su estudio consideraron un potencial esf\'ericamente sim\'etrico para el halo de la galaxia, reuniendo las contribuciones de materia oscura y materia visible en el mismo potencial \cite{choksi2017recoiling}.
 		
 	En este trabajo se busca analizar el efecto de distintos potenciales triaxiales para velocidades iniciales diferentes del agujero negro. Lo anterior es de particular importancia porque con estos potenciales el momento angular no siempre es conservado, las trayectorias no son cerradas y el esp\'acio de fase es ca\'otico. Esto \'ultimo significa que pequeñas variaciones en las condiciones iniciales dan lugar a resultados finales compl\'etamente distintos. Adem\'as, dichos potenciales se observan en galaxias el\'ipticas que rotan lentamente \cite{buote2002chandra, binney1978elliptical}. El compontente ca\'otico representa un desaf\'io para los m\'etodos de integraci\'on de la ecuaci\'on de movimiento, puesto que un error num\'erico no es distinto a un cambio en una condici\'on inicial. Por esta raz\'on se busca realizar cada simulaci\'on usando integradores num\'ericos distintos, disponibles en la librer\'ia de Python REBOUND \cite{larson2017modeling}.
 %	\newpage
@@ -35,9 +35,9 @@
 	
 \section{Objetivos específicos}
 	\begin{itemize}
-		\item Obtener distribuciones de probabilidad para los $t_{r_0}$ de cada uno de los par\'ametros l\'ibres del potencial triaxial, la magnitud y direcci\'on de $\vec{v}_0$.
-		\item Cuantificar la caoticidad de la trayectoria usando exponentes de Lyapunov.
-		\item Evaluar el desempe\~no de los integradores n\'umericos usando la informaci\'on de las simulaciones.
+		\item Obtener distribuciones de probabilidad para los $t_{r_0}$ de cada uno de los par\'ametros libres del potencial triaxial, la magnitud y direcci\'on de $\vec{v}_0$
+		\item Cuantificar la caoticidad de la trayectoria usando exponentes de Lyapunov
+		\item Evaluar el desempe\~no de los integradores n\'umericos usando la informaci\'on de las simulaciones
 	\end{itemize}
 	
 \section{Metodología}
@@ -86,12 +86,12 @@
 		\end{tabular}
 	\end{table}
 	\begin{itemize}
-		\item \textbf{Tarea 1:} Instalaci\'on de la librer\'ia REBOUND en el cluster.
-		\item \textbf{Tarea 2:} Realización de tutoriales y ejemplos básicos de REBOUND para entender su funcionamiento.
-		\item \textbf{Tarea 3:} Implementación de una simulación con los par\'ametros estudiados por Choksi \cite{choksi2017recoiling}.
-		\item \textbf{Tarea 4:} Implementaci\'on de una simulaci\'on con un potencial triaxial.
-		\item \textbf{Tarea 5:} Optimizar el tama\~no del paso en el esquema de integraci\'on \textit{WHFast} y \textit{IAS15}.
-		\item \textbf{Tarea 6:} Implementaci\'on de un algoritmo automatizado para barrer el espacio de par\'ametros de velocidades iniciales y par\'ametros del potencial triaxial, para los integradores \textit{Leapfrog, WHFast} y \textit{IAS15}.
-		\item \textbf{Tarea 7:} An\'alisis de resultados y escritura de la monograf\'ia.
+		\item \textbf{Tarea 1:} Instalaci\'on de la librer\'ia REBOUND en el cluster
+		\item \textbf{Tarea 2:} Realización de tutoriales y ejemplos básicos de REBOUND para entender su funcionamiento
+		\item \textbf{Tarea 3:} Implementación de una simulación con los par\'ametros estudiados por Choksi \cite{choksi2017recoiling}
+		\item \textbf{Tarea 4:} Implementaci\'on de una simulaci\'on con un potencial triaxial
+		\item \textbf{Tarea 5:} Optimizar el tama\~no del paso en el esquema de integraci\'on \textit{WHFast} y \textit{IAS15}
+		\item \textbf{Tarea 6:} Implementaci\'on de un algoritmo automatizado para barrer el espacio de par\'ametros de velocidades iniciales y par\'ametros del potencial triaxial, para los integradores \textit{Leapfrog, WHFast} y \textit{IAS15}
+		\item \textbf{Tarea 7:} An\'alisis de resultados y escritura de la monograf\'ia
 		
 	\end{itemize}
