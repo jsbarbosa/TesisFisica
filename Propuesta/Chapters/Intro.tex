@@ -9,7 +9,7 @@
 
 % Define some commands to keep the formatting separated from the content 
 \newcommand{\keyword}[1]{\textit{#1}}
-%\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\sm}[0]{$M_\odot$}
 %\newcommand{\code}[1]{\texttt{#1}}
 %\newcommand{\file}[1]{\texttt{\bfseries#1}}
 %\newcommand{\option}[1]{\texttt{\itshape#1}}
@@ -17,44 +17,42 @@
 %----------------------------------------------------------------------------------------
 
 \section{Introducción}
-	La Teor\'ia de la Relatividad General de Albert Einstein fue publicada en 1915, de dicha teor\'ia surgen las ondas gravitacionales como una, entre varias prediciones, las cuales incluyen lentes gravitacionales en donde cuerpos masivos modifican la trayectoria de la luz, as\'i como la dilataci\'on del tiempo. El t\'ermino ``ondas gravitacionales'' fue introduccido por primera vez en una publicaci\'on de Henri Poincaré, 10 a\~nos antes, donde propon\'ia la primera ecuaci\'on para un campo gravitacional invariante ante transformaciones de Lorentz \cite{straumann2012general, bassan2014advanced}. Actualmente se entiende por ondas gravitacionales a las variaciones periódicas de la geometría del espacio-tiempo, y tienen su origen en que la energía y densidad de momento de un campo gravitacional actúan a su vez como fuentes de gravedad \cite{hoyng2006gravitational}. A pesar que han pasado más de 100 años desde la publicación de la teoría, aun hoy en día existen vacíos en el entendimiento y las implicaciones de las ecuaciones de Einstein. Lo anterior se debe en parte a la dificultad de resolver las ecuaciones para situaciones físicas de interés, por ejemplo en el caso de las ondas gravitacionales sólo se pueden resolver analíticamente para campos débiles usando una forma lineal de estas ecuaciones. Los cuales detectaron en 2016 de forma simultánea y por primera vez en la historia de la humanidad una onda gravitacional, lo cual fue reconocido por la comunidad científica en 2017 con el Premio Nobel de Física \cite{brugmann2018fundamentals}.  
+	La Teor\'ia de la Relatividad General de Albert Einstein fue publicada en 1915, de ella surgen predicciones como las ondas gravitacionales, los lentes gravitacionales, y la dilataci\'on del tiempo. El t\'ermino ``ondas gravitacionales'' fue introducido por primera vez en una publicaci\'on de Henri Poincaré de 1905, en la que propuso la primera ecuaci\'on para un campo gravitacional invariante ante transformaciones de Lorentz \cite{straumann2012general, bassan2014advanced}. Actualmente se entiende por ondas gravitacionales a las variaciones periódicas de la geometría del espacio-tiempo, y tienen su origen en que la energía y densidad de momento de un campo gravitacional actúan a su vez como fuentes de gravedad \cite{hoyng2006gravitational}. A pesar de que han pasado más de 100 años desde la publicación de la teoría, aun hoy existen vacíos en el entendimiento y las implicaciones de las ecuaciones de Einstein. Lo anterior se debe, en parte, a la dificultad de resolver las ecuaciones para situaciones físicas de interés. Por ejemplo, las ondas gravitacionales sólo se pueden resolver analíticamente para campos débiles usando una forma lineal de estas ecuaciones. Sin embargo, a nivel experimental s\'olo es posible detectar ondas gravitacionales provenientes de cuerpos altamente masivos, como sistemas binarios de agujeros negros, los cuales s\'olo presentan campos fuertes. En 2016 se detectó una onda gravitacional por primera vez en la historia de la humanidad, y dicho descubrimiento fue reconocido por la comunidad científica en 2017 con el Premio Nobel de Física \cite{brugmann2018fundamentals}.
 	
-	Si bien cuales quiera dos objetos con masas desiguales generan ondas gravitacionales al orbitar sobre el centro de masa, la mayor\'ia de campos gravitacionales en el universo son d\'ebiles, entre las pocas escepciones se encuentran los campos cercanos a cuerpos extremadamente masivos, como agujeros negros y estrellas de neutrones, raz\'on por la cual	en la pr\'actica solo las ondas gravitacionales provenientes de cuerpos extremadamente masivos son detectables \cite{straumann2012general}. Esto restringe las fuentes a sistemas binarios de estrellas, agujeros negros y supernovas (siempre que la explosi\'on no sea sim\'etrica). En el caso de los agujeros negros las ondas gravitacionales constituyen una herramienta muy poderosa para su estudio, pues a excepción de su gravedad, y su tamaño, un agujero negro es muy similar a cualquier otro objeto en el universo, bien sea una estrella o un planeta \cite{meier2012black}. Dada la magnitud de la gravedad generada, no es posible que la luz escape de él. Esto da lugar a una superficie invisible, en el caso de encontrarse cerca, es posible detectar un agujero negro pues el paso de este por el firmamento ocultar\'ia las estrellas del fondo. Pero a largas distancias, este efecto es poco apreciable y por ende no es posible observarlos por un instrumento \'optico como un telescopio. Por otro lado, cuando la distancia entre el observador y un agujero negro es muy grande, sus efectos gravitacionales son poco distintos a los presentados por un objeto con la misma masa, pero un volumen considerablemente mayor, pues a largas distancias ambas serán aproximadamente masas puntuales \cite{meier2012black}.
+	En particular para sistemas binarios (dos cuerpos orbitando en torno a su centro de masa), existe un fen\'omeno conocido como \textit{recoil} o \textit{kick}. Esto se debe a que al considerar la Relatividad General, el movimiento de los cuerpos genera ondas que llevan momento y energ\'ia, y que altera las trayectorias antes predichas por la Gravitación Universal, en donde la solución a las ecuaciones de movimiento son trayectorias elípticas en concordancia con las leyes de Kepler \cite{hughes2005black, hoyng2006gravitational, brugmann2018fundamentals}. Esto ocasiona que poco a poco la \'orbita decaiga y los dos objetos se fusionen en un \'unico cuerpo. En el momento en que tiene lugar la fusi\'on, la amplitud de la onda aumenta considerablemente. Esto implica que existir\'a un movimiento del nuevo cuerpo en la direcci\'on opuesta a la propagaci\'on de la onda, dada por la conservaci\'on de momento lineal. Es a este movimiento al que se le conoce con el nombre de retroceso o patada (\textit{recoil} o \textit{kick}) \cite{hughes2005black} y fue descrito por Bonnor y Rotenberg en 1966 \cite{bonnor1966gravitational}. 
 	
-	Los esfuerzos por detectar ondas gravitacionales empezaron con el uso de barras resonantes por el f\'isico estadounidense Joe Weber en 1965 \cite{weber1967gravitational, bassan2014advanced}. Por varias d\'ecadas, la tecnolog\'ia, la sensibilidad y la extensi\'on de las barras de Weber mejor\'o, a tal punto de formar la primera red de observaci\'on global ondas gravitacionales. Sin embargo el acoplamiento entre materia y ondas es tan peque\~no, que en el caso de la detecci\'on de ondas gravitacionales existen factores que en otros contextos no seri\'an tan relevantes, como es el caso de las fuentes de ruido, entre los cuales se encuentran: t\'ermico y s\'ismico, \textit{shot noise} y su frecuencia \cite{bassan2014advanced}. Si bien los detectores de interferometr\'ia no estaban excentos de estas fuentes de ruido, presentan mayor sensitividad que las barras resonantes lo cual los hace los intrumentos m\'as usados hoy en d\'ia, ejemplos de estos son: LIGO (\textit{Laser Interferometer Gravitational-Wave Observatory} por sus siglas en ingl\'es) y Virgo, en Estados Unidos y Europa, correspondientemente \cite{abbott2009ligo, acernese2008status, bassan2014advanced}.
+	La fusi\'on de dos agujeros negros de un sistema binario da lugar a uno nuevo, siendo este uno de los mecan\'ismos por el cual se generan agujeros negros supermasivos. Este tipo de agujeros negros se ha encontrado en casi todas las galaxias, y se caracterizan por tener masas entre $10^4$ \sm\ a $10^{10}$ \sm\ (\sm, masas solares). Adem\'as se ha encontrado que su masa se correlaciona con propiedades de la galaxia entre las que se encuentran la velocidad de dispersi\'on, luminosidad y la masa del bulbo gal\'actico. Incluso se ha llegado a pensar que dichas correlaciones evidencian un proceso de coevoluci\'on de los agujeros negros y sus galaxias. Entre los efectos de los retrocesos sobre los agujeros negros, se encuentra que limitan la formaci\'on de estos a masas inferiores a $10^{10}$ \sm\ \cite{choksi2017recoiling}.
 	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.65\linewidth]{Figures/binarySystem}
-		\caption{Sistema binario con cuerpos de masas $m_1$ y $m_2$ ($m_2 > m_1$), emisor de ondas gravitacionales \cite{hughes2005black}.}
-		\label{fig: binary}
-	\end{figure}
+	Cuando un agujero negro experimenta un \textit{kick} sobre \'el actuan la fuerza de gravedad, la fricci\'on din\'amica, la acreci\'on y la aceleraci\'on cosmol\'ogica. La fricci\'on din\'amica se debe a la interacci\'on de un cuerpo en movimiento con el espacio no vac\'io circundante, el cual genera arrastre sobre este disminuyendo su velocidad. Por otro lado, dado el campo gravitacional del agujero negro pequeños cuerpos que se encuentren en su trayectoria ser\'an incorporados aumentando la masa del mismo, lo cual ocasiona una disminuci\'on en la velocidad por conservaci\'on del momento. Finalmente, la aceleraci\'on cosmol\'ogica se debe a la expansi\'on del universo y tiene un valor constante para un determinado \textit{redshift} ($z$) \cite{choksi2017recoiling}.
 	
-	En el caso de un sistema binario como el de la \autoref{fig: binary}, visto desde la gravitación universal de Newton, se tendría como solución a las ecuaciones de movimiento trayectorias elípticas en concordancia con las leyes de Kepler. Sin embargo, al considerar la Relatividad General, se producirán ondas que llevan energ\'ia y momento \cite{hughes2005black, hoyng2006gravitational, brugmann2018fundamentals}. Esto ocasiona que poco a poco la \'orbita decaiga y los dos objetos se fusionen en un \'unico cuerpo. En el momento en que tiene lugar la fusi\'on de los cuerpos la amplitud de la onda aumenta considerablemente. Un fen\'omeno que se ha comprendido durante bastante tiempo, sin embargo sus implicaciones han sido poco estudiadas, son aquellas que se relacionan con el momento lineal que lleva la onda. Esto implica que al aumentar la amplitud de la onda con la fusi\'on, tambi\'en lo hace el momento lineal de la onda ($\mathbf{P}_{\text{ejected}}$), por lo cual la fusi\'on ocasiona que el centro de masa se mueva en direcci\'on opuesta con momento $\mathbf{P}_{\text{recoil}}$ para conservar el momento del sistema. A este movimiento del centro de masa se le conoce con el nombre de retroceso o patada (\textit{recoil} o \textit{kick}) \cite{hughes2005black} y fue descrito por Bonnor y Rotenberg en 1966 \cite{bonnor1966gravitational}, siendo un proceso que ocurre en una etapa con el nombre de coalescencia.
-	
-	En la mayoría de los casos el decaimíento de un sistema binario es tan lento que sucede en escalas de millones o billones de años, pero para el caso de los agujeros negros y estrellas de neutrones las ondas gravitacionales son de vital importancia. En estos mismos casos los campos gravitacionales son fuertes, por lo cual no es posible usar las soluciones analíticas a las ecuaciones de Einstein, por lo cual los métodos numéricos adquieren particular relevancia, pues aplicados a simulaciones computacionales permiten obtener soluciones a las ecuaciones de Einstein y de esta forma proveer un marco de referencia teórico para el estudio de agujeros negros binarios, estrellas de neutrones y ondas gravitacionales en general \cite{brugmann2018fundamentals}. Aun cuando los m\'etodos num\'ericos constituyen la mejor forma de estudio de estos sistemas est\'an lejos de ser perfectos pues incluso peque\~nos errores de aproximaci\'on num\'erica pueden dar lugar a divergencias que ocasionan que la simulaci\'on falle \cite{brugmann2018fundamentals}. Por esta raz\'on se busca comparar la evoluci\'on de un sistema binario de dos agujeros negros de Schwarzchild (no contienen carga, ni rotan sobre su eje) en la etapa de coalescencia, usando distintos algoritmos de integraci\'on para las ecuaciones de movimiento de los cuerpos, as\'i como su influencia sobre el \textit{kick} generado.
-%	Una forma de entender c\'omo sucede este fen\'omeno, es usando un sistema con masas desiguales. Se puede considerar dos cuerpos, uno con masa $m_1$ y otro con masa $m_2$, donde $m_2 > m_1$. En el caso cl\'asico, donde no existe ning\'un efecto nuevo, se tiene que el centro de masa orbitar\'ia alrededor de un c\'irculo. Sin embargo, cuando se tiene una onda que lleva energ\'ia y momento angular, se tiene que los cuerpos seguir\'ian una trayector\'ia en espiral, por lo cual al considerar toda una \'orbita ($\mathcal{O}$) se tendr\'ia que:
-%	
-%	\begin{equation}
-%		\int\limits_{\mathcal{O}_1} m_1\vec{v}_1dl \neq \int\limits_{\mathcal{O}_2} m_2\vec{v}_2dl 
-%	\end{equation}	5
+	El efecto de estos sobre la trayectoria del \textit{kick} ha sido previamente estudiada por Choksi y colaboradores \cite{choksi2017recoiling}. Encontrando que variaciones en el valor de la aceleraci\'on cosmol\'ogica tienen poco efecto sobre las simulaciones. Para la acreci\'on determinaron que el aumento de esta disminuye el tiempo que le toma al agujero negro volver a su pocisi\'on inicial, siendo su efecto m\'as relevante para agujeros negros de masas peque\~nas. Con respecto a la fricci\'on din\'amica optar\'on por una descripci\'on h\'ibrida entre los modelos propuestos por Ostriker y Escala, logrando tener encuenta tanto el rango subs\'onico como el rango \'altamente supers\'onico del arratre \cite{ostriker1999dynamical, escala2005role}. Finalmente, en su estudio consideraron un potencial esf\'ericamente sim\'etrico para el halo de la galaxia, reuniendo las contribuciones de materia oscura y materia visible en el mismo potencial \cite{choksi2017recoiling}.
+		
+	En este trabajo se busca analizar el efecto de distintos potenciales triaxiales para velocidades iniciales diferentes del agujero negro. Lo anterior es de particular importancia porque con estos potenciales el momento angular no siempre es conservado, las trayectorias no son cerradas y el esp\'acio de fase es ca\'otico. Esto \'ultimo significa que pequeñas variaciones en las condiciones iniciales dan lugar a resultados finales compl\'etamente distintos. Adem\'as, dichos potenciales se observan en galaxias el\'ipticas que rotan lentamente \cite{buote2002chandra, binney1978elliptical}. El compontente ca\'otico representa un desaf\'io para los m\'etodos de integraci\'on de la ecuaci\'on de movimiento, puesto que un error num\'erico no es distinto a un cambio en una condici\'on inicial. Por esta raz\'on se busca realizar cada simulaci\'on usando integradores num\'ericos distintos, disponibles en la librer\'ia de Python REBOUND \cite{larson2017modeling}.
+%	\newpage
 	
 \section{Objetivo general}
-	Comparar la evoluci\'on de un sistema binario de dos agujeros negros de Schwarzchild en la etapa de coalescencia, usando distintos algoritmos de integraci\'on para las ecuaciones de movimiento de los cuerpos, as\'i como su influencia sobre el \textit{kick} generado.
-		
+	Estudiar el efecto de distintos potenciales triaxiales, velocidades iniciales ($\vec{v}_0$) e integradores num\'ericos sobre los tiempos requeridos por un agujero negro supermasivo para volver a su posici\'on inicial ($t_{r_0}$) luego de experimentar un retroceso, as\'i como cuantificar la caoticidad de su trayectoria.
+	
 \section{Objetivos específicos}
 	\begin{itemize}
-		\item Obtener las ecuaciones de movimiento para un sistema de dos cuerpos, usando las ecuaciones de Einstein.
-		\item 
-		\item 
-		\item
-%		\item Realizar el cableado y conexiones electrónicas pertinentes al mismo.
-%		\item Calibración eléctrica, determinación de las señales de entrada y salida, flujo de las bombas hidráulicas y temperatura del baño.
-%		\item Calibración química, determinación de la entalpía molar, energía libre de Gibbs, entropía, y constante de equilibrio, del acomplejamiento del catión bario con éter 18-corona-6.
+		\item Obtener distribuciones de probabilidad para los $t_{r_0}$ de cada uno de los par\'ametros l\'ibres del potencial triaxial, la magnitud y direcci\'on de $\vec{v}_0$.
+		\item Cuantificar la caoticidad de la trayectoria usando exponentes de Lyapunov.
+		\item Evaluar el desempe\~no de los integradores n\'umericos usando la informaci\'on de las simulaciones.
 	\end{itemize}
 	
 \section{Metodología}
-	Las simulaciones ser\'an realizadas en el cluster de la universidad (HPC) con el fin de paralelizar procesos, de forma que a haciendo uso de sus recursos se minimice el tiempo de simulación a fin de lograr la mayor cantidad de simulaciones posibles con el fin de obtener una cantidad significativa de datos de validación.
+	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
+	\begin{equation}
+		\ddot{\vec{x}} = \left(-\dfrac{GM_h(x)}{x^2} + a_{DF}-\ddot{x}\dfrac{\dot{M_\bullet}}{M_\bullet} -qH^2x\right)\hat{x}
+	\end{equation}
+	
+	donde $M_h$ corresponde con la masa del halo de la galaxia, $a_{DF}$ con la aceleraci\'on debida a la fricci\'on din\'amica, la cual se modela usando la f\'ormula de Chandrasekhar para la materia oscura y el modelo h\'ibrido descrito por Choksi para la materia visible \cite{choksi2017recoiling}. El tercer t\'ermino tiene en cuenta la acreci\'on de masa por el agujero negro, y el \'ultimo la aceleraci\'on cosmol\'ogica.
+	
+	Dicha ecuaci\'on ser\'a integrada usando un esquema \textit{Leapfrog}, el cual se encuentra implementado en la librer\'ia REBOUND. Usando como condiciones iniciales $\vec{x} = (0,0,0)$ km y $\dot{\vec{x}} = (70, 0, 0)$ km$s^{-1}$, e intervalos de integraci\'on temporales de 1000 años, se busca reproducir los comportamientos observados por Choksi y colaboradores, para comprobar que el algoritmo implementado funcione de manera adecuada.
+	
+	Posteriormente ser\'an introducidas las modificaciones al potencial cambiando $M_h(x)$ por $M_h(x, y, z)$, donde los pesos de cada dimensi\'on ser\'an determinados de manera aleatoria para cada simulaci\'on. Al mismo tiempo se asignar\'an velocidades iniciales aleatorias, logar\'itmicamente espaciadas en el rango de 0 kms$^{-1}$ hasta 3000 kms$^{-1}$, sin ninguna direcci\'on preferente. Para cada sistema generado se realizar\'a la evoluci\'on en el tiempo usando integradores num\'ericos distintos. El tiempo aproximado de cada simulaci\'on se encuentra en el orden de 100$^6$ a\~nos, por lo cual ser\'an necesarias cerca de cien mil interaciones por cada conjunto de par\'ametros escogidos.
+	
+	Las simulaciones ser\'an realizadas en el cluster de la universidad (HPC) con el fin de paralelizar procesos, de forma que haciendo uso de sus recursos se minimice el tiempo de simulación y de esta forma lograr la mayor cantidad de simulaciones posibles, con el fin de obtener una cantidad significativa de datos de validación. A partir de estos, se obtendr\'an las distribuciones de probabilidad de los tiempos de retorno, y la cuantificaci\'on de la caoticidad de la trayectoria.
 	
 \section{Consideraciones éticas}
 	Se manejará un repositorio de uso privado a través de Github en donde se encontrar\'an los códigos implementados en cada parte del proceso, junto con los resultados obtenidos, de forma que se asegure la reproducibilidad del modelo hallado, al mismo tiempo que se permita el seguimiento del uso de recursos. Adem\'as al mantener la informaci\'on abierta se asegura que no se están utilizando resultados obtenidos por otros investigadores de forma directa.
@@ -62,7 +60,7 @@
 \section{Cronograma}
 	\begin{table}[h]
 		\centering
-		\caption{Cronograma de actividades, pendiente*}
+		\caption{Cronograma de actividades}
 		\label{tb: cronograma}
 		\footnotesize
 		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
@@ -72,14 +70,28 @@
 			\rowcolor[HTML]{EFEFEF} 
 			\multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}\textbf{Actividades}} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16} \\ \hline
 			\cellcolor[HTML]{EFEFEF}
-			\textbf{Revisión bibliográfica} & x & x & x & & & & x & x & x & x & & & & x & x & x \\ \hline
-%			\cellcolor[HTML]{EFEFEF}\textbf{Revisión de manuales} & x & x & x & x & & & & & & & & & & & & \\ \hline
-%			\cellcolor[HTML]{EFEFEF}\textbf{Ensamble del equipo} & x & x & x & x & & & & & & & & & & & & \\ \hline
-%			\cellcolor[HTML]{EFEFEF}\textbf{Cableado y electrónica} & & & x & x & x & x & & & & & & & & & & \\ \hline
-%			\cellcolor[HTML]{EFEFEF}\textbf{Calibración eléctrica} & & & & & & x & x & x & & & & & & & & \\ \hline
-%			\cellcolor[HTML]{EFEFEF}\textbf{Calibración química} & & & & & & & & & x & x & x & x & & & & \\ \hline
-			\cellcolor[HTML]{EFEFEF}\textbf{Análisis de datos} & & & & & & & & & & & x & x & x & & & \\ \hline
-			\cellcolor[HTML]{EFEFEF}\textbf{Elaboración del documento} & & & & & & & x & x & x & x & & & & x & x & x \\ \hline
-			\cellcolor[HTML]{EFEFEF}\textbf{Presentación del proyecto} & & & & & & & & & & & & & & & & x \\ \hline
+			\textbf{Tarea 1} & x & & & & & & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 2} & x & x & & & & & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 3} & & x & x & x & & & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 4} & & & & & x & x & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 5} & & & & & & & x & x & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 6} & & & & & & & & & x & x & x & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 7} & & & & & & & & & & & & x & x & x & x & x \\ \hline
 		\end{tabular}
 	\end{table}
+	\begin{itemize}
+		\item \textbf{Tarea 1:} Instalaci\'on de la librer\'ia REBOUND en el cluster.
+		\item \textbf{Tarea 2:} Realización de tutoriales y ejemplos básicos de REBOUND para entender su funcionamiento.
+		\item \textbf{Tarea 3:} Implementación de una simulación con los par\'ametros estudiados por Choksi \cite{choksi2017recoiling}.
+		\item \textbf{Tarea 4:} Implementaci\'on de una simulaci\'on con un potencial triaxial.
+		\item \textbf{Tarea 5:} Optimizar el tama\~no del paso en el esquema de integraci\'on \textit{WHFast} y \textit{IAS15}.
+		\item \textbf{Tarea 6:} Implementaci\'on de un algoritmo automatizado para barrer el espacio de par\'ametros de velocidades iniciales y par\'ametros del potencial triaxial, para los integradores \textit{Leapfrog, WHFast} y \textit{IAS15}.
+		\item \textbf{Tarea 7:} An\'alisis de resultados y escritura de la monograf\'ia.
+		
+	\end{itemize}
