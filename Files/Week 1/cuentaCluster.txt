@@ -1,0 +1,11 @@
+convcloudhpc.uniandes.edu.co
+
+Nombre:
+	Órbitas de agujeros negros en potenciales triaxiales
+Descripción:
+	Estudiar el efecto de pontenciales triaxiales, condiciones iniciales e integradores numéricos sobre los tiempos requeridos por un agujero para volver a su posición inicial luego de un recoil.
+
+	Se busca estudiar el efecto de distintos pontenciales gravitacionales triaxiales, condiciones iniciales e integradores numéricos sobre los tiempos requeridos para que un agujero negro que ha sido expulsado de una galaxia, vuelva a su posición inicial. Para esto es necesario realizar millones de simulaciones, con el objetivo de obtener las distribuciones de probabilidad de los tiempos de retorno en función de los parámetros libres. Dichas simulaciones se realizarán usando C y Python.
+
+
+
