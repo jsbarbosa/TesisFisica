@@ -1,0 +1,100 @@
+% !TeX spellcheck = es_ES
+% Chapter 1
+
+%\chapter{Chapter Title Here} % Main chapter title
+%
+%\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textit{#1}}
+\newcommand{\sm}[0]{$M_\odot$}
+%\newcommand{\code}[1]{\texttt{#1}}
+%\newcommand{\file}[1]{\texttt{\bfseries#1}}
+%\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+\section{Introducción}
+	La Teor\'ia de la Relatividad General de Albert Einstein fue publicada en 1915, de ella surgen predicciones como las ondas gravitacionales, los lentes gravitacionales, y la dilataci\'on del tiempo. El t\'ermino ``ondas gravitacionales'' fue introducido por primera vez en una publicaci\'on de Henri Poincaré de 1905, en la que propuso la primera ecuaci\'on para un campo gravitacional invariante ante transformaciones de Lorentz \cite{straumann2012general, bassan2014advanced}. Actualmente se entiende por ondas gravitacionales a las variaciones periódicas de la geometría del espacio-tiempo, y tienen su origen en que la energía y densidad de momento de un campo gravitacional actúan a su vez como fuentes de gravedad \cite{hoyng2006gravitational}. A pesar de que han pasado más de 100 años desde la publicación de la teoría, aun hoy existen vacíos en el entendimiento y las implicaciones de las ecuaciones de Einstein. Lo anterior se debe, en parte, a la dificultad de resolver las ecuaciones para situaciones físicas de interés. Por ejemplo, las ondas gravitacionales sólo se pueden resolver analíticamente para campos débiles usando una forma lineal de estas ecuaciones. Sin embargo, a nivel experimental s\'olo es posible detectar ondas gravitacionales provenientes de cuerpos altamente masivos, como sistemas binarios de agujeros negros, los cuales s\'olo presentan campos fuertes. En 2016 se detectó una onda gravitacional por primera vez en la historia de la humanidad, y dicho descubrimiento fue reconocido por la comunidad científica en 2017 con el Premio Nobel de Física \cite{brugmann2018fundamentals}.
+	
+	En particular para sistemas binarios (dos cuerpos orbitando en torno a su centro de masa), existe un fen\'omeno conocido como \textit{recoil} o \textit{kick}. Esto se debe a que al considerar la Relatividad General, el movimiento de los cuerpos genera ondas que llevan momento y energ\'ia, y que altera las trayectorias antes predichas por la Gravitación Universal, en donde la solución a las ecuaciones de movimiento son trayectorias elípticas en concordancia con las leyes de Kepler \cite{hughes2005black, hoyng2006gravitational, brugmann2018fundamentals}. Esto ocasiona que poco a poco la \'orbita decaiga y los dos objetos se fusionen en un \'unico cuerpo. En el momento en que tiene lugar la fusi\'on, la amplitud de la onda aumenta considerablemente. Esto implica que existir\'a un movimiento del nuevo cuerpo en la direcci\'on opuesta a la propagaci\'on de la onda, dada por la conservaci\'on de momento lineal. Es a este movimiento al que se le conoce con el nombre de retroceso o patada (\textit{recoil} o \textit{kick}) \cite{hughes2005black} y fue descrito por Bonnor y Rotenberg en 1966 \cite{bonnor1966gravitational}. 
+	
+	La fusi\'on de dos agujeros negros de un sistema binario da lugar a uno nuevo, siendo este uno de los mecanismos por el cual se generan agujeros negros supermasivos. Este tipo de agujeros negros se ha encontrado en casi todas las galaxias, y se caracterizan por tener masas entre $10^4$ \sm\ a $10^{10}$ \sm\ (\sm, masas solares). Adem\'as se ha encontrado que su masa se correlaciona con propiedades de la galaxia entre las que se encuentran la velocidad de dispersi\'on, luminosidad y la masa del bulbo gal\'actico. Incluso se ha llegado a pensar que dichas correlaciones evidencian un proceso de coevoluci\'on de los agujeros negros y sus galaxias. Entre los efectos de los retrocesos sobre los agujeros negros, se encuentra que limitan la formaci\'on de estos a masas inferiores a $10^{10}$ \sm\ \cite{choksi2017recoiling}.
+	
+	Cuando un agujero negro experimenta un \textit{kick} sobre \'el actúan la fuerza de gravedad, la fricci\'on din\'amica, la acreci\'on y la aceleraci\'on cosmol\'ogica. La fricci\'on din\'amica se debe a la interacci\'on de un cuerpo en movimiento con el espacio no vac\'io circundante, el cual genera arrastre sobre este disminuyendo su velocidad. Por otro lado, dado el campo gravitacional del agujero negro, pequeños cuerpos que se encuentren en su trayectoria ser\'an incorporados aumentando la masa del mismo, lo cual ocasiona una disminuci\'on en la velocidad por conservaci\'on del momento. Finalmente, la aceleraci\'on cosmol\'ogica se debe a la expansi\'on del universo y tiene un valor constante para un determinado \textit{redshift} ($z$) \cite{choksi2017recoiling}.
+	
+	El efecto de estos sobre la trayectoria del \textit{kick} ha sido previamente estudiada por Choksi y colaboradores, encontrando que variaciones en el valor de la aceleraci\'on cosmol\'ogica tienen poco efecto sobre las simulaciones  \cite{choksi2017recoiling}. Para la acreci\'on determinaron que el aumento de esta disminuye el tiempo que le toma al agujero negro volver a su pocisi\'on inicial, siendo su efecto m\'as relevante para agujeros negros de masas peque\~nas. Con respecto a la fricci\'on din\'amica optaron por una descripci\'on h\'ibrida entre los modelos propuestos por Ostriker y Escala, logrando tener encuenta tanto el rango subs\'onico como el rango \'altamente supers\'onico del arratre \cite{ostriker1999dynamical, escala2005role}. Finalmente, en su estudio consideraron un potencial esf\'ericamente sim\'etrico para el halo de la galaxia, reuniendo las contribuciones de materia oscura y materia visible en el mismo potencial \cite{choksi2017recoiling}.
+		
+	En este trabajo se busca analizar el efecto de distintos potenciales triaxiales para velocidades iniciales diferentes del agujero negro. Lo anterior es de particular importancia porque con estos potenciales el momento angular no siempre es conservado, las trayectorias no son cerradas y el esp\'acio de fase es ca\'otico. Esto \'ultimo significa que pequeñas variaciones en las condiciones iniciales dan lugar a resultados finales completamente distintos. Adem\'as, dichos potenciales se observan en galaxias el\'ipticas que rotan lentamente \cite{buote2002chandra, binney1978elliptical}. El compontente ca\'otico representa un desaf\'io para los m\'etodos de integraci\'on de la ecuaci\'on de movimiento, puesto que un error num\'erico no es distinto a un cambio en una condici\'on inicial. Por esta raz\'on se busca realizar cada simulaci\'on usando integradores num\'ericos distintos, disponibles en la librer\'ia de Python REBOUND \cite{larson2017modeling}.
+%	\newpage
+	
+\section{Objetivo general}
+	Estudiar el efecto de distintos potenciales triaxiales, velocidades iniciales e integradores num\'ericos sobre los tiempos requeridos por un agujero negro supermasivo para volver a su posici\'on inicial, luego de experimentar un retroceso, as\'i como cuantificar qué tan caótica es su trayectoria.
+	
+\section{Objetivos específicos}
+	\begin{itemize}
+		\item Obtener distribuciones de probabilidad para los tiempos de retorno en función de cada uno de los par\'ametros libres del potencial triaxial, la magnitud y direcci\'on de la velocidad inicial
+		\item Cuantificar qué tan caótica es la trayectoria del agujero negro en cada simulación, usando exponentes de Lyapunov
+		\item Evaluar el desempe\~no de los integradores n\'umericos usando la informaci\'on de las simulaciones
+	\end{itemize}
+	
+\section{Metodología}
+	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
+	\begin{equation}
+		\ddot{\vec{x}} = \left(-\dfrac{GM_h(x)}{x^2} + a_{DF}-\ddot{x}\dfrac{\dot{M_\bullet}}{M_\bullet} -qH^2x\right)\hat{x}
+	\end{equation}
+	
+	donde $M_h$ corresponde con la masa del halo de la galaxia, $a_{DF}$ con la aceleraci\'on debida a la fricci\'on din\'amica, la cual se modela usando la f\'ormula de Chandrasekhar para la materia oscura y el modelo h\'ibrido descrito por Choksi para la materia visible \cite{choksi2017recoiling}. El tercer t\'ermino tiene en cuenta la acreci\'on de masa por el agujero negro, y el \'ultimo la aceleraci\'on cosmol\'ogica.
+	
+	Dicha ecuaci\'on ser\'a integrada usando un esquema \textit{Leapfrog}, el cual se encuentra implementado en la librer\'ia REBOUND. Usando como condiciones iniciales $\vec{x} = (0,0,0)$ km y $\dot{\vec{x}} = (70, 0, 0)$ km$s^{-1}$, e intervalos de integraci\'on temporales de 1000 años, se busca reproducir los comportamientos observados por Choksi y colaboradores, para comprobar que el algoritmo implementado funcione de manera adecuada.
+	
+	Posteriormente ser\'an introducidas las modificaciones al potencial cambiando $M_h(x)$ por $M_h(x, y, z)$, donde los pesos de cada dimensi\'on ser\'an determinados de manera aleatoria para cada simulaci\'on. Al mismo tiempo se asignar\'an velocidades iniciales aleatorias, logar\'itmicamente espaciadas en el rango de 0 kms$^{-1}$ hasta 3000 kms$^{-1}$, sin ninguna direcci\'on preferente. Para cada sistema generado se realizar\'a la evoluci\'on en el tiempo usando integradores num\'ericos distintos. El tiempo aproximado de cada simulaci\'on se encuentra en el orden de 100$^6$ a\~nos, por lo cual ser\'an necesarias cerca de cien mil interaciones por cada conjunto de par\'ametros escogidos.
+	
+	Las simulaciones ser\'an realizadas en el cluster de la universidad (HPC) con el fin de paralelizar procesos, minimizando el tiempo de simulación y de esta forma lograr la mayor cantidad de simulaciones posibles, con el fin de obtener una cantidad significativa de datos de validación. A partir de estos, se obtendr\'an las distribuciones de probabilidad de los tiempos de retorno, y la cuantificaci\'on de la caoticidad de la trayectoria.
+	
+\section{Consideraciones éticas}
+	Se manejará un repositorio de uso privado a través de Github en donde se encontrar\'an los códigos implementados en cada parte del proceso, junto con los resultados obtenidos, de forma que se asegure la reproducibilidad del modelo hallado, al mismo tiempo que se permita el seguimiento del uso de recursos. Adem\'as al mantener la informaci\'on abierta se asegura que no se están utilizando resultados obtenidos por otros investigadores de forma directa.
+	
+\section{Cronograma}
+	\begin{table}[h]
+		\centering
+		\caption{Cronograma de actividades}
+		\label{tb: cronograma}
+		\footnotesize
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\rowcolor[HTML]{C0C0C0} 
+			\cellcolor[HTML]{C0C0C0}                                       & \multicolumn{16}{c|}{\cellcolor[HTML]{C0C0C0}\textbf{Semana}} \\ \cline{2-17} 
+			\rowcolor[HTML]{EFEFEF} 
+			\multirow{-2}{*}{\cellcolor[HTML]{C0C0C0}\textbf{Actividades}} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16} \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 1} & x & & & & & & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 2} & x & x & & & & & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 3} & & x & x & x & & & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 4} & & & & & x & x & & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 5} & & & & & & & x & & & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 6} & & & & & & & & x & x & & & & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 7} & & & & & & & & & & x & x & x & & & & \\ \hline
+			\cellcolor[HTML]{EFEFEF}
+			\textbf{Tarea 8} & & & & & & & & & & & & & x & x & x & x \\ \hline
+		\end{tabular}
+	\end{table}
+	\begin{itemize}
+		\item \textbf{Tarea 1:} Instalaci\'on de la librer\'ia REBOUND en el cluster
+		\item \textbf{Tarea 2:} Realización de tutoriales y ejemplos básicos de REBOUND para entender su funcionamiento
+		\item \textbf{Tarea 3:} Implementación de una simulación con los par\'ametros estudiados por Choksi \cite{choksi2017recoiling}
+		\item \textbf{Tarea 4:} Implementaci\'on de una simulaci\'on con un potencial triaxial
+		\item \textbf{Tarea 5:} Sustentaci\'on del 30 \%
+		\item \textbf{Tarea 6:} Optimizar el tama\~no del paso en el esquema de integraci\'on \textit{WHFast} y \textit{IAS15}
+		\item \textbf{Tarea 7:} Implementaci\'on de un algoritmo automatizado para barrer el espacio de par\'ametros de velocidades iniciales y par\'ametros del potencial triaxial, para los integradores \textit{Leapfrog, WHFast} y \textit{IAS15}
+		\item \textbf{Tarea 8:} An\'alisis de resultados y escritura de la monograf\'ia
+		
+	\end{itemize}
