@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 value, float, double = abs(np.genfromtxt('floating.dat').T)
 
 fig, ax = plt.subplots(figsize = (8, 4.5))
-ax.loglog(value, float, '-o', label = '32 bit')
-ax.loglog(value, double, '-o', label = '64 bit')
+ax.loglog(value, float, '-', label = '32 bit')
+ax.loglog(value, double, '-', label = '64 bit')
 
 # ax.loglog(value, 100 * float / value)
 # ax.loglog(value, 100 * double / value)

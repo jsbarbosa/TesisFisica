@@ -18,7 +18,13 @@
 
 \section{Galatic setup}
 	\subsection{Units}
-		Computer simulations are sensitive to rounding errors due to the lack of infinite precision when representing decimal numbers. Really small numbers as well as really big ones tend to have bigger errors than those close to the unity. \todo{include IEEE 754}
+		Computer simulations are sensitive to rounding errors due to the lack of infinite precision when representing decimal numbers. Really small numbers as well as really big ones tend to have bigger errors than those close to the unity, as can be seen on \autoref{fig: IEEE-754}.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.8\linewidth]{"../Files/Week 3/floating"}
+			\caption{Floating point precision for different values, for a 32 bit and 64 bit holders.}
+			\label{fig: IEEE-754}
+		\end{figure}
 		
 		Under the International System of Units, distances are measured on meters, times on seconds, and mass on kilograms, nevertheless black holes are too heavy to be measured on kilograms, galaxies sizes too big to be quantified on meters, and time scales too large for a second. Because of that, the following units will be used throughout this document:
 		\begin{table}[h]
@@ -37,13 +43,14 @@
 		\end{table}		
 		
 		\subsubsection{Universal gravitational constant}
-			First quantified by Henry Cavendish the gravitational constant has a value of $G_0 = 6.67408\times10^{-11}$ on SI units of m$^3$s$^{-2}$kg$^{-1}$. With the units of length, mass and time on \autoref{tb: units} the constant of gravity to be used is given by:
+			First quantified by Henry Cavendish the gravitational constant has a value of $G_0 = 6.67408\times10^{-11}$ on SI units of m$^3$s$^{-2}$kg$^{-1}$. With the units of length, mass and time on \autoref{tb: units}, the constant of gravity to be used is given by:
 			\begin{equation}
 				\small
 				G = G_0 \left(\dfrac{1 \text{ kpc}^3}{\left(3.0857\times10^{19}\right)^3  \text{ m}^3}\right)\left(\dfrac{\left(3.154\times10^{16}\right)^2 \text{ s}^2}{1 \text{ Gyr}^2}\right)\left(\dfrac{1.98847\times10^{35} \text{ kg}}{10^5 M_\theta}\right) = 0.4493 \dfrac{\text{kpc$^3$}}{\text{Gy$r^210^5$\sm}}
 			\end{equation}
 			
 		\subsubsection{Hubble constant}
+		
 	\subsection{Mass distributions}
 		\begin{figure}[h]
 			\centering
@@ -83,9 +90,22 @@
 		
 		The concentration parameter of dark matter relates the viral radius $R_\text{vir}$ and the scale radius $R_s$ as:
 		\begin{equation}
-		R_\text{vir} = c(M_h, z)R_s
+			R_\text{vir} = c(M_h, z)R_s
 		\end{equation}
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/NFW_profile"}
+			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
+		\end{figure}
+	
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/darkmatter_concentration"}
+			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
+		\end{figure}
 
+		
 	
 \section{Metodología}
 %	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
