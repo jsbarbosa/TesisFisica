@@ -50,24 +50,40 @@
 			\end{equation}
 			
 		\subsubsection{Hubble constant}
+		The hubble constant is frequently used as $H_0 = 67.66 \pm 0.42$ kms$^{-1}$Mpc$^{-1}$, stating the speed of an astronomical body on kms$^{-1}$ at a distance of 1 Mpc.
+		
+%		Also, the SI unit of H0 is s−1
+		\begin{equation}
+			H = H_0 \left(\dfrac{1 \text{ kpc}}{3.0857\times10^{16} \text{ km}}\right)\left(\dfrac{1 \text{ s}}{3.154\times10^{13} \text{ Gyr}}\right)\left(\dfrac{1 \text{ Mpc}}{1000 \text{ kpc}}\right)
+		\end{equation}
+		
 		
 	\subsection{Mass distributions}
+		The host galaxy has two mass distributions that are superimposed, one for dark matter and the other one for all the luminous or baryonic matter.
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=0.7\linewidth]{Figures/NGC4414_modified}
+			\caption{NGC4414 galaxy \todo{cite image}}
 		\end{figure}
+	
+		The dark matter halo used on the host, follows a NFW (Navarro–Frenk–White) profile, while the baryonic mass distribution of the galaxy depends on the redshift $z$. For high redshifts a gaseous disk with constant density followed by a density dependance with $r^{-2.2}$ is used, while for $z \approx 0$ a Hernquist model is applied \cite{choksi2017recoiling}.
+		
 	\subsection{Dark matter halo}
 		For a dark matter halo following a NFW profile, the density at some distance $r$ is given by the formula:
-		\begin{equation}
+		\begin{equation}\label{eq: dmdensity}
 			\rho_\text{DM}(r) = \dfrac{\rho_0^\text{DM}}{\frac{r}{R_s}\left(1 + \frac{r}{R_s}\right)^2}
 		\end{equation}
 		
-		Where $R_s$ and $\rho_0^\text{DM}$ are constants for a given dark matter halo.
-		
-		The cumulative mass within some radius $r$ is:
-		\begin{equation}
-			M_{DM} = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
+		Where $R_s$ and $\rho_0^\text{DM}$ are constants for a given dark matter halo. Using the density, the cumulative mass $M_\text{DM}(r)$ within some radius $r$ is given by the integral of the density over a volume, since \autoref{eq: dmdensity} is spherically symmetrical, the only dependance of the integral is with distance. On \autoref{eq: cumulativeDM} the $r'^2$ comes from the Jacobian of spherical coordinates, and the $4\pi$ from the solid angle.
+		\begin{equation}\label{eq: cumulativeDM}
+			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
 		\end{equation}
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/NFW_profile"}
+			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
+		\end{figure}
 		
 		Since the mass of dark matter of a single galaxy diverges for $r \rightarrow \infty$ there is a radius called $R_\text{vir}$, at which the density of the NFW profile is 200 times the critical density $\rho_\text{crit}$ the minimum density for an expanding universe.
 		\begin{equation}
@@ -76,10 +92,10 @@
 		
 		Considering a concentration parameter $c(M_h, z)$ of dark matter in the halo, given by:
 		\begin{equation}
-			c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)} \qquad \text{where $z$ is the redshift}
+			c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)}
 		\end{equation}
 		
-		where $\alpha(z)$ and $c_0(z)$ were fitted using simulation data to the following functions:
+		where $\alpha(z)$ and $c_0(z)$ were fitted using simulation data to the following functions \cite{choksi2017recoiling}:
 		\begin{equation}
 			c_0(z) = \dfrac{4.58}{2}\left[\left(\dfrac{1 + z}{2.24}\right)^{0.107} + \left(\dfrac{1 + z}{2.24}\right)^{-1.29}\right]
 		\end{equation}
@@ -93,25 +109,44 @@
 			R_\text{vir} = c(M_h, z)R_s
 		\end{equation}
 		
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/NFW_profile"}
-			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
-		\end{figure}
+		The relation of $R_\text{vir}$ with the concentration parameter is particularly useful to the simulation. As the system evolves on time, so does the viral radius due to the existing relation between time and redshift.
+		\begin{equation}\label{eq: t_redshift}
+			t = \dfrac{2H^{-1}}{1 + (1 + z) ^ 2}
+		\end{equation}
 	
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/darkmatter_concentration"}
-			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
+			\caption{Dark matter concentration parameter as a function of the halo mass and the redshift.}
+			\label{fig: dmconcentration}
+		\end{figure}
+	
+		\subsubsection{Baryonic profile}
+	
+		\begin{figure}[h]
+			\centering
+			\begin{subfigure}[b]{0.49\textwidth}
+				\includegraphics[width=\textwidth]{"../Files/Week 3/gaseous"}
+				\caption{Constant density profile for $r < 1$ pc, followed by a fall as $r^{-2.2}$ for $z \gg 0$.}
+				\label{fig:gull}
+			\end{subfigure}
+			~ 
+			\begin{subfigure}[b]{0.49\textwidth}
+				\includegraphics[width=\textwidth]{"../Files/Week 3/hernquist"}
+				\caption{Hernquist profile for mass distribution at $z \approx 0$.}
+				\label{fig:tiger}
+			\end{subfigure}
+			\caption{Baryonic mass distributions for $z \gg 0$ and $z \approx 0$.}
+			\label{fig:animals}
 		\end{figure}
 
 		
 	
-\section{Metodología}
+%\section{Metodología}
 %	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
-	\begin{equation}
-		\ddot{\vec{x}} = \left(-\dfrac{GM_h(x)}{x^2} + a_{DF}-\ddot{x}\dfrac{\dot{M_\bullet}}{M_\bullet} -qH^2x\right)\hat{x}
-	\end{equation}
+%	\begin{equation}
+%		\ddot{\vec{x}} = \left(-\dfrac{GM_h(x)}{x^2} + a_{DF}-\ddot{x}\dfrac{\dot{M_\bullet}}{M_\bullet} -qH^2x\right)\hat{x}
+%	\end{equation}
 	
 %	donde $M_h$ corresponde con la masa del halo de la galaxia, $a_{DF}$ con la aceleraci\'on debida a la fricci\'on din\'amica, la cual se modela usando la f\'ormula de Chandrasekhar para la materia oscura y el modelo h\'ibrido descrito por Choksi para la materia visible \cite{choksi2017recoiling}. El tercer t\'ermino tiene en cuenta la acreci\'on de masa por el agujero negro, y el \'ultimo la aceleraci\'on cosmol\'ogica.
 %	
