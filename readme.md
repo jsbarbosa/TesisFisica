@@ -2,7 +2,7 @@
 ## PC
 -Virtualenv located at: `~/.tesisFisica`
 -Activate: `source ~/.tesisFisica/bin/activate`
--Installing libraries: `pip install numpy pandas ipykernel jupyter matplotlib rebound`
+-Installing libraries: `pip install numpy pandas scipy ipykernel jupyter matplotlib rebound`
 -Register kernel `ipython kernel install --user --name=tesisFisica`
 
 
