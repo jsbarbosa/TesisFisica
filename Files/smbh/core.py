@@ -11,7 +11,7 @@ import matplotlib.animation as animation
 
 import smbh.constants as constants
 
-def darkMatterDensity(r):    
+def darkMatterDensity(r):
     factor = r / constants.DARK_MATTER_SCALE_RADIUS
     return constants.DARK_MATTER_DENSITY_0 / (factor * (1 + factor) ** 2)
 
@@ -35,7 +35,7 @@ def baryonicDensityOld(r):
         if r < radio:
             return f1(r)
         else:
-            return f2(r) 
+            return f2(r)
     except ValueError:
         answer = np.zeros_like(r)
         answer[r < radio] = f1(r[r < radio])
@@ -52,7 +52,7 @@ def baryonicMassOld(r):
         if r < radio:
             return f1(r)
         else:
-            return f2(r) 
+            return f2(r)
     except ValueError:
         answer = np.zeros_like(r)
         answer[r < radio] = f1(r[r < radio])
@@ -65,39 +65,25 @@ def baryonicDensityHernquist(r):
 def baryonicMassHernquist(r):
     return constants.TOTAL_MASS * (r / (r + constants.SCALE_LENGTH))**2
 
-def dynamicalFrictionDM(position, speed, mass):    
-    r = np.linalg.norm(position)
-    v = np.linalg.norm(speed)
-    
-    factor = -4 * np.pi * (constants.G / v) ** 2 * mass * (darkMatterDensity(r) + BARYONIC_DENSITY_FUNCTION(r)) * constants.LN_LAMBDA
-    
-    sigma = (0.5 * constants.G * darkMatterMass(r) / constants.R_VIR) ** 0.5
-    x = v / (2 ** 0.5 * sigma)
-    
-    factor *= erf(x) - 2 * np.pi ** -0.5 * x * np.exp(-x**2)
-    
-    return factor * speed / v
-
-
 def sphericalToCartesian(r, theta, phi):
     x = r * np.sin(theta) * np.cos(phi)
     y = r * np.sin(theta) * np.sin(phi)
     z = r * np.cos(theta)
-    
+
     return x, y, z
 
 def setupSimulation(mass, position, speed, additional_force, velocity_dependent = 1):
     sim = rebound.Simulation()
     sim.G = constants.G
-    
+
     sim.add(m = mass, x = position[0], y = position[1], z = position[2],
             vx = speed[0], vy = speed[1], vz = speed[2])
-    
+
     particle = sim.particles[0]
-    
+
     sim.additional_forces = additional_force
     sim.force_is_velocity_dependent = velocity_dependent
-    
+
     return sim, particle
 
 def runSimulation(sim, particle, n_points):
@@ -112,6 +98,48 @@ def runSimulation(sim, particle, n_points):
         speeds[i] = particle.vxyz
     return times, positions, speeds
 
+def getLocalSoundSpeed(z):
+    # TODO: change of units
+    return 1.8 * (1 + z) ** 0.5 * (constants.HALO_MASS / (1e7 * constants.SOLAR_MASS)) ** (1/3) * ((constants.MATTER_DENSITY_PARAMETER * constants.h ** 2) / 0.14)
+
+def gasDensity(r):
+    return baryonicDensityHernquist(r) / 1000
+
+def dynamicalFrictionDM(position, speed, mass):
+    r = np.linalg.norm(position)
+    v = np.linalg.norm(speed)
+
+    rho = darkMatterDensity(r) + BARYONIC_DENSITY_FUNCTION(r)
+    factor = -4 * np.pi * (constants.G / v) ** 2 * mass * rho * constants.LN_LAMBDA
+
+    sigma = (0.5 * constants.G * darkMatterMass(r) / constants.R_VIR) ** 0.5
+    x = v / ((2 ** 0.5) * sigma)
+
+    factor *= erf(x) - 2 * (np.pi ** -0.5) * x * np.exp(-x**2)
+
+    return factor * (speed / v)
+
+def dynamicalFrictionGas(position, speed, mass):
+    cs = getLocalSoundSpeed(0)
+    v = np.linalg.norm(speed)
+    match = v / cs
+    if match <= 1.7:
+        factor = erf(match / (2 ** 0.5)) - (2 / np.pi) ** 0.5 * match * np.exp(-0.5 * match**2)
+        if match <= 0.8:
+            f = 0.5 * constants.LN_LAMBDA * factor
+        else:
+            f = 1.5 * constants.LN_LAMBDA * factor
+    else:
+        f = 0.5 * np.log(1 - match ** -2) + constants.LN_LAMBDA
+
+    rho = gasDensity(np.linalg.norm(position))
+    return -4 * np.pi * (constants.G / v) ** 2 * mass * rho * f * (speed / v)
+
+def SMBHAccretion(position, speed, mass):
+    r = np.linalg.norm(position)
+    v = np.linalg.norm(speed)
+    return 4 * np.pi * (constants.G * mass) ** 2 * baryonicDensityHernquist(r) / (getLocalSoundSpeed(0) ** 2 + v ** 2) ** (1.5)
+
 
 """
 Plots
@@ -125,7 +153,7 @@ def slicePlot(data, axes = None):
         ax3 = plt.subplot(gs[1, 1])
     else:
         ax1, ax2, ax3 = axes
-    
+
     c = ax1.plot(data[:, 0], data[:, 1])[0].get_color()
     ax1.plot(data[0, 0], data[0, 1], 'o', c = c, alpha = 0.5)
     ax1.plot(data[-1, 0], data[-1, 1], 'o', c = c, alpha = 0.7)
@@ -135,14 +163,17 @@ def slicePlot(data, axes = None):
 
     ax2.get_xaxis().set_visible(False)
     ax3.get_yaxis().set_visible(False)
-    
+
     ax1.set_xlabel('$x (kpc)$')
     ax1.set_ylabel('$y (kpc)$')
     ax2.set_ylabel('$z (kpc)$')
     ax3.set_xlabel('$z (kpc)$')
-    
+
     return plt.gcf(), (ax1, ax2, ax3)
 
+def getZ(t):
+    z1 = -1 + (1 -2*(1 - 1 / (constants.H * t)))**0.5
+    return z1
 
 def plotDensityMass(distance, density, mass, figsize = (8, 4.5)):
     fig, ax1 = plt.subplots(figsize = figsize)
@@ -158,26 +189,61 @@ def plotDensityMass(distance, density, mass, figsize = (8, 4.5)):
     ax1.set_yscale('log')
     ax1.set_xscale('log')
     ax2.set_yscale('log')
-    
+
     ax1.plot(distance, density, c = 'b')
     ax2.plot(distance, mass, c = 'g')
-    
+
     fig.tight_layout()
 
     return fig, (ax1, ax2)
 
+# def plotDistance(times, positions, axes = None, figsize = (8, 4.5)):
+#     rs = np.linalg.norm(positions, axis = 1)
+#
+#     if axes == None:
+#         fig, ax1 = plt.subplots(figsize = figsize)
+#         ax1.set_xlabel("Time (Myr)")
+#         ax1.set_ylabel("$R / R_{vir}$")
+#         ax2 = ax1.twiny()
+#         ax2.invert_xaxis()
+#     else:
+#         fig = plt.gcf()
+#         ax1, ax2 = axes
+#
+#     zs = getZ(times + 0.06335)
+#     y = rs / constants.R_VIR
+#     c = ax1.plot(times * 1000, y)[0].get_color()
+#
+#     ticks = ax1.get_xticks() / 1000
+#     lims = ax1.get_xlim()
+#     ticks[0] = lims[0] / 1000
+#     ticks[-1] = lims[-1] / 1000
+#
+#     zs = getZ(0.04 + ticks)
+#     zs_int = list(set(zs[1:-1].astype(int)))[::-1]
+#
+#     zs = [zs[0]] + zs_int + [zs[-1]]
+#     labels = ["%d"%z for z in zs[1:-1]]
+#     zs = zs[::-1]
+#
+#     ax2.set_xticks(zs[1:-1])
+#     ax2.set_xticklabels(labels)
+#     ax2.set_xlim(zs[0], zs[-1])
+#     return fig, (ax1)
+
 def plotDistance(times, positions, ax = None, figsize = (8, 4.5)):
     rs = np.linalg.norm(positions, axis = 1)
-    
+
     if ax == None:
         fig, ax = plt.subplots(figsize = figsize)
         ax.set_xlabel("Time (Myr)")
         ax.set_ylabel("$R / R_{vir}$")
     else:
         fig = plt.gcf()
-        
-    ax.plot(times * 1000, rs / constants.R_VIR)
-    
+
+    y = rs / constants.R_VIR
+    c = ax.plot(times * 1000, y)[0].get_color()
+
     return fig, ax
 
 def make3dPlot(positions):
@@ -188,7 +254,7 @@ def make3dPlot(positions):
     ax.set_xlabel("$x$ (kpc)")
     ax.set_ylabel("$y$ (kpc)")
     ax.set_zlabel("$z$ (kpc)")
-    
+
     return fig, ax
 
 def makeAnimation(positions, points = 100):
@@ -201,7 +267,7 @@ def makeAnimation(positions, points = 100):
 	        dot.set_xdata(x[-1])
 	        dot.set_ydata(y[-1])
 	        dot.set_3d_properties(z[-1])
-        
+
         return line, dot
 
     fig = plt.figure()
