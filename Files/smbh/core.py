@@ -12,6 +12,7 @@ import matplotlib.animation as animation
 import smbh.constants as constants
 
 def darkMatterDensity(r):
+    r += constants.SOFTENING_RADIUS
     factor = r / constants.DARK_MATTER_SCALE_RADIUS
     return constants.DARK_MATTER_DENSITY_0 / (factor * (1 + factor) ** 2)
 
@@ -60,6 +61,7 @@ def baryonicMassOld(r):
         return answer
 
 def baryonicDensityHernquist(r):
+    r += constants.SOFTENING_RADIUS
     return constants.TOTAL_MASS * constants.SCALE_LENGTH / (2 * np.pi * r * (r + constants.SCALE_LENGTH)**3)
 
 def baryonicMassHernquist(r):
@@ -73,29 +75,39 @@ def sphericalToCartesian(r, theta, phi):
     return x, y, z
 
 def setupSimulation(mass, position, speed, additional_force, velocity_dependent = 1):
+
     sim = rebound.Simulation()
     sim.G = constants.G
 
     sim.add(m = mass, x = position[0], y = position[1], z = position[2],
             vx = speed[0], vy = speed[1], vz = speed[2])
 
-    particle = sim.particles[0]
-
+    constants.SMBH_MASS = mass
+    constants.particle = sim.particles[0]
     sim.additional_forces = additional_force
     sim.force_is_velocity_dependent = velocity_dependent
 
-    return sim, particle
+    return sim
 
-def runSimulation(sim, particle, n_points):
-    times = np.zeros(n_points)
-    positions = np.zeros((n_points, 3))
-    speeds = np.zeros((n_points, 3))
+def runSimulation(sim, n_points, save_points = 1000):
+    if save_points > n_points: save_points = n_points
+
+    every = n_points // save_points
+
+    j = 0
+    times = np.zeros(save_points)
+    positions = np.zeros((save_points, 3))
+    speeds = np.zeros((save_points, 3))
 
     for i in range(n_points):
-        times[i] = times[i - 1] + sim.dt
-        sim.integrate(times[i], exact_finish_time = 0) # integrate to the nearest timestep so WHFast's timestep stays constant
-        positions[i] = particle.xyz
-        speeds[i] = particle.vxyz
+        if (i % every == 0) & (j < save_points):
+            times[j] = i * sim.dt
+            positions[j] = constants.particle.xyz
+            speeds[j] = constants.particle.vxyz
+            j += 1
+        constants.SIM_DT = sim.dt
+        sim.integrate(i * sim.dt, exact_finish_time = 0) # integrate to the nearest timestep so WHFast's timestep stays constant
+
     return times, positions, speeds
 
 def getLocalSoundSpeed(z):
@@ -105,23 +117,25 @@ def getLocalSoundSpeed(z):
 def gasDensity(r):
     return baryonicDensityHernquist(r) / 1000
 
-def dynamicalFrictionDM(position, speed, mass):
+def dynamicalFrictionDM(position, speed):
     r = np.linalg.norm(position)
-    v = np.linalg.norm(speed)
+    v = np.linalg.norm(speed) + constants.SOFTENING_RADIUS
 
-    rho = darkMatterDensity(r) + BARYONIC_DENSITY_FUNCTION(r)
-    factor = -4 * np.pi * (constants.G / v) ** 2 * mass * rho * constants.LN_LAMBDA
-
-    sigma = (0.5 * constants.G * darkMatterMass(r) / constants.R_VIR) ** 0.5
+    mass = constants.HALO_MASS
+    # mass = darkMatterMass(r)
+    # print()
+    sigma = (0.5 * constants.G * mass / constants.R_VIR) ** 0.5
     x = v / ((2 ** 0.5) * sigma)
 
-    factor *= erf(x) - 2 * (np.pi ** -0.5) * x * np.exp(-x**2)
+    rho = darkMatterDensity(r) + BARYONIC_DENSITY_FUNCTION(r)
+    factor = -4 * np.pi * (constants.G ** 2) * constants.SMBH_MASS * rho * constants.LN_LAMBDA \
+                * (erf(x) - 2 * (np.pi ** -0.5) * x * np.exp(-x**2))
 
-    return factor * (speed / v)
+    return factor * speed / (v ** 3)
 
-def dynamicalFrictionGas(position, speed, mass):
+def dynamicalFrictionGas(position, speed):
     cs = getLocalSoundSpeed(0)
-    v = np.linalg.norm(speed)
+    v = np.linalg.norm(speed) + constants.SOFTENING_SPEED
     match = v / cs
     if match <= 1.7:
         factor = erf(match / (2 ** 0.5)) - (2 / np.pi) ** 0.5 * match * np.exp(-0.5 * match**2)
@@ -133,13 +147,62 @@ def dynamicalFrictionGas(position, speed, mass):
         f = 0.5 * np.log(1 - match ** -2) + constants.LN_LAMBDA
 
     rho = gasDensity(np.linalg.norm(position))
-    return -4 * np.pi * (constants.G / v) ** 2 * mass * rho * f * (speed / v)
+    return -4 * np.pi * constants.G ** 2 * constants.SMBH_MASS * rho * f * speed / (v ** 3)
+    # return -4 * np.pi * (constants.G / (v + constants.SOFTENING_SPEED)) ** 2 * mass * rho * f * (speed / v)
 
-def SMBHAccretion(position, speed, mass):
+def SMBHAccretion(position, speed):
     r = np.linalg.norm(position)
     v = np.linalg.norm(speed)
-    return 4 * np.pi * (constants.G * mass) ** 2 * baryonicDensityHernquist(r) / (getLocalSoundSpeed(0) ** 2 + v ** 2) ** (1.5)
+    return 4 * np.pi * (constants.G * constants.SMBH_MASS) ** 2 * baryonicDensityHernquist(r) / (getLocalSoundSpeed(0) ** 2 + v ** 2) ** (1.5)
 
+def gravitationalForce(r):
+    return -constants.G * (darkMatterMass(r) + baryonicMassHernquist(r)) / ((r + constants.SOFTENING_RADIUS) ** 2)
+
+def baseCase(pos, speed):
+    r = np.linalg.norm(pos)
+    dir_ = pos / r
+
+    grav = gravitationalForce(r)
+    df_g = dynamicalFrictionGas(pos, speed)
+    df_dm = dynamicalFrictionDM(pos, speed)
+    df = df_g + df_dm
+    # df = df_g
+
+    m_change = SMBHAccretion(pos, speed)
+
+    constants.SMBH_MASS += m_change * constants.SIM_DT
+
+    v = np.linalg.norm(speed)
+    accretion = v * m_change / constants.SMBH_MASS
+
+    pos_dependent = grav + accretion
+
+    return [pos_dependent * dir_[0] + df[0],
+            pos_dependent * dir_[1] + df[1],
+            pos_dependent * dir_[2] + df[2]]
+
+"""
+Sims
+"""
+def gravitational_only(sim):
+    pos = np.array(constants.particle.xyz)
+    r = np.linalg.norm(pos)
+    coeff = gravitationalForce(r)
+    dir_ = pos / r
+
+    constants.particle.ax = coeff * dir_[0]
+    constants.particle.ay = coeff * dir_[1]
+    constants.particle.az = coeff * dir_[2]
+
+def gravitational_DF(sim):
+    pos = np.array(constants.particle.xyz)
+    speed = np.array(constants.particle.vxyz)
+
+    ax, ay, az = baseCase(pos, speed)
+
+    constants.particle.ax = ax
+    constants.particle.ay = ay
+    constants.particle.az = az
 
 """
 Plots
