@@ -8,20 +8,20 @@ def setDarkMatterScaleRadius(radius):
 """
 Universal constants
 """
+
+h = 0.678
+MATTER_DENSITY_PARAMETER = 0.309
+
 G0 = 6.67408e-11
 kpc = 1 / (3.0857e19 ** 3)
 gyr = (3.154e16) ** 2
 m0 = (1.98847e35)
 G = G0 * kpc * gyr * m0
 
-print(G)
-
 H_0 = 67.66
 kpc2 = 1 / (3.0857e16) # 1 kpc in km
 gyr2 = 3.154e16
 H = H_0 * kpc2 * gyr2 / 1000
-
-print(H)
 
 """
 Simulation constants
@@ -32,15 +32,11 @@ SOLAR_MASS = 1e-5
 
 BARIONIC_DENSITY_0 = 100
 TOTAL_MASS = 0.158 * HALO_MASS # fb * Mh
-
 R_VIR = 200  * 3 * H ** 2 / (8 * pi * G)
-SCALE_LENGTH = 0.1#0.01 * R_VIR / (1 + 2 ** 0.5)
+SCALE_LENGTH = 0.1
 
 DARK_MATTER_SCALE_RADIUS = 0
 DARK_MATTER_DENSITY_0 = 0
-
-MATTER_DENSITY_PARAMETER = 0.309
-h = 0.678
 
 SOFTENING_RADIUS = 1e-6
 SOFTENING_SPEED = 1e-6

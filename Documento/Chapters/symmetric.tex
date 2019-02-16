@@ -11,7 +11,7 @@
 \newcommand{\keyword}[1]{\textit{#1}}
 \newcommand{\sm}[0]{$M_\odot$}
 \newcommand{\todo}[1]{\texttt{\color{red}\#TODO: #1}}
-\newcommand{\erf}[1]{\text{erf}(#1)}
+\newcommand{\erf}[1]{\text{erf}\left(#1\right)}
 %\newcommand{\option}[1]{\texttt{\itshape#1}}
 
 %----------------------------------------------------------------------------------------
@@ -77,40 +77,40 @@
 			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
 		\end{equation}
 		
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/NFW_profile"}
-			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
-		\end{figure}
+%		\begin{figure}[h]
+%			\centering
+%			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/NFW_profile"}
+%			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
+%		\end{figure}
 		
-		Since the mass of dark matter of a single galaxy diverges for $r \rightarrow \infty$ there is a radius called $R_\text{vir}$, at which the density of the NFW profile is 200 times the critical density $\rho_\text{crit}$ the minimum density for an expanding universe \todo{cite}.
+		Since the mass of dark matter of a single galaxy diverges for $r \rightarrow \infty$ there is a radius called $R_\text{vir}$, at which the density of the NFW profile is 200 times the critical density $\rho_\text{crit}$, the minimum density for an expanding universe \todo{cite}.
 		\begin{equation}
 			R_\text{vir} = 200 \rho_\text{crit} = 200 \left(\dfrac{3H^2}{8\pi G}\right)
 		\end{equation}
 		
-		Considering a concentration parameter $c(M_h, z)$ of dark matter in the halo, given by:
-		\begin{equation}
-			c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)}
-		\end{equation}
-		
-		where $\alpha(z)$ and $c_0(z)$ were fitted using simulation data to the following functions \cite{choksi2017recoiling}:
-		\begin{equation}
-			c_0(z) = \dfrac{4.58}{2}\left[\left(\dfrac{1 + z}{2.24}\right)^{0.107} + \left(\dfrac{1 + z}{2.24}\right)^{-1.29}\right]
-		\end{equation}
-		
-		\begin{equation}
-			\alpha(z) = -0.0965 \exp\left(-\dfrac{z}{4.06}\right)
-		\end{equation}
-		
-		The concentration parameter of dark matter relates the viral radius $R_\text{vir}$ and the scale radius $R_s$ as:
+		Considering a concentration parameter $c(M_h, z)$ of dark matter in the halo, the following relation holds for the viral radius $R_\text{vir}$ and the scale radius $R_s$:
 		\begin{equation}\label{eq: viralRadius}
 			R_\text{vir} = c(M_h, z)R_s
 		\end{equation}
 		
-		The relation of $R_\text{vir}$ with the concentration parameter is particularly useful to the simulation. As the system evolves on time, so does the viral radius due to the existing relation between time and redshift \cite{carmeli2006cosmic}.
-		\begin{equation}\label{eq: t_redshift}
-			t = \dfrac{2H^{-1}}{1 + (1 + z) ^ 2}
-		\end{equation}	
+		Where the concentration parameter, dependence with the dark matter halo mass and redshift is given by: 
+		\begin{equation}
+		c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)}
+		\end{equation}
+		
+		where $\alpha(z)$ and $c_0(z)$ were fitted using simulation data to the following functions \cite{choksi2017recoiling}:
+		\begin{equation}
+		c_0(z) = \dfrac{4.58}{2}\left[\left(\dfrac{1 + z}{2.24}\right)^{0.107} + \left(\dfrac{1 + z}{2.24}\right)^{-1.29}\right]
+		\end{equation}
+		
+		\begin{equation}
+		\alpha(z) = -0.0965 \exp\left(-\dfrac{z}{4.06}\right)
+		\end{equation}
+		
+%		The relation of $R_\text{vir}$ with the concentration parameter is particularly useful to the simulation. As the system evolves on time, so does the viral radius due to the existing relation between time and redshift \cite{carmeli2006cosmic}.
+%		\begin{equation}\label{eq: t_redshift}
+%			t = \dfrac{2H^{-1}}{1 + (1 + z) ^ 2}
+%		\end{equation}	
 	
 		\begin{figure}[h]
 			\centering
@@ -119,7 +119,7 @@
 			\label{fig: dmconcentration}
 		\end{figure}
 	
-		For a fixed halo mass, as time passes, concentration of dark matter will decrease, as can be shown on \autoref{fig: dmconcentration}. Because of \autoref{eq: viralRadius} the value of $R_\text{vir}$ will decrease as well.
+		For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}. Because of \autoref{eq: viralRadius} the value of $R_\text{vir}$ will increase as well.
 	
 		\subsubsection{Baryonic profile}
 			For high redshift the baryonic profile resembles that of a gaseous galaxy with a constant density for distances lower than $r_0 = 1\times10^{-3}$ kpc, followed by an $r^{-2.2}$ profile for greater distances as in \autoref{fig: baryonicprofilehigh}.
@@ -173,13 +173,63 @@
 		\end{equation}
 		
 	\subsection{Dynamical friction}
-		As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Collisionless components, dark matter and stars apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{choksi2017recoiling}.
+		As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on it source, collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{choksi2017recoiling}.
 		\begin{equation}
-			a_\text{DF}^\text{DM}(r, v) = - \dfrac{4\pi G^2}{v^2}M_\bullet\rho(r) \times \ln \Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)\hat{v}
+			a_\text{DF}^\text{DM}(r, v) = -4\pi G^2 M_\bullet\rho(r) \times \ln \Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)\dfrac{\vec{v}}{v^3}
 		\end{equation}
 		\begin{equation}
-			X \equiv \dfrac{|v|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM}(r) = \sqrt{\dfrac{GM_\text{DM}(r)}{2R_\text{vir}}}
+			X \equiv \dfrac{|v|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM}(r) = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
 		\end{equation}
+		
+		 Gas on the other hand is collisional, special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by Choksi, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
+		 \begin{equation}
+			 \mathcal{M} \equiv \dfrac{v}{c_s}
+		 \end{equation}
+		 
+		 where $v$ is the speed of the black hole, and $c_s$ is the local sound speed, which depends on local temperature, nevertheless it can be approximated to an isothermal halo as:
+		 \begin{equation}
+		 	c_s \approx 1.8(1 + z)^{1/2}\left(\dfrac{M_h}{10^7M_\odot}\right)^{1/3}\left(\dfrac{\Omega_M h^2}{0.14}\right)\text{ kms$^{-1}$}
+		 \end{equation}
+		 
+		 where $\Omega_M$ and $h$ depend on the cosmology chosen. By knowing $\mathcal{M}$, the acceleration caused by gas can be written as:
+		 \begin{equation}
+		 	a^\text{gas}_\text{DF}(r, \vec{v}) = -4\pi G^2M_\bullet\rho_\text{gas}(r)\times f(\mathcal{M})\dfrac{\vec{v}}{v^3}
+		 \end{equation}
+		 
+		 with
+		 \begin{equation}
+		 	f(\mathcal{M}) = \left\{
+			\begin{matrix}
+			0.5\ln\Lambda \left[\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right]& \text{if $\mathcal{M} \leq 0.8$}\\
+			1.5\ln\Lambda \left[\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right] & \text{if $0.8 < \mathcal{M} \leq 1.7$}\\
+			0.5\ln\left(1 - \mathcal{M}^{-2}\right) + \ln\Lambda & \text{if $\mathcal{M} > 1.7$}
+			\end{matrix}
+			\right.
+		 \end{equation}
+		 
+		 finally, the gas density is taken as a power-law profile, $\rho_\text{gas}=\rho_0^\text{gas}r^{-n}$, were $1 \leq n \leq 3$ \cite{choksi2017recoiling}.
+	
+		\begin{table}[h]
+			\centering
+			\caption{Constants used in the simulation}
+			\begin{tabular}{c|c}
+				\hline
+				\textbf{Constant} & \textbf{Value (unit)} \\
+				\hline
+				$n$ & 2\\
+				$h$ & 0.678 \\
+				$\Omega_M$ & 0.309 \\
+				$\ln\Lambda$ & 2.3 \\
+				$M_h$ & $1\times10^3$ ($10^5$\sm) \\
+				$M_\bullet$ & 1 ($10^5$\sm) \\
+				$M_T^B$ & 158 ($10^5$\sm) \\
+				$R_s$ & 1.3 (kpc) \\
+				$\mathcal{R}_s$ & 0.14 (kpc) \\
+				$\rho_0^\text{DM}$ & 1700 ($10^5$\sm kpc$^{-3}$)\\
+				$\rho_0^\text{gas}$ & 0.01 ($10^5$\sm kpc$^{-3}$)\\
+				\hline
+			\end{tabular}
+		\end{table}
 	
 %\section{Metodología}
 %	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
