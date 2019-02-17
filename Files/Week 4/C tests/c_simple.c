@@ -19,8 +19,8 @@ volatile double BARYONIC_SCALE_LENGTH = 0; // fixed at main
 
 volatile double MATTER_DENSITY_PARAMETER = 4;
 
-volatile double SOFTENING_SPEED = 1e-6;
-volatile double SOFTENING_RADIUS = 1e-6;
+volatile double SOFTENING_SPEED = 1e-4;
+volatile double SOFTENING_RADIUS = 1e-4;
 
 volatile double CONCENTRATION_PARAMETER = 4;
 volatile double DARK_MATTER_SCALE_RADIUS = 0; // fixed at main
@@ -162,6 +162,7 @@ double *dynamicalFrictionDM(double *position, double *speed)
                 * (erf(x) - 2 / pow(PI, 0.5) * x * exp(-pow(x, 2)));
 
     factor *= 1 / pow(v, 3);
+    // factor *= 0.5;
     double *ac = malloc(3 * sizeof(double));
 
     ac[0] = factor * speed[0];

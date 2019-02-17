@@ -27,12 +27,13 @@ t0 = np.pi / 4
 p0 = np.pi / 4
 
 v0 = 70 * 1.023 # to kpc / gyr
+
 vt0 = np.pi / 4
 vp0 = np.pi / 4
 
 n = 10
-label_every = 2
-r_virs = np.logspace(-1, 0, n)
+label_every = n // 10
+r_virs = np.linspace(5, 7, n)
 colors = cm.jet(np.linspace(0, 1, n))
 
 rs = []
@@ -52,7 +53,7 @@ for (i, R_VIR) in enumerate(r_virs):
 
 ax.set_xlabel('Time since recoil (Myr)')
 ax.set_ylabel(r'$R / R_{vir}$')
-
+# ax.set_ylim(0, 2)
 ax.legend()
 # fig.savefig('recoil%f.png'%R_VIR, dpi = 300)
 plt.show()
