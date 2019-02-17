@@ -14,29 +14,37 @@ volatile double R_VIR = 0;
 volatile double SOLAR_MASS = 1e-5;
 volatile double HALO_MASS = 1e3;
 volatile double SMBH_MASS = 1;
-volatile double TOTAL_MASS = 158;//1e3;
-volatile double SCALE_LENGTH = 0.14;//
+volatile double BARYONIC_TOTAL_MASS = 158; //1e3;
+volatile double BARYONIC_SCALE_LENGTH = 0; // fixed at main
 
-volatile double MATTER_DENSITY_PARAMETER = 0.309;
+volatile double MATTER_DENSITY_PARAMETER = 4;
 
-volatile double SOFTENING_SPEED = 1e-6;//1e-6;
+volatile double SOFTENING_SPEED = 1e-6;
 volatile double SOFTENING_RADIUS = 1e-6;
-volatile double DARK_MATTER_SCALE_RADIUS = 2.5;
-volatile double DARK_MATTER_DENSITY_0 = 1700; // NOT FREE.
 
-volatile double GAS_DENSITY = 0.01;
+volatile double CONCENTRATION_PARAMETER = 4;
+volatile double DARK_MATTER_SCALE_RADIUS = 0; // fixed at main
+volatile double DARK_MATTER_DENSITY_0 = 0; // fixed at main
+
+volatile double GAS_DENSITY = 0;
 volatile double SIM_DT = 1e-6;
+
+double darkMatterDensity0(double c)
+{
+    double factor = log(1 + c) - c / (1 + c);
+    return HALO_MASS / (4 * PI * pow(DARK_MATTER_SCALE_RADIUS, 3) * factor);
+}
 
 double getNorm(double *vector)
 {
-  return pow(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2], 0.5);
+    return pow(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2], 0.5);
 }
 
 double darkMatterDensity(double r)
 {
-  r += SOFTENING_RADIUS;
-  double factor = r / DARK_MATTER_SCALE_RADIUS;
-  return DARK_MATTER_DENSITY_0 / (factor * pow(1 + factor, 2));
+    r += SOFTENING_RADIUS;
+    double factor = r / DARK_MATTER_SCALE_RADIUS;
+    return DARK_MATTER_DENSITY_0 / (factor * pow(1 + factor, 2));
 }
 
 double darkMatterMass(double r)
@@ -48,12 +56,12 @@ double darkMatterMass(double r)
 double baryonicDensityHernquist(double r)
 {
     r += SOFTENING_RADIUS;
-    return TOTAL_MASS * SCALE_LENGTH / (2 * PI * r * pow(r + SCALE_LENGTH, 3));
+    return BARYONIC_TOTAL_MASS * BARYONIC_SCALE_LENGTH / (2 * PI * r * pow(r + BARYONIC_SCALE_LENGTH, 3));
 }
 
 double baryonicMassHernquist(double r)
 {
-    return TOTAL_MASS * pow(r / (r + SCALE_LENGTH), 2);
+    return BARYONIC_TOTAL_MASS * pow(r / (r + BARYONIC_SCALE_LENGTH), 2);
 }
 
 void sphericalToCartesian(double *r, double *theta, double *phi)
@@ -66,6 +74,23 @@ void sphericalToCartesian(double *r, double *theta, double *phi)
     *r = x;
     *theta = y;
     *phi = z;
+}
+
+void printStatus(struct reb_simulation *sim, const char *filename)
+{
+    double t, x, y, z, vx, vy, vz;
+    FILE *file;
+    struct reb_particle particle = sim -> particles[0];
+    t = sim -> t;
+    x = particle.x;
+    y = particle.y;
+    z = particle.z;
+    vx = particle.vx;
+    vy = particle.vy;
+    vz = particle.vz;
+    file = fopen(filename, "a");
+    fprintf(file, "%e %e %e %e %e %e %e %e\n", t, x, y, z, vx, vy, vz, SMBH_MASS);
+    fclose(file);
 }
 
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
@@ -97,34 +122,17 @@ void runSimulation(struct reb_simulation *sim, int n_points, int save_points, co
 
     int i, every = n_points / save_points;
 
-    double t, x, y, z, vx, vy, vz;
-
-    struct reb_particle particle;
     sim->dt = SIM_DT;
-
-    FILE *file;
 
     for (i = 0; i < n_points; i++)
     {
         if(i % every == 0)
         {
-            particle = sim -> particles[0];
-            t = sim -> t;
-            x = particle.x;
-            y = particle.y;
-            z = particle.z;
-            vx = particle.vx;
-            vy = particle.vy;
-            vz = particle.vz;
-            file = fopen(filename, "a");
-            fprintf(file, "%f %f %f %f %f %f %f\n", t, x, y, z, vx, vy, vz);
-            fclose(file);
+            printStatus(sim, filename);
         }
         SIM_DT = sim->dt;
         reb_integrate(sim, sim->t + sim->dt);
     }
-
-    // printf("%f\n", SMBH_MASS);
 }
 
 double getLocalSoundSpeed(double z)
@@ -154,7 +162,6 @@ double *dynamicalFrictionDM(double *position, double *speed)
                 * (erf(x) - 2 / pow(PI, 0.5) * x * exp(-pow(x, 2)));
 
     factor *= 1 / pow(v, 3);
-
     double *ac = malloc(3 * sizeof(double));
 
     ac[0] = factor * speed[0];
@@ -180,7 +187,6 @@ double *dynamicalFrictionGas(double *position, double *speed)
     double rho = gasDensity(getNorm(position));
 
     all = -4 * PI * pow(G, 2) * SMBH_MASS * rho * f / pow(v, 3);
-
     double *ac = malloc(3 * sizeof(double));
     ac[0] = all * speed[0];
     ac[1] = all * speed[1];
@@ -191,12 +197,13 @@ double *dynamicalFrictionGas(double *position, double *speed)
 double SMBHAccretion(double *position, double *speed)
 {
     double r = getNorm(position);
-    double v = getNorm(speed);
+    double v = pow(pow(getLocalSoundSpeed(20), 2) + pow(getNorm(speed), 2), 1.5);
 
-    double bondi = 4 * PI * pow(G * SMBH_MASS, 2) * baryonicDensityHernquist(r) / pow(pow(getLocalSoundSpeed(20), 2) + pow(v, 2), 1.5);
-    double e = 0.1;
-    double eddington = (1 - e) * SMBH_MASS / (e * 0.44);
-    return bondi + eddington;
+    double bondi = 4 * PI * pow(G * SMBH_MASS, 2) * baryonicDensityHernquist(r) / v;
+    double eddington = (1 - 0.1) * SMBH_MASS / (0.1 * 0.44);
+
+    if (bondi < eddington) return bondi;
+    return eddington;
 }
 
 double gravitationalForce(double r)
@@ -237,8 +244,6 @@ void baseCase(struct reb_simulation* sim)
 
 int main(int argc, char* argv[])
 {
-    R_VIR = 200 * 3 * pow(H, 2) / (8 * PI * G);
-    printf("%f\n", R_VIR);
     double r, theta, phi;
     double v, vt, vp;
 
@@ -250,13 +255,22 @@ int main(int argc, char* argv[])
     v = atof(argv[5]);
     vt = atof(argv[6]);
     vp = atof(argv[7]);
+
+    R_VIR = atof(argv[8]);
+    DARK_MATTER_SCALE_RADIUS = R_VIR / CONCENTRATION_PARAMETER;
+    DARK_MATTER_DENSITY_0 = darkMatterDensity0(CONCENTRATION_PARAMETER);
+    BARYONIC_SCALE_LENGTH = 0.01 * R_VIR / (1 + pow(2, 0.5));
+    printf("R_VIR: %f\nDARK_MATTER_SCALE_RADIUS: %f\nDARK_MATTER_DENSITY_0: %f\nBARYONIC_SCALE_LENGTH: %f\n\n",
+              R_VIR, DARK_MATTER_SCALE_RADIUS,
+              DARK_MATTER_DENSITY_0, BARYONIC_SCALE_LENGTH);
+
     sphericalToCartesian(&r, &theta, &phi);
     sphericalToCartesian(&v, &vt, &vp);
     double positions[3] = {r, theta, phi};
     double speeds[3] = {v, vt, vp};
     struct reb_simulation* sim = setupSimulation(1, positions, speeds, baseCase, 1);
 
-    int sim_points = 150000;
+    int sim_points = 65000;
     sim->integrator = REB_INTEGRATOR_LEAPFROG;
     runSimulation(sim, sim_points, sim_points / 10, filename);
 
