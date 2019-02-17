@@ -74,7 +74,7 @@
 		
 		Where $R_s$ and $\rho_0^\text{DM}$ are constants for a given dark matter halo. Using the density, the cumulative mass $M_\text{DM}(r)$ within some radius $r$ is given by the integral of the density over a volume, since \autoref{eq: dmdensity} is spherically symmetrical, the only dependance of the integral is with distance. On \autoref{eq: cumulativeDM} the $r'^2$ comes from the Jacobian of spherical coordinates, and the $4\pi$ from the solid angle.
 		\begin{equation}\label{eq: cumulativeDM}
-			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
+			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0^\text{DM}R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
 		\end{equation}
 		
 %		\begin{figure}[h]
@@ -85,7 +85,7 @@
 		
 		Since the mass of dark matter of a single galaxy diverges for $r \rightarrow \infty$ there is a radius called $R_\text{vir}$, at which the density of the NFW profile is 200 times the critical density $\rho_\text{crit}$, the minimum density for an expanding universe \todo{cite}.
 		\begin{equation}
-			R_\text{vir} = 200 \rho_\text{crit} = 200 \left(\dfrac{3H^2}{8\pi G}\right)
+			R_\text{vir} = 200 \rho_\text{crit} = 200 \left(\dfrac{3H^2}{8\pi G}\right) = 0.2541 \text{ kpc}
 		\end{equation}
 		
 		Considering a concentration parameter $c(M_h, z)$ of dark matter in the halo, the following relation holds for the viral radius $R_\text{vir}$ and the scale radius $R_s$:
@@ -93,7 +93,7 @@
 			R_\text{vir} = c(M_h, z)R_s
 		\end{equation}
 		
-		Where the concentration parameter, dependence with the dark matter halo mass and redshift is given by: 
+		Where the concentration parameter, dependence with the dark matter halo mass ($M_h$) and redshift is given by: 
 		\begin{equation}
 		c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)}
 		\end{equation}
@@ -119,7 +119,15 @@
 			\label{fig: dmconcentration}
 		\end{figure}
 	
-		For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}. Because of \autoref{eq: viralRadius} the value of $R_\text{vir}$ will increase as well.
+		For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}. Because of \autoref{eq: viralRadius} the value of $R_\text{vir}$ will increase as well, this equation can be used to obtain the value of $\rho_0^\text{DM}$ by evaluating \autoref{eq: cumulativeDM} at $R_\text{vir}$.
+		\begin{equation}
+			M_h \equiv M_\text{DM}(R_\text{vir}) = 4\pi\rho_0^\text{DM}R_s^3 \left[\ln\left(\dfrac{R_s + c(M_h, z)R_s}{R_s}\right) - \dfrac{c(M_h, z)R_s}{R_s + c(M_h, z)R_s}\right]
+		\end{equation}
+		\begin{equation}
+			\rho_0^\text{DM} = \dfrac{M_h}{4\pi R_s^3 \left[\ln\left(1 + c(M_h, z)\right) - \dfrac{c(M_h, z)}{1 + c(M_h, z)}\right]}
+		\end{equation}
+		
+		By considering a fixed concentration parameter $c(M_h, z) \equiv 4$, one obtains $R_s = 0.0635$ kpc, and $\rho_0^\text{DM} = 383457$ $10^5$\sm kpc$^{-3}$.
 	
 		\subsubsection{Baryonic profile}
 			For high redshift the baryonic profile resembles that of a gaseous galaxy with a constant density for distances lower than $r_0 = 1\times10^{-3}$ kpc, followed by an $r^{-2.2}$ profile for greater distances as in \autoref{fig: baryonicprofilehigh}.
@@ -227,6 +235,7 @@
 				$\mathcal{R}_s$ & 0.14 (kpc) \\
 				$\rho_0^\text{DM}$ & 1700 ($10^5$\sm kpc$^{-3}$)\\
 				$\rho_0^\text{gas}$ & 0.01 ($10^5$\sm kpc$^{-3}$)\\
+				$f_b$ & baryon fraction $\Omega_b / \Omega_M = f_\text{gas} + f_\text{gal}$ \\
 				\hline
 			\end{tabular}
 		\end{table}
