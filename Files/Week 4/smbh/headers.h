@@ -2,8 +2,8 @@
 #define LN_LAMBDA 2.3
 
 #define h 0.678
-// #define G0 0.449849
-#define G0 4.49849e-06 // kpc gyr m0
+#define G0 0.449849
+// #define G0 4.49849e-06 // kpc gyr m0
 #define H 0.069158
 
 void setR_vir(double r);

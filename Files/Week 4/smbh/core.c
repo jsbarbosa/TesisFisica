@@ -8,9 +8,9 @@
 #define MATTER_DENSITY_PARAMETER 0
 
 volatile double R_VIR = 0;
-volatile double HALO_MASS = 1e8;
-volatile double SMBH_MASS = 1e5;
-volatile double BARYONIC_TOTAL_MASS = 158e5; //1e3;
+volatile double HALO_MASS = 1e3;
+volatile double SMBH_MASS = 1;
+volatile double BARYONIC_TOTAL_MASS = 158; //1e3;
 volatile double BARYONIC_SCALE_LENGTH = 0; // fixed at main
 
 volatile double SOFTENING_SPEED = 0;
@@ -204,7 +204,7 @@ double gravitationalForce(double r)
 {
     double m = darkMatterMass(r);
     m += baryonicMassHernquist(r);
-    return -G0 * (m) / pow(r + SOFTENING_RADIUS, 2);
+    return -G0 * m / pow(r, 2);
 }
 
 void baseCase(struct reb_simulation* sim)
