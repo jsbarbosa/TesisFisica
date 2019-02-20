@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
-r0 = 1
+r0 = 0
 t0 = np.pi / 4
 p0 = np.pi / 4
 
@@ -17,7 +17,7 @@ POS = np.array(smbh.sphericalToCartesian(r0, t0, p0))
 SPEEDS = smbh.sphericalToCartesian(v0, vt0, vp0)
 
 dt = 1e-6
-smbh_m = 1e5
+smbh_m = 1
 until = 0.06 # gyr
 n_points = until // dt
 filename = "Data/Results%.3f.dat"
@@ -29,9 +29,12 @@ r_virs = np.logspace(-2, 3, n)
 
 colors = cm.jet(np.linspace(0, 1, n))
 
-for r_vir in r_virs:
-    smbh.setR_vir(r_vir)
-    smbh.run(r_vir * 1e-6 * POS, SPEEDS, smbh_m, dt, n_points, n_points // 100, filename%r_vir, delete_file = False)
+# for r_vir in r_virs:
+r_vir = 9.79
+smbh.setR_vir(r_vir)
+smbh.run(POS, SPEEDS, smbh_m, dt, n_points, n_points // 100, filename%r_vir, delete_file = False)
+
+r_virs = [r_vir]
 
 fig, ax = plt.subplots()
 for (i, r_vir) in enumerate(r_virs):
