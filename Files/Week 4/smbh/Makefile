@@ -1,20 +1,17 @@
 export OPENGL = 0
 SRC_DIR = ../../../../rebound/src
-FILE_NAME = c_simple.c
+FILE_NAME = core.c
 
 include $(SRC_DIR)/Makefile.defs
 
-*.dat : plots.py rebound.run
-	python3 plots.py
-
-rebound.run : c_simple.c
+rebound.so : $(FILE_NAME)
 	@echo "Compiling problem file ..."
 	rm -f librebound.so
 	ln -s $(SRC_DIR)/librebound.so .
-	$(CC) -I $(SRC_DIR) -Wl,-rpath,./ $(OPT) $(PREDEF) $(FILE_NAME) -L. -lrebound $(LIB) -o rebound.run
+	$(CC) -I $(SRC_DIR) -I . -Wl,-rpath,./ $(OPT) $(PREDEF) $(FILE_NAME) -L. -lrebound $(LIB) -fPIC -shared -o rebound.so
 	@echo ""
 	@echo "REBOUND compiled successfully."
 
 clean:
 	@echo "Cleaning up shared library librebound.so ..."
-	rm -f librebound.so rebound.run *.dat
+	rm -f *.so *.run *.dat

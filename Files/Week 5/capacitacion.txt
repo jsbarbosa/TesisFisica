@@ -1,0 +1,23 @@
+Costo anual de 1 M dolares.
+
+Slurm es el nuevo encolador.
+
+Documentacion: hpcfs/shared/README
+
+350 gb de ram por nodo. 8600 cpus
+
+solo mantener el cluster encendido, consume tanta energia como todo un pueblo en colombia en el mes.
+
+INTERACTIVA:
+  srun -p serial --mem 32G --pty bash -i
+
+  module load anaconda/python3
+  srun -p serial --mem 32G --pty python -i
+
+  salloc --nodes=1 --time=00:01:00 --exclusive
+  ssh node-5 ### el node que
+
+  cancelar
+  scancel IDDDD
+
+  submit sbatch
