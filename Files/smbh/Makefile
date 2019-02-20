@@ -1,5 +1,6 @@
 export OPENGL = 0
-SRC_DIR = ../../../../rebound/src
+#SRC_DIR = ../../../../rebound/src
+SRC_DIR = src/
 FILE_NAME = core.c
 
 include $(SRC_DIR)/Makefile.defs

@@ -4,7 +4,7 @@
 #define h 0.678
 #define G0 0.449849
 // #define G0 4.49849e-06 // kpc gyr m0
-#define H 0.069158
+#define H 0.069197
 
 void setR_vir(double r);
 void printConstants(void);
