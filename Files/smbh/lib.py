@@ -1,13 +1,15 @@
 import os
 import numpy as np
-from ctypes import cdll, CDLL, c_double, POINTER, c_int, c_char_p, pointer
+from scipy.special import erf
+from functools import partial
+
+from ctypes import cdll, CDLL, c_double, POINTER, c_int, c_char_p, pointer, ArgumentError
 
 from .useful import readFile
 
 dir = os.path.dirname(__file__)
 
 os.environ['PATH'] = dir + ';' + os.environ['PATH']
-
 path = os.path.abspath(os.path.join(dir, "rebound.so"))
 
 try:
@@ -18,6 +20,8 @@ except OSError:
     lib = CDLL(path)
     os.chdir(cwd)
 
+G = 0.449338
+
 def setResArgs(func, res, args):
     f = getattr(lib, func)
     f.restype = res
@@ -26,6 +30,16 @@ def setResArgs(func, res, args):
     except TypeError:
         if args != None:f.argtypes = args,
     setattr(lib, func, f)
+
+def function(func, *args):
+    try:
+        return func(*args)
+    except ArgumentError:
+        if len(args) == 1:
+            ls = [func(arg) for arg in args[0]]
+            return np.array(ls)
+        else:
+            raise('Put argument one by one')
 
 func_info = [('setR_vir', None, c_double),
             ('printConstants', None, None),
@@ -36,8 +50,8 @@ func_info = [('setR_vir', None, c_double),
             ('darkMatterDensity0', c_double, c_double),
             ('getLocalSoundSpeed', c_double, c_double),
             ('gravitationalForce', c_double, c_double),
-            ('baryonicMassHernquist', c_double, c_double),
-            ('baryonicDensityHernquist', c_double, c_double),
+            ('stellarMassHernquist', c_double, c_double),
+            ('stellarDensityHernquist', c_double, c_double),
             ('SMBHAccretion', c_double, (POINTER(c_double), POINTER(c_double))),
             ('dynamicalFrictionDM', POINTER(c_double), (POINTER(c_double), POINTER(c_double))),
             ('dynamicalFrictionGas', POINTER(c_double), (POINTER(c_double), POINTER(c_double))),
@@ -47,7 +61,7 @@ func_info = [('setR_vir', None, c_double),
 for func in func_info:
     name = func[0]
     setResArgs(*func)
-    globals()[name] = getattr(lib, name)
+    globals()[name] = partial(function, getattr(lib, name))
 
 def pointerFunction(func, pos, speeds):
     pos = (c_double * 3)(*pos)
