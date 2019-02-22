@@ -5,7 +5,7 @@ FILE_NAME = core.c
 
 include $(SRC_DIR)/Makefile.defs
 
-rebound.so : $(FILE_NAME) $(SRC_DIR)/librebound.so
+rebound.so : $(FILE_NAME) $(SRC_DIR)/librebound.so headers.h
 	rm -f librebound.so
 	ln -s $(SRC_DIR)/librebound.so .
 	$(CC) -I $(SRC_DIR) -I . -Wl,-rpath,./ $(OPT) $(PREDEF) $(FILE_NAME) -L. -lrebound $(LIB) -fPIC -shared -o rebound.so

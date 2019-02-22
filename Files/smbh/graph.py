@@ -96,7 +96,10 @@ def plotProperties(times, positions, speeds, mass, r_vir, figsize = (8, 4.5)):
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, figsize = figsize, sharex = True)
 
+    ax11 = ax1.twinx()
+
     ax1.plot(t, r/r_vir, c = 'k')
+    ax11.plot(t, v, c = 'b')
 
     ax2.plot(t, x, label = 'x')
     ax2.plot(t, erf_, label = 'erf')
@@ -119,7 +122,10 @@ def plotProperties(times, positions, speeds, mass, r_vir, figsize = (8, 4.5)):
     ax2.legend()
     ax3.legend()
 
+    ax1.set_ylim(0, 1)
+
     ax1.set_ylabel('$R / R_{vir}$')
+    ax11.set_ylabel('Speed (kpc/Gyr)', color = 'b')
     ax3.set_xlabel('Time (Myr)')
     return fig, (ax1, ax2, ax3)
 

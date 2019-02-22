@@ -6,19 +6,17 @@
 
 volatile double R_VIR = 0; // fixed at main
 volatile double SMBH_MASS = 1;
-volatile double STELLAR_TOTAL_MASS = STELLAR_RATIO * fb * HALO_MASS;
+volatile double STELLAR_TOTAL_MASS = 0;//STELLAR_RATIO * fb * HALO_MASS;
 volatile double STELLAR_SCALE_LENGTH = 0; // fixed at main
 
-volatile double SOFTENING_SPEED = 0;
-volatile double SOFTENING_RADIUS = 0;
+volatile double SOFTENING_SPEED = 1e-12;
+volatile double SOFTENING_RADIUS = 1e-12;
 
 volatile double DARK_MATTER_SCALE_RADIUS = 0; // fixed at main
 volatile double DARK_MATTER_DENSITY_0 = 0; // fixed at main
 
 volatile double GAS_DENSITY = 0; //fixed at main
 volatile double SIM_DT = 1e-6;
-
-volatile double I = 0;
 
 double darkMatterDensity0(double c)
 {
@@ -33,7 +31,7 @@ double getNorm(double *vector)
 
 double darkMatterDensity(double r)
 {
-    // r += SOFTENING_RADIUS;
+    r += SOFTENING_RADIUS;
     double factor = r / DARK_MATTER_SCALE_RADIUS;
     return DARK_MATTER_DENSITY_0 / (factor * pow(1 + factor, 2));
 }
@@ -46,7 +44,7 @@ double darkMatterMass(double r)
 
 double stellarDensityHernquist(double r)
 {
-    // r += SOFTENING_RADIUS;
+    r += SOFTENING_RADIUS;
     return STELLAR_TOTAL_MASS * STELLAR_SCALE_LENGTH / (2 * PI * r * pow(r + STELLAR_SCALE_LENGTH, 3));
 }
 
@@ -129,7 +127,7 @@ double getLocalSoundSpeed(double z)
 {
     double factor1, factor2;
     factor1 = pow(HALO_MASS / 1e2, 1./3);
-    factor2 = (MATTER_DENSITY_PARAMETER * pow(h, 2) / 0.14);
+    factor2 = pow(MATTER_DENSITY_PARAMETER * pow(h, 2) / 0.14, 1/6.);
     return 1.8 * pow(1 + z, 0.5) * factor1 * factor2;
 }
 
@@ -157,7 +155,7 @@ double *dynamicalFrictionDM(double *position, double *speed)
     double factor = -4 * PI * pow(G0, 2) * SMBH_MASS * rho * LN_LAMBDA
                 * (erf(x) - 2 / pow(PI, 0.5) * x * exp(-pow(x, 2)));
 
-    factor *= 1 / (pow(v, 3) + SOFTENING_RADIUS);
+    factor *= 1 / (pow(v, 2) + SOFTENING_SPEED);
     // factor *= 0.5;
     double *ac = malloc(3 * sizeof(double));
 
@@ -207,7 +205,7 @@ double gravitationalForce(double r)
     double m = darkMatterMass(r);
     m += stellarMassHernquist(r);
     m += gasMass(r);
-    return -G0 * m / pow(r, 2);
+    return -G0 * m / (pow(r, 2) + SOFTENING_RADIUS);
 }
 
 // void integrate(struct reb_simulation* sim)
@@ -304,19 +302,22 @@ void baseCase(struct reb_simulation* sim)
     double dir_[3] = {pos[0] / r, pos[1] / r, pos[2] / r};
 
     double grav = gravitationalForce(r);
-    double *df_g = dynamicalFrictionGas(pos, speed);
+    double df_g[3] = {0, 0, 0};
+    // double *df_g = dynamicalFrictionGas(pos, speed);
     double *df_dm = dynamicalFrictionDM(pos, speed);
     double df[3] = {df_g[0] + df_dm[0], df_g[1] + df_dm[1], df_g[2] + df_dm[2]};
 
-    free(df_g);
+    // double df[3] = {0, 0, 0};
+    //
+    // free(df_g);
     free(df_dm);
 
-    double m_change = SMBHAccretion(pos, speed);
-    SMBH_MASS += m_change * SIM_DT;
-
-    double accretion = v * m_change / SMBH_MASS;
-
-    grav += accretion;
+    // double m_change = SMBHAccretion(pos, speed);
+    // SMBH_MASS += m_change * SIM_DT;
+    //
+    // double accretion = - v * m_change / SMBH_MASS;
+    //
+    // grav += accretion;
 
     double ax, ay, az;
 
