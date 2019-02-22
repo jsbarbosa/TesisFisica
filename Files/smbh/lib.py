@@ -5,7 +5,7 @@ from functools import partial
 
 from ctypes import cdll, CDLL, c_double, POINTER, c_int, c_char_p, pointer, ArgumentError
 
-from .useful import readFile
+from .useful import Results
 
 dir = os.path.dirname(__file__)
 
@@ -56,7 +56,9 @@ func_info = [('setR_vir', None, c_double),
             ('dynamicalFrictionDM', POINTER(c_double), (POINTER(c_double), POINTER(c_double))),
             ('dynamicalFrictionGas', POINTER(c_double), (POINTER(c_double), POINTER(c_double))),
             ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_int, c_char_p)),
-            ]
+            ('getRedshift', c_double, c_double),
+            ('getHubbleParameter', c_double, c_double),
+            ('calculateR_vir', c_double, (c_double, c_double))]
 
 for func in func_info:
     name = func[0]
@@ -77,14 +79,12 @@ def run(positions, speeds, smbh_mass, dt, n_points, n_saves, filename, delete_fi
     global lib
     pos = (c_double * len(positions))(*positions)
     speeds = (c_double * len(speeds))(*speeds)
-    try: os.remove(filename)
-    except FileNotFoundError: pass
     try:
         lib.run(pos, speeds, smbh_mass, dt, int(n_points), int(n_saves), filename.encode())
     except Exception as e:
         print(e)
 
-    data = readFile(filename)
+    data = Results(filename)
 
     if delete_file: os.remove(filename)
 

@@ -4,19 +4,23 @@
 #include <math.h>
 #include "headers.h"
 
+volatile double Z = 20;
 volatile double R_VIR = 0; // fixed at main
 volatile double SMBH_MASS = 1;
-volatile double STELLAR_TOTAL_MASS = 0;//STELLAR_RATIO * fb * HALO_MASS;
+volatile double STELLAR_TOTAL_MASS = STELLAR_RATIO * fb * HALO_MASS;
 volatile double STELLAR_SCALE_LENGTH = 0; // fixed at main
 
-volatile double SOFTENING_SPEED = 1e-12;
-volatile double SOFTENING_RADIUS = 1e-12;
+volatile double SOFTENING_SPEED = 0;//1e-9;
+volatile double SOFTENING_RADIUS = 1e-9;
 
 volatile double DARK_MATTER_SCALE_RADIUS = 0; // fixed at main
 volatile double DARK_MATTER_DENSITY_0 = 0; // fixed at main
 
 volatile double GAS_DENSITY = 0; //fixed at main
-volatile double SIM_DT = 1e-6;
+volatile double SIM_DT;
+
+double const Z_TIME_COEFFS[Z_TIME_DEGREE + 1] = {-2.22289277, 5.13671586, -4.92900515, 3.71708597};
+double const Z_HUBBLE_COEFFS[Z_HUBBLE_DEGREE + 1] = {0.0039385, 0.11201693, -0.11131262};
 
 double darkMatterDensity0(double c)
 {
@@ -65,10 +69,19 @@ void sphericalToCartesian(double *r, double *theta, double *phi)
     *phi = z;
 }
 
-void printStatus(struct reb_simulation*  sim, const char *filename)
+void printStatus(struct reb_simulation* sim, const char *filename, int header)
 {
-    double t, x, y, z, vx, vy, vz;
-    FILE *file;
+  FILE *file;
+
+  if (header == 0)
+  {
+    file = fopen(filename, "w");
+    fprintf(file, "time(Gyr) z H(Gry-1) R_vir(kpc) x(kpc) y(kpc) z(kpc) vx(kpc) vy(kpc) vz(kpc) mass(10^5sm)\n");
+  }
+  else
+  {
+    file = fopen(filename, "a");
+    double t, h, x, y, z, vx, vy, vz;
     struct reb_particle  particle = sim -> particles[0];
     t = sim -> t;
     x = particle.x;
@@ -77,9 +90,10 @@ void printStatus(struct reb_simulation*  sim, const char *filename)
     vx = particle.vx;
     vy = particle.vy;
     vz = particle.vz;
-    file = fopen(filename, "a");
-    fprintf(file, "%e %e %e %e %e %e %e %e\n", t, x, y, z, vx, vy, vz, SMBH_MASS);
-    fclose(file);
+    h = getHubbleParameter(Z);
+    fprintf(file, "%e %e %e %e %e %e %e %e %e %e %e\n", t, Z, h, R_VIR, x, y, z, vx, vy, vz, SMBH_MASS);
+  }
+  fclose(file);
 }
 
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
@@ -117,7 +131,7 @@ void runSimulation(struct reb_simulation* sim, int n_points, int save_points, co
     {
         if(i % every == 0)
         {
-            printStatus(sim, filename);
+            printStatus(sim, filename, i);
         }
         reb_integrate(sim, sim->t + sim->dt);
     }
@@ -125,7 +139,8 @@ void runSimulation(struct reb_simulation* sim, int n_points, int save_points, co
 
 double getLocalSoundSpeed(double z)
 {
-    double factor1, factor2;
+    double factor1, factor2, h;
+    h = getHubbleParameter(z);
     factor1 = pow(HALO_MASS / 1e2, 1./3);
     factor2 = pow(MATTER_DENSITY_PARAMETER * pow(h, 2) / 0.14, 1/6.);
     return 1.8 * pow(1 + z, 0.5) * factor1 * factor2;
@@ -146,8 +161,8 @@ double *dynamicalFrictionDM(double *position, double *speed)
     double r = getNorm(position);
     double v = getNorm(speed);
 
-    double mass = HALO_MASS;
-    // double mass = darkMatterMass(r);
+    // double mass = HALO_MASS;
+    double mass = darkMatterMass(r);
     double sigma = pow(0.5 * G0 * mass / R_VIR, 0.5);
     double x = v / (pow(2, 0.5) * sigma);
 
@@ -168,7 +183,7 @@ double *dynamicalFrictionDM(double *position, double *speed)
 double *dynamicalFrictionGas(double *position, double *speed)
 {
     double f, all;
-    double cs = getLocalSoundSpeed(20);
+    double cs = getLocalSoundSpeed(Z);
     double v = getNorm(speed);
     double mach = v / cs;
     if (mach <= 1.7)
@@ -192,9 +207,9 @@ double *dynamicalFrictionGas(double *position, double *speed)
 double SMBHAccretion(double *position, double *speed)
 {
     double r = getNorm(position);
-    double v = pow(pow(getLocalSoundSpeed(20), 2) + pow(getNorm(speed), 2), 1.5);
-
-    double bondi = 4 * PI * pow(G0 * SMBH_MASS, 2) * stellarDensityHernquist(r) / v;
+    double v = pow(pow(getLocalSoundSpeed(Z), 2) + pow(getNorm(speed), 2), 1.5);
+    double rho = stellarDensityHernquist(r) + gasDensity(r);
+    double bondi = 4 * PI * pow(G0 * SMBH_MASS, 2) * rho / v;
     double eddington = (1 - 0.1) * SMBH_MASS / (0.1 * 0.44);
     if (bondi < eddington) return bondi;
     return eddington;
@@ -208,135 +223,43 @@ double gravitationalForce(double r)
     return -G0 * m / (pow(r, 2) + SOFTENING_RADIUS);
 }
 
-// void integrate(struct reb_simulation* sim)
-// {
-//   struct reb_particle*  particle = &(sim->particles[0]);
-//   double pos[3] = {particle->x, particle->y, particle->z};
-//   double speeds[3] = {particle->vx, particle->vy, particle->vz};
-//
-//   double *ac = baseCase(pos, speeds);
-//
-//   int i;
-//   for(i = 0; i < 3; i++)
-//   {
-//     speeds[i] += ac[i] * SIM_DT;
-//     pos[i] += speeds[i] * SIM_DT;
-//   }
-//   particle->x = pos[0];
-//   particle->y = pos[1];
-//   particle->z = pos[2];
-//   particle->vx = speeds[0];
-//   particle->vy = speeds[1];
-//   particle->vz = speeds[2];
-//
-//   sim->t += SIM_DT;
-//   free(ac);
-// }
-//
-// double *baseCase(double* pos, double* speed)
-// {
-//     double r = getNorm(pos);
-//     double v = getNorm(speed);
-//     if (!isnormal(r))
-//     {
-//       r = 1e-4;
-//       pos[0] = r / sqrt(3.);
-//       pos[1] = r / sqrt(3.);
-//       pos[2] = r / sqrt(3.);
-//     }
-//     if (!isnormal(v))
-//     {
-//       v = 1e-12;
-//       speed[0] = v / sqrt(3.);
-//       speed[1] = v / sqrt(3.);
-//       speed[2] = v / sqrt(3.);
-//     }
-//
-//     double dir_[3] = {pos[0] / r, pos[1] / r, pos[2] / r};
-//
-//     double grav = gravitationalForce(r);
-//     double *df_g = dynamicalFrictionGas(pos, speed);
-//     double *df_dm = dynamicalFrictionDM(pos, speed);
-//     double df[3] = {df_g[0] + df_dm[0], df_g[1] + df_dm[1], df_g[2] + df_dm[2]};
-//
-//     free(df_g);
-//     free(df_dm);
-//
-//     double m_change = SMBHAccretion(pos, speed);
-//     SMBH_MASS += m_change * SIM_DT;
-//
-//     double accretion = v * m_change / SMBH_MASS;
-//
-//     grav += accretion;
-//
-//     double *ac = malloc(3 * sizeof(double));
-//
-//     ac[0] = grav * dir_[0] + df[0];
-//     ac[0] = grav * dir_[1] + df[1];
-//     ac[0] = grav * dir_[2] + df[2];
-//     return ac;
-// }
-
 void baseCase(struct reb_simulation* sim)
 {
+    Z = getRedshift(sim->t + T0);
+    double H = getHubbleParameter(Z);
+    double r_vir = calculateR_vir(G0, H);
+    setR_vir(r_vir);
+
     struct reb_particle*  particle = &(sim->particles[0]);
     double pos[3] = {particle->x, particle->y, particle->z};
     double speed[3] = {particle->vx, particle->vy, particle->vz};
     double r = getNorm(pos);
     double v = getNorm(speed);
-    // if (!isnormal(r))
-    // {
-    //   r = 1e-12;
-    //   pos[0] = r / sqrt(3.);
-    //   pos[1] = r / sqrt(3.);
-    //   pos[2] = r / sqrt(3.);
-    // }
-    // if (!isnormal(v))
-    // {
-    //   v = 1e-12;
-    //   speed[0] = v / sqrt(3.);
-    //   speed[1] = v / sqrt(3.);
-    //   speed[2] = v / sqrt(3.);
-    // }
 
     double dir_[3] = {pos[0] / r, pos[1] / r, pos[2] / r};
 
     double grav = gravitationalForce(r);
-    double df_g[3] = {0, 0, 0};
-    // double *df_g = dynamicalFrictionGas(pos, speed);
+    double *df_g = dynamicalFrictionGas(pos, speed);
     double *df_dm = dynamicalFrictionDM(pos, speed);
     double df[3] = {df_g[0] + df_dm[0], df_g[1] + df_dm[1], df_g[2] + df_dm[2]};
 
     // double df[3] = {0, 0, 0};
     //
     // free(df_g);
-    free(df_dm);
+    // free(df_dm);
 
-    // double m_change = SMBHAccretion(pos, speed);
-    // SMBH_MASS += m_change * SIM_DT;
-    //
-    // double accretion = - v * m_change / SMBH_MASS;
-    //
-    // grav += accretion;
+    double m_change = SMBHAccretion(pos, speed);
+    SMBH_MASS += m_change * SIM_DT;
+
+    double accretion = - v * m_change / SMBH_MASS;
+
+    grav += accretion;
 
     double ax, ay, az;
 
     ax = grav * dir_[0] + df[0];
     ay = grav * dir_[1] + df[1];
     az = grav * dir_[2] + df[2];
-
-
-    // FILE *file;
-    // file = fopen("Data/Results9.79.dat", "a");
-    // fprintf(file, "%e %e %e %e %e %e %e %e\n", sim->t, pos[0], pos[1], pos[2], speed[0], speed[1], speed[2], SMBH_MASS);
-    // fclose(file);
-    /*
-    // dynamicalfriction magnitude
-    grav += getNorm(df);
-    particle->ax = grav * dir_[0];
-    particle->ay = grav * dir_[1];
-    particle->az = grav * dir_[2];
-    */
 
     particle->ax = ax;
     particle->ay = ay;
@@ -346,8 +269,6 @@ void baseCase(struct reb_simulation* sim)
 void setR_vir(double r)
 {
   R_VIR = r;
-  // SOFTENING_SPEED = r * 1e-5;
-  // SOFTENING_RADIUS = r * 1e-5;
   DARK_MATTER_SCALE_RADIUS = R_VIR / CONCENTRATION_PARAMETER;
   DARK_MATTER_DENSITY_0 = darkMatterDensity0(CONCENTRATION_PARAMETER);
   STELLAR_SCALE_LENGTH = 0.01 * R_VIR / (1 + pow(2, 0.5));
@@ -369,4 +290,32 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, int n_p
     struct reb_simulation* sim = setupSimulation(smbh_mass, positions, speeds, baseCase);
     sim->integrator = REB_INTEGRATOR_LEAPFROG;
     runSimulation(sim, n_points, n_saves, filename);
+}
+
+double getRedshift(double t)
+{
+  int i;
+  double z = 0;
+  for(i = 0; i < Z_TIME_DEGREE + 1; i++)
+  {
+    z += Z_TIME_COEFFS[i] * pow(t, Z_TIME_DEGREE - i);
+  }
+  z = exp(z);
+  return z;
+}
+
+double getHubbleParameter(double z)
+{
+  int i;
+  double h = 0;
+  for(i = 0; i < Z_HUBBLE_DEGREE + 1; i++)
+  {
+    h += Z_HUBBLE_COEFFS[i] * pow(z, Z_HUBBLE_DEGREE - i);
+  }
+  return h;
+}
+
+double calculateR_vir(double G, double H)
+{
+  return pow((G * 1e3) / (100 * pow(H, 2)), 1/3.);
 }

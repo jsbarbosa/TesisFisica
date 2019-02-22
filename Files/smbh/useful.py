@@ -33,11 +33,16 @@ def sphericalToCartesian(r, theta, phi):
 def magnitude(matrix):
     return np.linalg.norm(matrix, axis = 1)
 
-def readFile(filename):
-    data = np.genfromtxt(filename)
-    t = data[:, 0]
-    pos = data[:, 1:4]
-    speeds = data[:, 4:7]
-    mass = data[:, -1]
+class Results(object):
+    def __init__(self, filename):
+        data = np.genfromtxt(filename, skip_header = 1)
+        self.times = data[:, 0]
+        self.redshifts = data[:, 1]
+        self.hubbles = data[:, 2]
+        self.r_virs = data[:, 3]
+        self.positions = data[:, 4:7]
+        self.speeds = data[:, 7:10]
+        self.masses = data[:, -1]
 
-    return t, pos, speeds, mass
+        self.distance = magnitude(self.positions)
+        self.speed = magnitude(self.speeds)

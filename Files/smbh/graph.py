@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from smbh.lib import *
 from smbh.useful import magnitude
 
-
 def slicePlot(data, axes = None):
     if axes == None:
         gs = gridspec.GridSpec(2, 2)
@@ -68,37 +67,39 @@ def plotDistance(times, positions, ax = None, figsize = (8, 4.5)):
 
     return fig, ax
 
-def plotProperties(times, positions, speeds, mass, r_vir, figsize = (8, 4.5)):
-    setR_vir(r_vir)
-    accr = SMBHAccretion(positions, speeds)
-    dm = dynamicalFrictionDM(positions, speeds)
+def plotProperties(results, figsize = (8, 4.5)):
 
-    t = times * 1000
-    r = magnitude(positions)
-    v = magnitude(speeds)
-    dm = magnitude(dm)
+    # setR_vir(r_vir)
+    # accr = SMBHAccretion(positions, speeds)
+    # dm = dynamicalFrictionDM(positions, speeds)
+
+    t = results.times * 1000
+    r = results.distance
+    v = results.speed
+    r_vir = results.r_virs
+    # dm = magnitude(dm)
 
     mass = 1e3
     sigma = (0.5 * G * mass / r_vir) ** 0.5
     x = v / (np.sqrt(2) * sigma)
-
-    grav = gravitationalForce(r)
-
-    rho_dm = darkMatterDensity(r)
-    rho_h = stellarDensityHernquist(r)
-    rho_g = gasDensity(r)
-    m_dm = darkMatterMass(r)
-
     erf_ = erf(x)
     exp = 2 * x  * np.exp(-x**2) / np.sqrt(np.pi)
-
     factor = erf_ - exp
+    #
+    # grav = gravitationalForce(r)
+    #
+    # rho_dm = darkMatterDensity(r)
+    # rho_h = stellarDensityHernquist(r)
+    # rho_g = gasDensity(r)
+    # m_dm = darkMatterMass(r)
+    #
+    #
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, figsize = figsize, sharex = True)
 
     ax11 = ax1.twinx()
 
-    ax1.plot(t, r/r_vir, c = 'k')
+    ax1.plot(t, r / r_vir, c = 'k')
     ax11.plot(t, v, c = 'b')
 
     ax2.plot(t, x, label = 'x')
@@ -106,12 +107,12 @@ def plotProperties(times, positions, speeds, mass, r_vir, figsize = (8, 4.5)):
     ax2.plot(t, exp, label = 'exp')
     ax2.plot(t, factor, label = 'factor')
 
-    ax3.plot(t, abs(grav), label = '$a_{grav}$')
+    # ax3.plot(t, abs(grav), label = '$a_{grav}$')
 
-    ax3.plot(t, dm, label = '$a_{DF}$')
-    ax3.plot(t, rho_g, label = r'$\rho_{gas}$')
-    ax3.plot(t, rho_h, label = r'$\rho_h$')
-    ax3.plot(t, rho_dm, label = r'$\rho_{dm}$')
+    # ax3.plot(t, dm, label = '$a_{DF}$')
+    # ax3.plot(t, rho_g, label = r'$\rho_{gas}$')
+    # ax3.plot(t, rho_h, label = r'$\rho_h$')
+    # ax3.plot(t, rho_dm, label = r'$\rho_{dm}$')
 
     ax1.grid()
     ax2.grid()

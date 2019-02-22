@@ -6,13 +6,15 @@
 
 #define HALO_MASS 1e3
 
-#define STELLAR_RATIO 0.65 // complement of gas percent
+#define STELLAR_RATIO 0.0 // complement of gas percent
 
-#define h 0.678
-#define fb 0.158
+#define fb 0.156
 #define G0 0.449849
 // #define G0 4.49849e-06 // kpc gyr m0
-#define H 0.069197
+
+#define Z_TIME_DEGREE 3
+#define Z_HUBBLE_DEGREE 2
+#define T0 0.18004611427373277
 
 void setR_vir(double r);
 void printConstants(void);
@@ -31,7 +33,7 @@ double *dynamicalFrictionDM(double *position, double *speed);
 double *dynamicalFrictionGas(double *position, double *speed);
 
 void sphericalToCartesian(double *r, double *theta, double *phi);
-void printStatus(struct reb_simulation *sim, const char *filename);
+void printStatus(struct reb_simulation *sim, const char *filename, int header);
 
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
                             void (*additional_force)(struct reb_simulation*));
@@ -41,3 +43,7 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, int n_p
 
 // void integrate(struct reb_simulation* sim);
 // double *baseCase(double *position, double *speed);
+
+double getRedshift(double t);
+double getHubbleParameter(double z);
+double calculateR_vir(double G, double H);
