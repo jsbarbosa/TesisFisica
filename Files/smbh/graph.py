@@ -117,14 +117,10 @@ def plotProperties(results, r_vir, figsize = (8, 4.5)):
     ax2.legend(prop={'size': 6})
     ax3.legend(prop={'size': 6})
 
-    ax1.set_ylim(0, 1)
-
     ax1.set_ylabel('$R / R_{vir}$')
     ax11.set_ylabel('Speed (kpc/Gyr)', color = 'b')
     ax3.set_xlabel('Time (Myr)')
     return fig, (ax1, ax2, ax3)
-
-
 
 def make3dPlot(positions):
     fig = plt.figure()

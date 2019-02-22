@@ -27,6 +27,9 @@ n_points = until // dt
 filename = "Results.dat"
 
 smbh.setR_vir(r_vir)
+smbh.setStellarRatio(0.1)
+# smbh.setBaryonicFraction(0)
+
 smbh.printConstants()
 results = smbh.run(POS, SPEEDS, smbh_m, dt, n_points, n_points // 10, filename, delete_file = False)
 

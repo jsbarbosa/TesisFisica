@@ -6,9 +6,7 @@
 
 #define HALO_MASS 1e3
 
-#define STELLAR_RATIO 0.0 // complement of gas percent
 
-#define fb 0.156
 #define G0 0.449849
 // #define G0 4.49849e-06 // kpc gyr m0
 
@@ -47,3 +45,8 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, int n_p
 double getRedshift(double t);
 double getHubbleParameter(double z);
 double calculateR_vir(double G, double H);
+
+void setBaryonicFraction(double fb);
+void setStellarRatio(double ratio);
+void setStellarTotalMass(void);
+void setGasDensity(void);

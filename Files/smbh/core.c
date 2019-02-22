@@ -5,15 +5,20 @@
 #include "headers.h"
 
 volatile double Z = 20;
-volatile double R_VIR = 0; // fixed at main
-volatile double SMBH_MASS = 1;
 
-volatile double DARK_MATTER_TOTAL_MASS = (1 - fb) * HALO_MASS;
-volatile double STELLAR_TOTAL_MASS = STELLAR_RATIO * fb * HALO_MASS;
+volatile double FB = 0.156;
+volatile double STELLAR_RATIO = 0.0; // complement of gas percent
+
+/* FIXED AT MAIN */
+volatile double R_VIR = 0;
+volatile double SMBH_MASS = 0;
+
+volatile double DARK_MATTER_TOTAL_MASS = 0;
+volatile double STELLAR_TOTAL_MASS = 0;
 volatile double STELLAR_SCALE_LENGTH = 0;
 
 volatile double SOFTENING_SPEED = 0;//1e-8;
-volatile double SOFTENING_RADIUS = 1e-8;
+volatile double SOFTENING_RADIUS = 1e-7;
 
 volatile double DARK_MATTER_SCALE_RADIUS = 0; // fixed at main
 volatile double DARK_MATTER_DENSITY_0 = 0; // fixed at main
@@ -24,6 +29,32 @@ volatile double SIM_DT;
 double const Z_TIME_COEFFS[Z_TIME_DEGREE + 1] = {-2.22289277, 5.13671586, -4.92900515, 3.71708597};
 double const Z_HUBBLE_COEFFS[Z_HUBBLE_DEGREE + 1] = {0.0039385, 0.11201693, -0.11131262};
 
+void setBaryonicFraction(double fb)
+{
+  FB = fb;
+  DARK_MATTER_TOTAL_MASS = (1 - FB) * HALO_MASS;
+  DARK_MATTER_DENSITY_0 = darkMatterDensity0(CONCENTRATION_PARAMETER);
+  setStellarTotalMass();
+  setGasDensity();
+}
+
+void setStellarRatio(double ratio)
+{
+  STELLAR_RATIO = ratio;
+  setStellarTotalMass();
+  setGasDensity();
+}
+
+void setStellarTotalMass(void)
+{
+  STELLAR_TOTAL_MASS = STELLAR_RATIO * FB * HALO_MASS;
+}
+
+void setGasDensity(void)
+{
+  GAS_DENSITY = (1 - STELLAR_RATIO) * FB * HALO_MASS / (4 * PI * R_VIR);
+}
+
 double darkMatterDensity0(double c)
 {
   double factor = log(1 + c) - c / (1 + c);
@@ -32,8 +63,8 @@ double darkMatterDensity0(double c)
 
 double darkMatterVelocityDispersion(double r)
 {
-  double m = darkMatterMass(r);
-  // double m = DARK_MATTER_TOTAL_MASS;
+  // double m = darkMatterMass(r);
+  double m = DARK_MATTER_TOTAL_MASS;
   return sqrt(0.5 * G0 * m / R_VIR);
 }
 
@@ -267,18 +298,34 @@ void baseCase(struct reb_simulation* sim)
 void setR_vir(double r)
 {
   R_VIR = r;
+
+  setBaryonicFraction(FB);
   DARK_MATTER_SCALE_RADIUS = R_VIR / CONCENTRATION_PARAMETER;
   DARK_MATTER_DENSITY_0 = darkMatterDensity0(CONCENTRATION_PARAMETER);
   STELLAR_SCALE_LENGTH = 0.01 * R_VIR / (1 + pow(2, 0.5));
-  GAS_DENSITY = (1 - STELLAR_RATIO) * fb * HALO_MASS / (4 * PI * R_VIR);
+
+  setGasDensity();
 }
 
 void printConstants(void)
 {
   printf("R_VIR: %f\n", R_VIR);
+
+  printf("\n===== FRACTIONS =====\n");
+  printf("FB: %f\n", FB);
+  printf("STELLAR_RATIO: %f\n", STELLAR_RATIO);
+
+  printf("\n===== SCALES =====\n");
   printf("DARK_MATTER_SCALE_RADIUS: %f\n", DARK_MATTER_SCALE_RADIUS);
-  printf("DARK_MATTER_DENSITY_0: %f\n", DARK_MATTER_DENSITY_0);
   printf("STELLAR_SCALE_LENGTH: %f\n", STELLAR_SCALE_LENGTH);
+
+  printf("\n===== MASSES =====\n");
+  printf("DARK_MATTER_TOTAL_MASS: %f\n", DARK_MATTER_TOTAL_MASS);
+  printf("STELLAR_TOTAL_MASS: %f\n", STELLAR_TOTAL_MASS);
+
+
+  printf("\n===== DENSITIES =====\n");
+  printf("DARK_MATTER_DENSITY_0: %f\n", DARK_MATTER_DENSITY_0);
   printf("GAS_DENSITY: %f\n", GAS_DENSITY);
 }
 

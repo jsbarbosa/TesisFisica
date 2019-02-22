@@ -57,7 +57,9 @@ func_info = [('setR_vir', None, c_double),
             ('getRedshift', c_double, c_double),
             ('getHubbleParameter', c_double, c_double),
             ('calculateR_vir', c_double, (c_double, c_double)),
-            ('dampingFactor', c_double, ((c_double, c_double)))]
+            ('dampingFactor', c_double, (c_double, c_double)),
+            ('setBaryonicFraction', None, c_double),
+            ('setStellarRatio', None, c_double)]
 
 for func in func_info:
     name = func[0]
