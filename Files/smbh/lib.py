@@ -35,11 +35,9 @@ def function(func, *args):
     try:
         return func(*args)
     except ArgumentError:
-        if len(args) == 1:
-            ls = [func(arg) for arg in args[0]]
-            return np.array(ls)
-        else:
-            raise('Put argument one by one')
+        values = np.array(args).T
+        ls = [func(*row) for row in values]
+        return np.array(ls)
 
 func_info = [('setR_vir', None, c_double),
             ('printConstants', None, None),
@@ -53,12 +51,13 @@ func_info = [('setR_vir', None, c_double),
             ('stellarMassHernquist', c_double, c_double),
             ('stellarDensityHernquist', c_double, c_double),
             ('SMBHAccretion', c_double, (POINTER(c_double), POINTER(c_double))),
-            ('dynamicalFrictionDM', POINTER(c_double), (POINTER(c_double), POINTER(c_double))),
-            ('dynamicalFrictionGas', POINTER(c_double), (POINTER(c_double), POINTER(c_double))),
+            ('dynamicalFrictionDM', c_double, (c_double, c_double)),
+            ('dynamicalFrictionGas', c_double, (c_double, c_double)),
             ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_int, c_char_p)),
             ('getRedshift', c_double, c_double),
             ('getHubbleParameter', c_double, c_double),
-            ('calculateR_vir', c_double, (c_double, c_double))]
+            ('calculateR_vir', c_double, (c_double, c_double)),
+            ('dampingFactor', c_double, ((c_double, c_double)))]
 
 for func in func_info:
     name = func[0]
@@ -98,23 +97,23 @@ def SMBHAccretion(pos, speeds):
             return pointerFunction(lib.SMBHAccretion, pos, speeds)
     return pointerFunction(lib.SMBHAccretion, pos, speeds)
 
-def dynamicalFrictionDM(pos, speeds):
-    if type(pos) is np.ndarray:
-        if len(pos.shape) > 1:
-            ans = []
-            for i in range(len(pos)):
-                pointer = pointerFunction(lib.dynamicalFrictionDM, pos[i], speeds[i])
-                values = pointerReturn(pointer)
-                ans.append(values)
-            return np.array(ans)
-        else:
-            return pointerReturn(pointerFunction(lib.dynamicalFrictionDM, pos, speeds))
-    return pointerReturn(pointerFunction(lib.dynamicalFrictionDM, pos, speeds))
-
-def dynamicalFrictionGas(pos, speeds):
-    if type(pos) is np.ndarray:
-        if len(pos.shape) > 1:
-            return np.array([pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos[i], speeds[i])) for i in range(len(pos))])
-        else:
-            return pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos, speeds))
-    return pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos, speeds))
+# def dynamicalFrictionDM(pos, speeds):
+#     if type(pos) is np.ndarray:
+#         if len(pos.shape) > 1:
+#             ans = []
+#             for i in range(len(pos)):
+#                 pointer = pointerFunction(lib.dynamicalFrictionDM, pos[i], speeds[i])
+#                 values = pointerReturn(pointer)
+#                 ans.append(values)
+#             return np.array(ans)
+#         else:
+#             return pointerReturn(pointerFunction(lib.dynamicalFrictionDM, pos, speeds))
+#     return pointerReturn(pointerFunction(lib.dynamicalFrictionDM, pos, speeds))
+#
+# def dynamicalFrictionGas(pos, speeds):
+#     if type(pos) is np.ndarray:
+#         if len(pos.shape) > 1:
+#             return np.array([pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos[i], speeds[i])) for i in range(len(pos))])
+#         else:
+#             return pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos, speeds))
+#     return pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos, speeds))

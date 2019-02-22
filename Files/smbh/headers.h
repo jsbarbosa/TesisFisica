@@ -29,8 +29,8 @@ double baryonicMassHernquist(double r);
 double baryonicDensityHernquist(double r);
 void baseCase(struct reb_simulation* sim);
 double SMBHAccretion(double *position, double *speed);
-double *dynamicalFrictionDM(double *position, double *speed);
-double *dynamicalFrictionGas(double *position, double *speed);
+double dynamicalFrictionDM(double r, double v);
+double dynamicalFrictionGas(double r, double v);
 
 void sphericalToCartesian(double *r, double *theta, double *phi);
 void printStatus(struct reb_simulation *sim, const char *filename, int header);

@@ -14,15 +14,15 @@ H = cosmo.H(z).value
 H = smbh.HubbleToNaturalUnits(H)
 r_vir = smbh.calculateR_vir(smbh.G, H)
 
-r0 = 1e-6
-v0 = 100 * 1.023 # to kpc / gyr
+r0 = 0
+v0 = 70 * 1.023 # to kpc / gyr
 
 POS = smbh.sphericalToCartesian(r0, np.pi / 4, np.pi / 4)
 SPEEDS = smbh.sphericalToCartesian(v0, np.pi / 4, np.pi / 4)
 
 dt = 1e-6
 smbh_m = 1
-until = 0.165 # gyr
+until = 0.15 # gyr
 n_points = until // dt
 filename = "Results.dat"
 
@@ -31,7 +31,7 @@ smbh.printConstants()
 results = smbh.run(POS, SPEEDS, smbh_m, dt, n_points, n_points // 10, filename, delete_file = False)
 
 # t, pos, speeds, masses = smbh.readFile(filename%r_vir)
-smbh.plotProperties(results)
+smbh.plotProperties(results, r_vir)
 plt.show()
 #
 # r = smbh.magnitude(pos)

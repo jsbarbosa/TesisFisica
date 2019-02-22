@@ -67,33 +67,28 @@ def plotDistance(times, positions, ax = None, figsize = (8, 4.5)):
 
     return fig, ax
 
-def plotProperties(results, figsize = (8, 4.5)):
-
-    # setR_vir(r_vir)
-    # accr = SMBHAccretion(positions, speeds)
-    # dm = dynamicalFrictionDM(positions, speeds)
+def plotProperties(results, r_vir, figsize = (8, 4.5)):
+    setR_vir(r_vir)
+    pos = results.positions
+    speeds = results.speeds
+    accr = SMBHAccretion(pos, speeds)
 
     t = results.times * 1000
     r = results.distance
     v = results.speed
-    r_vir = results.r_virs
-    # dm = magnitude(dm)
+
+    dm = dynamicalFrictionDM(r, v)
 
     mass = 1e3
     sigma = (0.5 * G * mass / r_vir) ** 0.5
     x = v / (np.sqrt(2) * sigma)
-    erf_ = erf(x)
-    exp = 2 * x  * np.exp(-x**2) / np.sqrt(np.pi)
-    factor = erf_ - exp
-    #
-    # grav = gravitationalForce(r)
-    #
-    # rho_dm = darkMatterDensity(r)
-    # rho_h = stellarDensityHernquist(r)
-    # rho_g = gasDensity(r)
-    # m_dm = darkMatterMass(r)
-    #
-    #
+    factor = dampingFactor(r, v)
+
+    grav = gravitationalForce(r)
+    rho_dm = darkMatterDensity(r)
+    rho_h = stellarDensityHernquist(r)
+    rho_g = gasDensity(r)
+    m_dm = darkMatterMass(r)
 
     fig, (ax1, ax2, ax3) = plt.subplots(3, figsize = figsize, sharex = True)
 
@@ -103,16 +98,15 @@ def plotProperties(results, figsize = (8, 4.5)):
     ax11.plot(t, v, c = 'b')
 
     ax2.plot(t, x, label = 'x')
-    ax2.plot(t, erf_, label = 'erf')
-    ax2.plot(t, exp, label = 'exp')
+    # ax2.plot(t, erf_, label = 'erf')
+    # ax2.plot(t, exp, label = 'exp')
     ax2.plot(t, factor, label = 'factor')
 
-    # ax3.plot(t, abs(grav), label = '$a_{grav}$')
-
-    # ax3.plot(t, dm, label = '$a_{DF}$')
-    # ax3.plot(t, rho_g, label = r'$\rho_{gas}$')
-    # ax3.plot(t, rho_h, label = r'$\rho_h$')
-    # ax3.plot(t, rho_dm, label = r'$\rho_{dm}$')
+    ax3.plot(t, abs(grav), label = '$a_{grav}$')
+    ax3.plot(t, dm, label = '$a_{DF}$')
+    ax3.plot(t, rho_g, label = r'$\rho_{gas}$')
+    ax3.plot(t, rho_h, label = r'$\rho_h$')
+    ax3.plot(t, rho_dm, label = r'$\rho_{dm}$')
 
     ax1.grid()
     ax2.grid()
@@ -120,8 +114,8 @@ def plotProperties(results, figsize = (8, 4.5)):
 
     ax3.set_yscale('log')
 
-    ax2.legend()
-    ax3.legend()
+    ax2.legend(prop={'size': 6})
+    ax3.legend(prop={'size': 6})
 
     ax1.set_ylim(0, 1)
 

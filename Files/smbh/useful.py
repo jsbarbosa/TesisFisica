@@ -38,10 +38,10 @@ class Results(object):
         data = np.genfromtxt(filename, skip_header = 1)
         self.times = data[:, 0]
         self.redshifts = data[:, 1]
-        self.hubbles = data[:, 2]
-        self.r_virs = data[:, 3]
-        self.positions = data[:, 4:7]
-        self.speeds = data[:, 7:10]
+        # self.hubbles = data[:, 2]
+        # self.r_virs = data[:, 3]
+        self.positions = data[:, 2:5]
+        self.speeds = data[:, 5:8]
         self.masses = data[:, -1]
 
         self.distance = magnitude(self.positions)
