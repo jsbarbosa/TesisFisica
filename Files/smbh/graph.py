@@ -1,8 +1,13 @@
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 from smbh.lib import *
 from smbh.useful import magnitude
+
+mpl.rcParams['grid.color'] = 'k'
+mpl.rcParams['grid.linestyle'] = ':'
+mpl.rcParams['grid.linewidth'] = 0.5
 
 def slicePlot(data, axes = None):
     if axes == None:
@@ -67,7 +72,7 @@ def plotDistance(times, positions, ax = None, figsize = (8, 4.5)):
 
     return fig, ax
 
-def plotProperties(results, r_vir, figsize = (8, 4.5)):
+def plotProperties(results, r_vir, figsize = (6, 8.5)):
     setR_vir(r_vir)
     pos = results.positions
     speeds = results.speeds
@@ -76,12 +81,10 @@ def plotProperties(results, r_vir, figsize = (8, 4.5)):
     t = results.times * 1000
     r = results.distance
     v = results.speed
+    masses = results.masses
 
     dm = dynamicalFrictionDM(r, v)
-
-    mass = 1e3
-    sigma = (0.5 * G * mass / r_vir) ** 0.5
-    x = v / (np.sqrt(2) * sigma)
+    dg = dynamicalFrictionGas(r, v)
     factor = dampingFactor(r, v)
 
     grav = gravitationalForce(r)
@@ -97,13 +100,11 @@ def plotProperties(results, r_vir, figsize = (8, 4.5)):
     ax1.plot(t, r / r_vir, c = 'k')
     ax11.plot(t, v, c = 'b')
 
-    ax2.plot(t, x, label = 'x')
-    # ax2.plot(t, erf_, label = 'erf')
-    # ax2.plot(t, exp, label = 'exp')
-    ax2.plot(t, factor, label = 'factor')
+    ax2.plot(t, masses)
 
     ax3.plot(t, abs(grav), label = '$a_{grav}$')
-    ax3.plot(t, dm, label = '$a_{DF}$')
+    ax3.plot(t, abs(dm), label = '$a_{DF}$')
+    ax3.plot(t, abs(dg), label = '$a_{gas}$')
     ax3.plot(t, rho_g, label = r'$\rho_{gas}$')
     ax3.plot(t, rho_h, label = r'$\rho_h$')
     ax3.plot(t, rho_dm, label = r'$\rho_{dm}$')
@@ -114,12 +115,18 @@ def plotProperties(results, r_vir, figsize = (8, 4.5)):
 
     ax3.set_yscale('log')
 
-    ax2.legend(prop={'size': 6})
-    ax3.legend(prop={'size': 6})
+    # ax3.legend(prop={'size': 8})
+    ax3.legend(loc = 'center', bbox_to_anchor = (1.15, 0.5),
+          ncol = 1, fancybox = True, shadow = True, prop = {'size': 12})
 
     ax1.set_ylabel('$R / R_{vir}$')
     ax11.set_ylabel('Speed (kpc/Gyr)', color = 'b')
+    ax11.tick_params('y', colors='b')
+
+    ax2.set_ylabel(r'$M_\bullet$')
     ax3.set_xlabel('Time (Myr)')
+
+    fig.tight_layout()
     return fig, (ax1, ax2, ax3)
 
 def make3dPlot(positions):

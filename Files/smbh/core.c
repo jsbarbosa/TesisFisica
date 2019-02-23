@@ -61,16 +61,15 @@ double darkMatterDensity0(double c)
   return DARK_MATTER_TOTAL_MASS / (4 * PI * pow(DARK_MATTER_SCALE_RADIUS, 3) * factor);
 }
 
-double darkMatterVelocityDispersion(double r)
+double darkMatterVelocityDispersion(void)
 {
-  // double m = darkMatterMass(r);
   double m = DARK_MATTER_TOTAL_MASS;
   return sqrt(0.5 * G0 * m / R_VIR);
 }
 
 double dampingFactor(double r, double v)
 {
-  double x = v / (sqrt(2) * darkMatterVelocityDispersion(r));
+  double x = v / (sqrt(2) * darkMatterVelocityDispersion());
   x = erf(x) - (2 / sqrt(PI)) * x * exp(-x * x);
   return x;
 }

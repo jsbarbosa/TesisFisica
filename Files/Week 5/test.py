@@ -33,7 +33,7 @@ smbh.setStellarRatio(0.1)
 smbh.printConstants()
 results = smbh.run(POS, SPEEDS, smbh_m, dt, n_points, n_points // 10, filename, delete_file = False)
 
-# t, pos, speeds, masses = smbh.readFile(filename%r_vir)
+# results = smbh.Results(filename)
 smbh.plotProperties(results, r_vir)
 plt.show()
 #

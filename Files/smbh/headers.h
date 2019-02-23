@@ -45,7 +45,7 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, int n_p
 double getRedshift(double t);
 double getHubbleParameter(double z);
 double calculateR_vir(double G, double H);
-
+double darkMatterVelocityDispersion(void);
 void setBaryonicFraction(double fb);
 void setStellarRatio(double ratio);
 void setStellarTotalMass(void);
