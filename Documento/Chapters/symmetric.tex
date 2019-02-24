@@ -11,18 +11,36 @@
 %\newcommand{\option}[1]{\texttt{\itshape#1}}
 
 %----------------------------------------------------------------------------------------
-\chapter{Base case}
-	\section{Mass distributions}
+\chapter{Spherical study}
+	\section{Setup}
 		The host galaxy has two mass distributions that are superimposed, one for dark matter and the other one for all the luminous or baryonic matter.
 		\begin{figure}[h]
 			\centering
-			\includegraphics[width=0.7\linewidth]{Figures/NGC4414_modified}
-			\caption{NGC4414 galaxy \todo{cite}}
+			\includegraphics[width=0.8\linewidth]{Figures/NGC4414_modified}
+			\caption{NGC4414 galaxy as seen by the Hubble telescope.}
 		\end{figure}
 	
-		The dark matter halo used on the host, follows a NFW (Navarro–Frenk–White) profile, while the baryonic mass distribution of the galaxy depends on the redshift $z$. For high redshifts a gaseous disk with constant density followed by a density dependance with $r^{-2.2}$ is used, while for $z \approx 0$ a Hernquist model is applied \cite{choksi2017recoiling}.
+		The dark matter halo used, follows a NFW (Navarro–Frenk–White) profile, baryonic matter is divided in stars and gas, for gas a power law profile with $r^{-2.2}$ is used, while for stars a Hernquist model is applied \cite{tanaka2009assembly, choksi2017recoiling}. The sum of all these components accounts for the total mass of the host ($M_h$), which remains constant through a simulation. The amount of baryonic matter is given by the baryonic fraction parameter ($f_b$), and the mass of stars by the stellar fraction parameter ($f_s$). Cumulative masses at the virial radius are defined as follows:
+		\begin{equation}
+			M_\text{DM}(R_\text{vir}) = (1 - f_b)M_h
+		\end{equation}
+		\begin{equation}
+			M_\text{stars}(R_\text{vir}) = f_sf_bM_h
+		\end{equation}
+		\begin{equation}
+			M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_h
+		\end{equation}
 		
-	\section{Dark matter halo}
+	\subsection{Virial radius}
+		Since all of the density profiles are spherically symmetrical, it follows from \autoref{eq: R_vir_def} that:  
+		\begin{equation}
+			\dfrac{M_h}{4/3\pi R_\text{vir}^3} = 75\dfrac{H(t)^2}{\pi G}
+		\end{equation}
+		\begin{equation}
+			R_\text{vir} = \left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
+		\end{equation}
+	
+	\subsection{Dark matter halo}
 		For a dark matter halo following a NFW profile, the density at some distance $r$ is given by the formula:
 		\begin{equation}\label{eq: dmdensity}
 			\rho_\text{DM}(r) = \dfrac{\rho_0^\text{DM}}{\frac{r}{R_s}\left(1 + \frac{r}{R_s}\right)^2}
@@ -33,40 +51,32 @@
 			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0^\text{DM}R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
 		\end{equation}
 		
+		
+		
 %		\begin{figure}[h]
 %			\centering
 %			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/NFW_profile"}
 %			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
 %		\end{figure}
 		
-		Since the mass of dark matter of a single galaxy diverges for $r \rightarrow \infty$ there is a radius called $R_\text{vir}$, at which the density of the NFW profile is 200 times the critical density $\rho_\text{crit}$, the minimum density for an expanding universe \todo{cite}.
-		\begin{equation}
-			R_\text{vir} = 200 \rho_\text{crit} = 200 \left(\dfrac{3H^2}{8\pi G}\right) = 0.2541 \text{ kpc}
-		\end{equation}
-		
 		Considering a concentration parameter $c(M_h, z)$ of dark matter in the halo, the following relation holds for the viral radius $R_\text{vir}$ and the scale radius $R_s$:
-		\begin{equation}\label{eq: viralRadius}
+		\begin{equation}\label{eq: virialConcentration}
 			R_\text{vir} = c(M_h, z)R_s
 		\end{equation}
 		
 		Where the concentration parameter, dependence with the dark matter halo mass ($M_h$) and redshift is given by: 
 		\begin{equation}
-		c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)}
+			c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)}
 		\end{equation}
 		
 		where $\alpha(z)$ and $c_0(z)$ were fitted using simulation data to the following functions \cite{choksi2017recoiling}:
 		\begin{equation}
-		c_0(z) = \dfrac{4.58}{2}\left[\left(\dfrac{1 + z}{2.24}\right)^{0.107} + \left(\dfrac{1 + z}{2.24}\right)^{-1.29}\right]
+			c_0(z) = \dfrac{4.58}{2}\left[\left(\dfrac{1 + z}{2.24}\right)^{0.107} + \left(\dfrac{1 + z}{2.24}\right)^{-1.29}\right]
 		\end{equation}
 		
 		\begin{equation}
-		\alpha(z) = -0.0965 \exp\left(-\dfrac{z}{4.06}\right)
+			\alpha(z) = -0.0965 \exp\left(-\dfrac{z}{4.06}\right)
 		\end{equation}
-		
-%		The relation of $R_\text{vir}$ with the concentration parameter is particularly useful to the simulation. As the system evolves on time, so does the viral radius due to the existing relation between time and redshift \cite{carmeli2006cosmic}.
-%		\begin{equation}\label{eq: t_redshift}
-%			t = \dfrac{2H^{-1}}{1 + (1 + z) ^ 2}
-%		\end{equation}	
 	
 		\begin{figure}[h]
 			\centering
@@ -75,93 +85,80 @@
 			\label{fig: dmconcentration}
 		\end{figure}
 	
-		For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}. Because of \autoref{eq: viralRadius} the value of $R_\text{vir}$ will increase as well, this equation can be used to obtain the value of $\rho_0^\text{DM}$ by evaluating \autoref{eq: cumulativeDM} at $R_\text{vir}$.
-		\begin{equation}
-			M_h \equiv M_\text{DM}(R_\text{vir}) = 4\pi\rho_0^\text{DM}R_s^3 \left[\ln\left(\dfrac{R_s + c(M_h, z)R_s}{R_s}\right) - \dfrac{c(M_h, z)R_s}{R_s + c(M_h, z)R_s}\right]
+		For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}, nevertheless for high redshifts concentration is approximately constant. By using \autoref{eq: virialConcentration} one can obtain the value of $\rho_0^\text{DM}$ by evaluating \autoref{eq: cumulativeDM} at $R_\text{vir}$.
+		\begin{equation}\label{eq: dmM_virial}
+			M_\text{DM}(R_\text{vir}) = 4\pi\rho_0^\text{DM}R_s^3 \left[\ln\left(\dfrac{R_s + c(M_h, z)R_s}{R_s}\right) - \dfrac{c(M_h, z)R_s}{R_s + c(M_h, z)R_s}\right] = (1 - f_b)M_h
 		\end{equation}
-		\begin{equation}
-			\rho_0^\text{DM} = \dfrac{M_h}{4\pi R_s^3 \left[\ln\left(1 + c(M_h, z)\right) - \dfrac{c(M_h, z)}{1 + c(M_h, z)}\right]}
+		\begin{equation}\label{eq: rho0dm}
+			\rho_0^\text{DM} = \dfrac{(1 - f_b)M_h}{4\pi \left(\dfrac{R_\text{vir}}{c(M_h, z)}\right)^3 \left[\ln\left(1 + c(M_h, z)\right) - \dfrac{c(M_h, z)}{1 + c(M_h, z)}\right]}
 		\end{equation}
-		
-		By considering a fixed concentration parameter $c(M_h, z) \equiv 4$, one obtains $R_s = 0.0635$ kpc, and $\rho_0^\text{DM} = 383457$ $10^5$\sm kpc$^{-3}$.
 	
-		\subsection{Baryonic profile}
-			For high redshift the baryonic profile resembles that of a gaseous galaxy with a constant density for distances lower than $r_0 = 1\times10^{-3}$ kpc, followed by an $r^{-2.2}$ profile for greater distances as in \autoref{fig: baryonicprofilehigh}.
-			
+		\subsection{Stellar profile}
+			Stellar density is modeled as a Hernquist profile with half-mass radius $R_{1/2} = 0.01 R_\text{vir}$, as in \citeauthor{choksi2017recoiling}. Density for a Hernquist profile is given by \cite{hernquist1990analytical}:
 			\begin{equation}
-				\rho_B(r) = \left \{
-				\begin{matrix}
-				\rho_0^B & \text{if $r < r_0$}\\
-				\rho_0^B\left(\dfrac{r_0}{r}\right)^{2.2} & \text{if $r \geq r_0$}\\
-				\end{matrix}
+				\rho_s(r) = \dfrac{f_sf_bM_h \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3} \qquad \text{$\mathcal{R}_s$ is known as scale length}
+			\end{equation}
+			
+			Integrating from $0$ to $r$ yields:
+			\begin{equation}
+				M_s(r) = \dfrac{f_sf_bM_h r^2}{(r + \mathcal{R}_s)^2}
+			\end{equation}
+			
+			The half-mass radius, as the name implies, is the distance at which the cumulative mass is half the total mass \cite{hernquist1990analytical}.
+			\begin{equation}
+				R_{1/2} = \left(1 + \sqrt{2}\right)\mathcal{R}_s = 0.01\left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
+			\end{equation}
+			
+			From which the scale length can be set as a function of the time when the kick occurs, and the mass of the host, as:
+			\begin{equation}
+				\mathcal{R}_s = \dfrac{0.01}{\left(1 + \sqrt{2}\right)}\left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3} \approx 6.835\times 10^{-4}\left({\dfrac{M_h}{H(t)^2}}\right)^{1/3}
+			\end{equation}
+	
+		\subsection{Gas profile}
+			For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^n = r^{-2.2}$. The complete density is described as follows:
+			\begin{equation}
+				\rho_\text{gas}(r) = \left \{
+					\begin{matrix}
+					\rho_0^\text{gas} & \text{if $r < r_0$}\\
+					\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{-n} & \text{if $r \geq r_0$}\\
+					\end{matrix}
 				\right.
 			\end{equation}
 			
+			The cumulative mass is found by integrating the density in spherical coordinates, which for $n \neq -3$ is equal to:
 			\begin{equation}
-				M_B(r) = \left \{
-				\begin{matrix}
-				\dfrac{4}{3}\pi\rho_0^Br^3 & \text{if $r < r_0$}\\
-				4\pi\rho_0^Br_0^{2.2} \left(r^{0.8} - r_0^{0.8}\right) + \dfrac{4}{3}\pi\rho_0^Br_0^3 & \text{if $r \geq r_0$} \\
-				\end{matrix}
+				M_\text{gas}(r) = \left \{
+					\begin{matrix}
+					\dfrac{4}{3}\pi\rho_0^\text{gas}r^3 & \text{if $r < r_0$} \\
+					4\pi\rho_0^\text{gas}\left(\dfrac{\left(r^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}}  + \dfrac{r_0^3}{3}\right) & \text{if $r \geq r_0$} \\
+					\end{matrix}
 				\right.
 			\end{equation}
 			
-			\pagebreak
-		
+			The value of the constant $\rho_0^\text{gas}$ is found using a similar process as in \autoref{eq: dmM_virial} and \ref{eq: rho0dm}.
+			\begin{equation}
+				M_\text{gas}(R_\text{vir}) = 4\pi\rho_0^\text{gas}\left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right) = (1 - f_s) f_bM_h
+			\end{equation}
+			\begin{equation}
+				\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right)} \qquad \text{ if $R_\text{vir} > r_0$}
+			\end{equation}
+			
 			\begin{figure}[h]
 				\centering
 				\begin{subfigure}[b]{0.49\textwidth}
-					\includegraphics[width=\textwidth]{"../Files/Week 3/gaseous"}
-					\caption{Constant density profile for $r < 1$ pc, followed by a fall as $r^{-2.2}$ for $z \gg 0$.}
+					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs01"}
+					\caption{Stellar fraction $f_s = 0.01$.}
 					\label{fig: baryonicprofilehigh}
 				\end{subfigure}
 				~ 
 				\begin{subfigure}[b]{0.49\textwidth}
-					\includegraphics[width=\textwidth]{"../Files/Week 3/hernquist"}
-					\caption{Hernquist profile for mass distribution at $z \approx 0$.}
-						\label{fig: baryonicprofilelow}
+					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs1"}
+					\caption{Stellar fraction $f_s = 0.1$.}
+					\label{fig: baryonicprofilelow}
 				\end{subfigure}
 				\caption{Baryonic mass distributions for $z \gg 0$ and $z \approx 0$.}
 				\label{fig: baryonicprofile}
 			\end{figure}
-
-		At low redshifts, stars have already been formed, and the baryonic profile is modeled as a Hernquist profile with half-mass radius $R_{1/2} = 0.01 R_\text{vir}$, as in \autoref{fig: baryonicprofilelow}. The half-mass radius, as the name implies, is the distance at which the cumulative mass is half the total mass \cite{hernquist1990analytical}.
-		\begin{equation}
-			\rho_B(r) = \dfrac{M_T^B \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3}
-		\end{equation}
-		\begin{equation}
-			M_B(r) = \dfrac{M_T^B r^2}{(r + \mathcal{R}_s)^2}
-		\end{equation}
-		\begin{equation}
-			R_{1/2} = \left(1 + \sqrt{2}\right)\mathcal{R}_s
-		\end{equation}
-		
-		
-		 
-		 finally, the gas density is taken as a power-law profile, $\rho_\text{gas}=\rho_0^\text{gas}r^{-n}$, were $1 \leq n \leq 3$ \cite{choksi2017recoiling}.
-	
-		\begin{table}[h]
-			\centering
-			\caption{Constants used in the simulation}
-			\begin{tabular}{c|c}
-				\hline
-				\textbf{Constant} & \textbf{Value (unit)} \\
-				\hline
-				$n$ & 2\\
-				$h$ & 0.678 \\
-				$\Omega_M$ & 0.309 \\
-				$\ln\Lambda$ & 2.3 \\
-				$M_h$ & $1\times10^3$ ($10^5$\sm) \\
-				$M_\bullet$ & 1 ($10^5$\sm) \\
-				$M_T^B$ & 158 ($10^5$\sm) \\
-				$R_s$ & 1.3 (kpc) \\
-				$\mathcal{R}_s$ & 0.14 (kpc) \\
-				$\rho_0^\text{DM}$ & 1700 ($10^5$\sm kpc$^{-3}$)\\
-				$\rho_0^\text{gas}$ & 0.01 ($10^5$\sm kpc$^{-3}$)\\
-				$f_b$ & baryon fraction $\Omega_b / \Omega_M = f_\text{gas} + f_\text{gal}$ \\
-				\hline
-			\end{tabular}
-		\end{table}
 	
 	\begin{figure}[h]
 		\centering
@@ -173,16 +170,3 @@
 		\includegraphics[width=0.7\textwidth]{"../Files/Week 5/properties_s02v70"}
 	\end{figure}
 	
-%\section{Metodología}
-%	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
-%	\begin{equation}
-%		\ddot{\vec{x}} = \left(-\dfrac{GM_h(x)}{x^2} + a_{DF}-\ddot{x}\dfrac{\dot{M_\bullet}}{M_\bullet} -qH^2x\right)\hat{x}
-%	\end{equation}
-	
-%	donde $M_h$ corresponde con la masa del halo de la galaxia, $a_{DF}$ con la aceleraci\'on debida a la fricci\'on din\'amica, la cual se modela usando la f\'ormula de Chandrasekhar para la materia oscura y el modelo h\'ibrido descrito por Choksi para la materia visible \cite{choksi2017recoiling}. El tercer t\'ermino tiene en cuenta la acreci\'on de masa por el agujero negro, y el \'ultimo la aceleraci\'on cosmol\'ogica.
-%	
-%	Dicha ecuaci\'on ser\'a integrada usando un esquema \textit{Leapfrog}, el cual se encuentra implementado en la librer\'ia REBOUND. Usando como condiciones iniciales $\vec{x} = (0,0,0)$ km y $\dot{\vec{x}} = (70, 0, 0)$ km$s^{-1}$, e intervalos de integraci\'on temporales de 1000 años, se busca reproducir los comportamientos observados por Choksi y colaboradores, para comprobar que el algoritmo implementado funcione de manera adecuada.
-%	
-%	Posteriormente ser\'an introducidas las modificaciones al potencial cambiando $M_h(x)$ por $M_h(x, y, z)$, donde los pesos de cada dimensi\'on ser\'an determinados de manera aleatoria para cada simulaci\'on. Al mismo tiempo se asignar\'an velocidades iniciales aleatorias, logar\'itmicamente espaciadas en el rango de 0 kms$^{-1}$ hasta 3000 kms$^{-1}$, sin ninguna direcci\'on preferente. Para cada sistema generado se realizar\'a la evoluci\'on en el tiempo usando integradores num\'ericos distintos. El tiempo aproximado de cada simulaci\'on se encuentra en el orden de 100$^6$ a\~nos, por lo cual ser\'an necesarias cerca de cien mil interaciones por cada conjunto de par\'ametros escogidos.
-%	
-%	Las simulaciones ser\'an realizadas en el cluster de la universidad (HPC) con el fin de paralelizar procesos, minimizando el tiempo de simulación y de esta forma lograr la mayor cantidad de simulaciones posibles, con el fin de obtener una cantidad significativa de datos de validación. A partir de estos, se obtendr\'an las distribuciones de probabilidad de los tiempos de retorno, y la cuantificaci\'on de la caoticidad de la trayectoria.

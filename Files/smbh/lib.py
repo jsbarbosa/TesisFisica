@@ -7,8 +7,9 @@ from ctypes import cdll, CDLL, c_double, POINTER, c_int, c_char_p, pointer, Argu
 
 from .useful import Results
 
-dir = os.path.dirname(__file__)
+R_VIR_z20 = 0.6899734690284971
 
+dir = os.path.dirname(__file__)
 os.environ['PATH'] = dir + ';' + os.environ['PATH']
 path = os.path.abspath(os.path.join(dir, "rebound.so"))
 
@@ -32,6 +33,8 @@ def setResArgs(func, res, args):
     setattr(lib, func, f)
 
 def function(func, *args):
+    if lib.getR_vir() == 0:
+        lib.setR_vir(R_VIR_z20)
     try:
         return func(*args)
     except ArgumentError:
@@ -39,9 +42,11 @@ def function(func, *args):
         ls = [func(*row) for row in values]
         return np.array(ls)
 
-func_info = [('setR_vir', None, c_double),
+func_info = [('getR_vir', c_double, None),
+            ('setR_vir', None, c_double),
             ('printConstants', None, None),
             ('gasDensity', c_double, c_double),
+            ('gasMass', c_double, c_double),
             ('getNorm', c_double, POINTER(c_double)),
             ('darkMatterMass', c_double, c_double),
             ('darkMatterDensity', c_double, c_double),
@@ -53,7 +58,7 @@ func_info = [('setR_vir', None, c_double),
             ('SMBHAccretion', c_double, (POINTER(c_double), POINTER(c_double))),
             ('dynamicalFrictionDM', c_double, (c_double, c_double)),
             ('dynamicalFrictionGas', c_double, (c_double, c_double)),
-            ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_char_p)),
+            ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_int, c_char_p)),
             ('getRedshift', c_double, c_double),
             ('getHubbleParameter', c_double, c_double),
             ('calculateR_vir', c_double, (c_double, c_double)),
@@ -61,7 +66,15 @@ func_info = [('setR_vir', None, c_double),
             ('setBaryonicFraction', None, c_double),
             ('setStellarRatio', None, c_double),
             ('darkMatterVelocityDispersion', c_double, None),
-            ('machFunction', c_double, c_double)]
+            ('machFunction', c_double, c_double),
+            ('setGasPower', None, c_double)]
+
+INT_LEAPFROG = 0
+INT_IAS15 = 1
+INT_WHFAST = 2
+INT_SEI = 3
+INT_JANUS = 4
+INT_MERCURIUS = 5
 
 for func in func_info:
     name = func[0]
@@ -78,14 +91,15 @@ def pointerReturn(pointer):
     lib.free(pointer)
     return np.array(values)
 
-def run(positions, speeds, smbh_mass = 1, dt = 1e-6, save_every = 10, filename = "results.dat", delete_file = True):
+def run(speeds, smbh_mass = 1, dt = 1e-6, integrator = INT_LEAPFROG, save_every = 10, filename = None):
     global lib
-    pos = (c_double * len(positions))(*positions)
+    delete_file = False
+    pos = (c_double * 3)(*[0, 0, 0])
     speeds = (c_double * len(speeds))(*speeds)
-    try:
-        lib.run(pos, speeds, smbh_mass, dt, int(save_every), filename.encode())
-    except Exception as e:
-        print(e)
+    if filename == None:
+        filename = "temp.dat"
+        delete_file = True
+    lib.run(pos, speeds, smbh_mass, dt, integrator, int(save_every), filename.encode())
 
     data = Results(filename)
 
@@ -100,24 +114,3 @@ def SMBHAccretion(pos, speeds):
         else:
             return pointerFunction(lib.SMBHAccretion, pos, speeds)
     return pointerFunction(lib.SMBHAccretion, pos, speeds)
-
-# def dynamicalFrictionDM(pos, speeds):
-#     if type(pos) is np.ndarray:
-#         if len(pos.shape) > 1:
-#             ans = []
-#             for i in range(len(pos)):
-#                 pointer = pointerFunction(lib.dynamicalFrictionDM, pos[i], speeds[i])
-#                 values = pointerReturn(pointer)
-#                 ans.append(values)
-#             return np.array(ans)
-#         else:
-#             return pointerReturn(pointerFunction(lib.dynamicalFrictionDM, pos, speeds))
-#     return pointerReturn(pointerFunction(lib.dynamicalFrictionDM, pos, speeds))
-#
-# def dynamicalFrictionGas(pos, speeds):
-#     if type(pos) is np.ndarray:
-#         if len(pos.shape) > 1:
-#             return np.array([pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos[i], speeds[i])) for i in range(len(pos))])
-#         else:
-#             return pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos, speeds))
-#     return pointerReturn(pointerFunction(lib.dynamicalFrictionGas, pos, speeds))

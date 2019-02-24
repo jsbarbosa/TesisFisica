@@ -35,7 +35,7 @@ def slicePlot(data, axes = None):
 
     return plt.gcf(), (ax1, ax2, ax3)
 
-def plotDensityMass(distance, density, mass, figsize = (8, 4.5)):
+def plotDensityMass(distance, densities, masses, figsize = (8, 4.5)):
     fig, ax1 = plt.subplots(figsize = figsize)
     ax2 = ax1.twinx()
 
@@ -50,10 +50,51 @@ def plotDensityMass(distance, density, mass, figsize = (8, 4.5)):
     ax1.set_xscale('log')
     ax2.set_yscale('log')
 
-    ax1.plot(distance, density, c = 'b')
-    ax2.plot(distance, mass, c = 'g')
+    n = len(densities)
+    if n <= 3:
+        lines = ["-", "--", ":"]
+        for i in range(n):
+            ax1.plot(distance, densities[i], lines[i], c = 'b')
+            ax2.plot(distance, masses[i], lines[i], c = 'g')
+    else:
+        ax1.plot(distance, densities, c = 'b')
+        ax2.plot(distance, masses, c = 'g')
+
+    r_vir = getR_vir()
+
+    x = [r_vir, r_vir]
+    y = ax1.get_ylim()
+
+    ax1.plot(x, y, lw = 0.5, c = 'r')
+
+    ax1.set_ylim(y)
 
     fig.tight_layout()
+
+    ax1.grid()
+
+    return fig, (ax1, ax2)
+
+def plotDensityMassForAll(r, r_vir = None, baryonic_fraction = None, stellar_ratio = None, figsize = (8, 4.5)):
+    if r_vir != None: setR_vir(r_vir)
+    if baryonic_fraction != None: setBaryonicFraction(baryonic_fraction)
+    if stellar_ratio != None: setStellarRatio(stellar_ratio)
+
+    d_dm = darkMatterDensity(r)
+    m_dm = darkMatterMass(r)
+
+    d_s = stellarDensityHernquist(r)
+    m_s = stellarMassHernquist(r)
+
+    d_g = gasDensity(r)
+    m_g = gasMass(r)
+
+    ds = [d_dm, d_s, d_g]
+    ms = [m_dm, m_s, m_g]
+
+    fig, (ax1, ax2) = plotDensityMass(r, ds, ms, figsize)
+
+    ax1.legend(["Dark matter", "Stars", "Gas"])
 
     return fig, (ax1, ax2)
 

@@ -44,7 +44,19 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage{mathpazo} % Use the Palatino font by default
 
-\usepackage[backend=bibtex, style=chem-acs, natbib=true]{biblatex} 
+\usepackage[backend=bibtex, style=chem-acs, natbib=true]{biblatex}
+
+\DeclareCiteCommand{\citeauthor}%
+{\boolfalse{citetracker}%
+	\boolfalse{pagetracker}%
+	\usebibmacro{prenote}}
+{\ifciteindex
+	{\indexnames{labelname}}
+	{}%
+	\printtext[bibhyperref]{\printnames{labelname}}}
+{\multicitedelim}
+{\usebibmacro{postnote}}
+
 \usepackage{subcaption}
 
 \addbibresource{bibliography.bib} % The filename of the bibliography
@@ -270,6 +282,11 @@ headsepline, % Uncomment to get a line under the header
 % Include the chapters of the thesis as separate files from the Chapters folder
 % Uncomment the lines as you write the chapters
 
+\newcommand{\keyword}[1]{\textit{#1}}
+\newcommand{\sm}[0]{$M_\odot$}
+\newcommand{\todo}[1]{\texttt{\color{red}\#TODO: #1}}
+\newcommand{\erf}[1]{\text{erf}\left(#1\right)}
+
 %\setstretch{2.0}
 %\include{Chapters/Intro}
 \include{Chapters/methodology}
@@ -295,7 +312,7 @@ headsepline, % Uncomment to get a line under the header
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
-%\printbibliography[heading=bibintoc, title={Referencias}]
+\printbibliography[heading=bibintoc, title={References}]
 
 %----------------------------------------------------------------------------------------
 

@@ -7,7 +7,9 @@
 volatile double Z = 20;
 
 volatile double FB = 0.156;
-volatile double STELLAR_RATIO = 0.0; // complement of gas percent
+
+volatile double GAS_POWER = -2.2;
+volatile double STELLAR_FRACTION = 0.0; // complement of gas percent
 
 /* FIXED AT MAIN */
 volatile double R_VIR = 0;
@@ -45,19 +47,25 @@ void setBaryonicFraction(double fb)
 
 void setStellarRatio(double ratio)
 {
-  STELLAR_RATIO = ratio;
+  STELLAR_FRACTION = ratio;
   setStellarTotalMass();
   setGasDensity();
 }
 
 void setStellarTotalMass(void)
 {
-  STELLAR_TOTAL_MASS = STELLAR_RATIO * FB * HALO_MASS;
+  STELLAR_TOTAL_MASS = STELLAR_FRACTION * FB * HALO_MASS;
 }
 
 void setGasDensity(void)
 {
-  GAS_DENSITY = (1 - STELLAR_RATIO) * FB * HALO_MASS / (4 * M_PI * R_VIR);
+  GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / (4 * M_PI * pow(R_VIR, GAS_POWER + 3));
+}
+
+void setGasPower(double n)
+{
+  GAS_POWER = n;
+  setGasDensity();
 }
 
 double darkMatterDensity0(double c)
@@ -134,14 +142,14 @@ double getLocalSoundSpeed(double z)
 
 double gasDensity(double r)
 {
-  double factor = GAS_DENSITY * pow(r, -2);
+  double factor = GAS_DENSITY * pow(r, GAS_POWER);
   if(factor > MAX_DENSITY_GAS) return MAX_DENSITY_GAS;
   return factor;
 }
 
 double gasMass(double r)
 {
-  return 4 * M_PI * GAS_DENSITY * r;
+  return 4 * M_PI * GAS_DENSITY * pow(r, GAS_POWER + 3);
 }
 
 double getSoftenedLength(double r)
@@ -240,6 +248,11 @@ void setR_vir(double r)
   setGasDensity();
 }
 
+double getR_vir(void)
+{
+  return R_VIR;
+}
+
 double getRedshift(double t)
 {
   int i;
@@ -265,7 +278,7 @@ double getHubbleParameter(double z)
 
 double calculateR_vir(double G, double H)
 {
-  return pow((G * 1e3) / (100 * pow(H, 2)), 1/3.);
+  return pow((G * HALO_MASS) / (100 * pow(H, 2)), 1/3.);
 }
 
 void baseCase(struct reb_simulation* sim)
@@ -314,7 +327,7 @@ void printConstants(void)
 
   printf("\n##### FRACTIONS #####\n");
   printf("FB = %f\n", FB);
-  printf("STELLAR_RATIO = %f\n", STELLAR_RATIO);
+  printf("STELLAR_FRACTION = %f\n", STELLAR_FRACTION);
 
   printf("\n##### SCALES #####\n");
   printf("DARK_MATTER_SCALE_RADIUS = %f\n", DARK_MATTER_SCALE_RADIUS);
@@ -327,6 +340,7 @@ void printConstants(void)
   printf("\n##### DENSITIES #####\n");
   printf("DARK_MATTER_DENSITY_0 = %f\n", DARK_MATTER_DENSITY_0);
   printf("GAS_DENSITY = %f\n", GAS_DENSITY);
+  printf("GAS_POWER = %f\n", GAS_POWER);
 }
 
 void printStatus(struct reb_simulation* sim, const char *filename, int header)
@@ -338,9 +352,8 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
     file = fopen(filename, "w");
 
     fprintf(file, "R_VIR = %f\n", R_VIR);
-
     fprintf(file, "FB = %f\n", FB);
-    fprintf(file, "STELLAR_RATIO = %f\n", STELLAR_RATIO);
+    fprintf(file, "STELLAR_FRACTION = %f\n", STELLAR_FRACTION);
 
     fprintf(file, "DARK_MATTER_SCALE_RADIUS = %f\n", DARK_MATTER_SCALE_RADIUS);
     fprintf(file, "STELLAR_SCALE_LENGTH = %f\n", STELLAR_SCALE_LENGTH);
@@ -350,13 +363,16 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
 
     fprintf(file, "DARK_MATTER_DENSITY_0 = %f\n", DARK_MATTER_DENSITY_0);
     fprintf(file, "GAS_DENSITY = %f\n", GAS_DENSITY);
+    fprintf(file, "GAS_POWER = %f\n", GAS_POWER);
 
-    fprintf(file, "time\tz\tx\ty\tz\tvx\tvy\tvz\tmass\n");
+    // fprintf(file, "INTEGRATOR = %f\n", GAS_POWER);
+
+    fprintf(file, "time\tz\tx\ty\tz\tvx\tvy\tvz\tmass\tlyapunov\n");
     fclose(file);
   }
 
   file = fopen(filename, "a");
-  double t, x, y, z, vx, vy, vz;
+  double t, x, y, z, vx, vy, vz, ly;
   struct reb_particle  particle = sim -> particles[0];
   t = sim -> t;
   x = particle.x;
@@ -365,7 +381,8 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
   vx = particle.vx;
   vy = particle.vy;
   vz = particle.vz;
-  fprintf(file, "%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\n", t, Z, x, y, z, vx, vy, vz, SMBH_MASS);
+  ly = reb_tools_calculate_lyapunov(sim);
+  fprintf(file, "%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\n", t, x, y, z, vx, vy, vz, SMBH_MASS, ly);
   fclose(file);
 }
 
@@ -389,6 +406,8 @@ struct reb_simulation* setupSimulation(double mass, double *position, double *sp
 
     reb_add(sim, particle);
     SMBH_MASS = mass;
+
+    reb_tools_megno_init(sim);
     return sim;
 }
 
@@ -402,7 +421,7 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   LAST_SPEEDS[0] = -1;
   LAST_SPEEDS[1] = -1;
 
-  while((!STOP_SIMULATION) & (sim->t < 13.78))
+  while((!STOP_SIMULATION) & (sim->t + T0 < 13.78))
   {
     if(i % save_every == 0)
     {
@@ -413,10 +432,30 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   }
 }
 
-void run(double *positions, double *speeds, double smbh_mass, double dt, int save_every, const char *filename)
+void run(double *positions, double *speeds, double smbh_mass, double dt, int integrator, int save_every, const char *filename)
 {
-    SIM_DT = dt;
-    struct reb_simulation* sim = setupSimulation(smbh_mass, positions, speeds, baseCase);
-    sim->integrator = REB_INTEGRATOR_LEAPFROG;
-    runSimulation(sim, save_every, filename);
+  SIM_DT = dt;
+  struct reb_simulation* sim = setupSimulation(smbh_mass, positions, speeds, baseCase);
+  switch(integrator)
+  {
+    case INT_LEAPFROG:
+      sim->integrator = REB_INTEGRATOR_LEAPFROG;
+      break;
+    case INT_IAS15:
+      sim->integrator = REB_INTEGRATOR_IAS15;
+      break;
+    case INT_WHFAST:
+      sim->integrator = REB_INTEGRATOR_WHFAST;
+      break;
+    case INT_JANUS:
+      sim->integrator = REB_INTEGRATOR_JANUS;
+      break;
+    case INT_MERCURIUS:
+      sim->integrator = REB_INTEGRATOR_MERCURIUS;
+      break;
+    default :
+      sim->integrator = REB_INTEGRATOR_WHFAST;
+ }
+
+  runSimulation(sim, save_every, filename);
 }

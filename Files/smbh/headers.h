@@ -17,9 +17,18 @@
 #define Z_HUBBLE_DEGREE 2
 #define T0 0.18004611427373277
 
+#define INT_LEAPFROG 0
+#define INT_IAS15 1
+#define INT_WHFAST 2
+#define INT_SEI 3
+#define INT_JANUS 4
+#define INT_MERCURIUS 5
+
+double getR_vir(void);
 void setR_vir(double r);
 void printConstants(void);
 double gasDensity(double r);
+double gasMass(double r);
 double getNorm(double *vector);
 double darkMatterMass(double r);
 double machFunction(double mach);
@@ -40,7 +49,7 @@ void printStatus(struct reb_simulation *sim, const char *filename, int header);
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
                             void (*additional_force)(struct reb_simulation*));
 void runSimulation(struct reb_simulation *sim, int save_every, const char *filename);
-void run(double *positions, double *speeds, double smbh_mass, double dt, int save_every, const char *filename);
+void run(double *positions, double *speeds, double smbh_mass, double dt, int integrator, int save_every, const char *filename);
 
 // void integrate(struct reb_simulation* sim);
 // double *baseCase(double *position, double *speed);
@@ -53,3 +62,4 @@ void setBaryonicFraction(double fb);
 void setStellarRatio(double ratio);
 void setStellarTotalMass(void);
 void setGasDensity(void);
+void setGasPower(double n);

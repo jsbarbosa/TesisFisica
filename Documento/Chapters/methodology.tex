@@ -8,10 +8,7 @@
 %----------------------------------------------------------------------------------------
 
 % Define some commands to keep the formatting separated from the content 
-\newcommand{\keyword}[1]{\textit{#1}}
-\newcommand{\sm}[0]{$M_\odot$}
-\newcommand{\todo}[1]{\texttt{\color{red}\#TODO: #1}}
-\newcommand{\erf}[1]{\text{erf}\left(#1\right)}
+
 %\newcommand{\option}[1]{\texttt{\itshape#1}}
 
 %----------------------------------------------------------------------------------------
@@ -97,14 +94,14 @@
 		
 		\subsection{Dynamical friction}
 			As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on its source, collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{binney2011galactic, madau2004effect, tanaka2009assembly, choksi2017recoiling}.
-			\begin{equation}
+			\begin{equation}\label{eq: df_cl}
 				a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2} M_\bullet\rho(\vec{x})\ln\Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)\text{, } \quad \rho(\vec{x}) = \rho_\text{DM}(\vec{x}) + \rho_\text{stars}(\vec{x})
 			\end{equation}
 			\begin{equation}
 				X \equiv \dfrac{|\dot{x}|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM} = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
 			\end{equation}
 			
-			$\sigma_\text{DM}$ is called the local velocity dispersion of the dark matter halo, and since varies little over the entire host, can be taken as constant \cite{tanaka2009assembly, choksi2017recoiling}. The Coulomb logarithm ($\ln\Lambda$) is not known but authors take it in the range of 2 - 4 \cite{choksi2017recoiling}. Gas on the other hand is collisional, special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by Tanaka, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
+			$\sigma_\text{DM}$ is called the local velocity dispersion of the dark matter halo, and since varies little over the entire host, can be taken as constant \cite{tanaka2009assembly, choksi2017recoiling}. The Coulomb logarithm ($\ln\Lambda$) is not known but authors take it in the range of 2 - 4 \cite{choksi2017recoiling}. Gas on the other hand is collisional, special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by \citeauthor{tanaka2009assembly}, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
 			\begin{equation}
 				\mathcal{M}(\dot{x}) \equiv \dfrac{|\dot{x}|}{c_s}
 			\end{equation}
@@ -115,7 +112,7 @@
 			\end{equation}
 			
 			where $\mu$ is the value of the mean molecular weight of the gas ($\mathcal{M}_w$), $m_p$ is the proton mass and $\gamma$ is the adiabatic index \cite{barkana2001beginning}. Approximating the gas to a monoatomic one $\gamma \approx 5/3$, yields the last expression on \autoref{eq: soundSpeed}. By knowing $\mathcal{M}$, the acceleration caused by gas can be written as \cite{tanaka2009assembly, choksi2017recoiling}:
-			\begin{equation}
+			\begin{equation}\label{eq: df_c}
 				a^\text{c}_\text{DF}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2}M_\bullet\rho_\text{gas}(\vec{x})f(\mathcal{M})
 			\end{equation}
 			
@@ -135,20 +132,50 @@
 				\ln\Lambda\left[1.5\left(\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right) - 1\right] - 0.5\ln\left(1 - \mathcal{M}^{-2}\right) = 0
 			\end{equation}
 			
-			Numerically solving \autoref{eq: machEq}, yields $M_{eq} \approx 1.731$ for a value of the Coulomb logarithm $\ln\Lambda = 2.3$.
+			Numerically solving \autoref{eq: machEq}, yields $M_{eq} \approx 1.731$ for a value of the Coulomb logarithm $\ln\Lambda = 2.3$. The full acceleration due to dynamical friction is given by the sum of the noncollisional drag on \autoref{eq: df_cl} and \autoref{eq: df_c}:
+			\begin{equation}
+				a_\text{DF}(\vec{x}, \dot{\vec{x}}) = a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) + a_\text{DF}^\text{c}(\vec{x}, \dot{\vec{x}})
+			\end{equation}
 		
 		\subsection{Accretion onto the black hole}
+			As the black hole accretes matter from the surroundings, an acceleration appears, due to the second law of Newton:
+			\begin{equation}
+				\vec{F} = \dfrac{d\vec{P}}{dt} = \dot{\vec{x}}\dot{M}_\bullet + M_\bullet\ddot{\vec{x}}
+			\end{equation}
+			
+			By considering conservation of momentum:
+			\begin{equation}
+				\ddot{\vec{x}} = - \dot{\vec{x}}\dfrac{\dot{M}_\bullet}{M_\bullet}
+			\end{equation}
+			
+			Two schemes describe the speed at which the black hole gains mass, on the first one the black hole undergoes Bondi-Hoyle-Littleton accretion \cite{tanaka2009assembly, choksi2017recoiling}:
+			\begin{equation}
+				\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_B(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
+			\end{equation}
+			
+			There is a limit of accretion for the black hole given by the Eddington luminosity:
+			\begin{equation}
+				\dot{M}_\bullet^\text{Edd} = \dfrac{(1 - \epsilon)M_\bullet}{\epsilon t_\text{Edd}} \qquad \epsilon = 0.1, \quad t_\text{Edd} = 0.44 \text{ Gyr}
+			\end{equation}
+			
+			Final accretion rate is given by:
+			\begin{equation}
+				\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
+				\begin{array}{lc}
+				\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) & \text{if $\dot{M}_\bullet^\text{BHL} < \dot{M}_\bullet^\text{Edd}$} \\
+				\dot{M}_\bullet^\text{Edd} & \text{else}
+				\end{array}
+				\right.
+			\end{equation}
 	
+	\subsection{Initial conditions and numerical integration}
+		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen densities profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, as it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (0, 0, 0)$ kpc.
 		
-	
-%\section{Metodología}
-%	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
-
-	
-%	donde $M_h$ corresponde con la masa del halo de la galaxia, $a_{DF}$ con la aceleraci\'on debida a la fricci\'on din\'amica, la cual se modela usando la f\'ormula de Chandrasekhar para la materia oscura y el modelo h\'ibrido descrito por Choksi para la materia visible \cite{choksi2017recoiling}. El tercer t\'ermino tiene en cuenta la acreci\'on de masa por el agujero negro, y el \'ultimo la aceleraci\'on cosmol\'ogica.
-%	
-%	Dicha ecuaci\'on ser\'a integrada usando un esquema \textit{Leapfrog}, el cual se encuentra implementado en la librer\'ia REBOUND. Usando como condiciones iniciales $\vec{x} = (0,0,0)$ km y $\dot{\vec{x}} = (70, 0, 0)$ km$s^{-1}$, e intervalos de integraci\'on temporales de 1000 años, se busca reproducir los comportamientos observados por Choksi y colaboradores, para comprobar que el algoritmo implementado funcione de manera adecuada.
-%	
-%	Posteriormente ser\'an introducidas las modificaciones al potencial cambiando $M_h(x)$ por $M_h(x, y, z)$, donde los pesos de cada dimensi\'on ser\'an determinados de manera aleatoria para cada simulaci\'on. Al mismo tiempo se asignar\'an velocidades iniciales aleatorias, logar\'itmicamente espaciadas en el rango de 0 kms$^{-1}$ hasta 3000 kms$^{-1}$, sin ninguna direcci\'on preferente. Para cada sistema generado se realizar\'a la evoluci\'on en el tiempo usando integradores num\'ericos distintos. El tiempo aproximado de cada simulaci\'on se encuentra en el orden de 100$^6$ a\~nos, por lo cual ser\'an necesarias cerca de cien mil interaciones por cada conjunto de par\'ametros escogidos.
-%	
-%	Las simulaciones ser\'an realizadas en el cluster de la universidad (HPC) con el fin de paralelizar procesos, minimizando el tiempo de simulación y de esta forma lograr la mayor cantidad de simulaciones posibles, con el fin de obtener una cantidad significativa de datos de validación. A partir de estos, se obtendr\'an las distribuciones de probabilidad de los tiempos de retorno, y la cuantificaci\'on de la caoticidad de la trayectoria.
+		Numerical integration is carried out using a leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years, simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the age of the universe. 
+		
+	\section{Definitions}
+		\subsection{Escape velocity}
+			Minimum initial velocity required for the maximum distance of a single orbit of the black hole to stay outside $0.1R_\text{vir}$ after $z = 0$, $z = 6$ or 10 \% of the age of the universe at the moment of the kick \cite{tanaka2009assembly, choksi2017recoiling}.
+		
+		\subsection{Time of return}
+			Time required by the black hole to orbit with maximum distances of less than  $0.1R_\text{vir}$.

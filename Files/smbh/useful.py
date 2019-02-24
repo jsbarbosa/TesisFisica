@@ -7,7 +7,6 @@ KPC = 3.0856776e19 # in meters
 GYR = 60 * 60 * 24 * 365.25 * 1e9 # in seconds
 SOLAR_MASSES = 1.98847e30 # in kg
 
-R_VIR_z20 = 0.6899734690284971
 R_VIR_THRESHOLD = 0.1
 
 def kmsTokpcGyr(kms):
@@ -59,10 +58,10 @@ class Results(object):
 
         data = np.genfromtxt(filename, skip_header = i + 1)
         self.times = data[:, 0]
-        self.redshifts = data[:, 1]
-        self.positions = data[:, 2:5]
-        self.speeds = data[:, 5:8]
-        self.masses = data[:, -1]
+        self.positions = data[:, 1:4]
+        self.speeds = data[:, 4:7]
+        self.masses = data[:, -2]
+        self.lyapunov = data[:, -1]
 
         self.distance = magnitude(self.positions)
         self.speed = magnitude(self.speeds)
