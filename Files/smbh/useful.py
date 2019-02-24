@@ -7,6 +7,13 @@ KPC = 3.0856776e19 # in meters
 GYR = 60 * 60 * 24 * 365.25 * 1e9 # in seconds
 SOLAR_MASSES = 1.98847e30 # in kg
 
+R_VIR_z20 = 0.6899734690284971
+R_VIR_THRESHOLD = 0.1
+
+def kmsTokpcGyr(kms):
+    global GYR, KPC
+    return kms * 1000 * GYR / KPC
+
 def GToNaturalUnits():
     global KPC, GYR, SOLAR_MASSES, G_0
     distance = KPC ** -3
@@ -33,9 +40,24 @@ def sphericalToCartesian(r, theta, phi):
 def magnitude(matrix):
     return np.linalg.norm(matrix, axis = 1)
 
+def findLocalMaxima(array):
+    return argrelextrema(array, np.greater)[0]
+
+def findLocalMinima(array):
+    return argrelextrema(array, np.lower)[0]
+
 class Results(object):
     def __init__(self, filename):
-        data = np.genfromtxt(filename, skip_header = 1)
+        with open(filename, "r") as file:
+            for (i, line) in enumerate(file):
+                line = line.replace("\n", "").replace(" ", "")
+                try:
+                    conf, val = line.split("=")
+                    setattr(self, conf, float(val))
+                except ValueError:
+                    break
+
+        data = np.genfromtxt(filename, skip_header = i + 1)
         self.times = data[:, 0]
         self.redshifts = data[:, 1]
         self.positions = data[:, 2:5]
@@ -45,35 +67,18 @@ class Results(object):
         self.distance = magnitude(self.positions)
         self.speed = magnitude(self.speeds)
 
-        self.cleanResults()
-
-    def cleanResults(self, t = 1e-3):
-        import matplotlib.pyplot as plt
-
-        n = int(t / (self.times[1] - self.times[0]))
-        N = len(self.times)
-        groups = int(N // n)
-        averages = []
-        for i in range(groups):
-            try:
-                frag = self.distance[i * n : (i + 1) * n]
-            except IndexError:
-                frag = self.distance[i * n : ]
-            averages.append(frag.mean())
-
-        local_maxima = argrelextrema(self.distance, np.greater)[0]
-        pos = abs(np.diff(np.diff(local_maxima)))
-
+    def getReturnTime(self, threshold = R_VIR_THRESHOLD):
         try:
-            pos = pos > pos[0]
-            pos = np.where(pos)[0][0]
-        except IndexError: return
-        pos = local_maxima[pos]
-
-
-        for attr in dir(self):
+            return self.return_time
+        except AttributeError:
+            r = self.distance / self.R_VIR
+            indexes = findLocalMaxima(r)
             try:
-                array = getattr(self, attr)
-                array = array[: pos]
-                setattr(self, attr, array)
-            except TypeError as e: pass
+                first_in = np.where(r[indexes] < threshold)[0][0]
+                first_in = indexes[first_in]
+                for i in range(first_in, 0, -1):
+                    if r[i] >= threshold: break
+            except Exception as e:
+                i = -1
+            self.return_time = self.times[i]
+            return self.return_time

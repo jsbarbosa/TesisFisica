@@ -72,7 +72,8 @@ def plotDistance(times, positions, ax = None, figsize = (8, 4.5)):
 
     return fig, ax
 
-def plotProperties(results, r_vir, figsize = (6, 8.5)):
+def plotProperties(results, figsize = (6, 8.5)):
+    r_vir = results.R_VIR
     setR_vir(r_vir)
     pos = results.positions
     speeds = results.speeds
@@ -123,10 +124,12 @@ def plotProperties(results, r_vir, figsize = (6, 8.5)):
     ax11.set_ylabel('Speed (kpc/Gyr)', color = 'b')
     ax11.tick_params('y', colors='b')
 
-    ax2.set_ylabel(r'$M_\bullet$')
+    ax2.set_ylabel(r'$M_\bullet$ ($10^5M_\odot$)')
     ax3.set_xlabel('Time (Myr)')
 
     fig.tight_layout()
+    fig.subplots_adjust(hspace = 0)
+
     return fig, (ax1, ax2, ax3)
 
 def make3dPlot(positions):

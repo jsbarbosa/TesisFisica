@@ -1,0 +1,154 @@
+% !TeX spellcheck = en_US
+% Chapter 1
+
+%\chapter{Chapter Title Here} % Main chapter title
+%
+%\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textit{#1}}
+\newcommand{\sm}[0]{$M_\odot$}
+\newcommand{\todo}[1]{\texttt{\color{red}\#TODO: #1}}
+\newcommand{\erf}[1]{\text{erf}\left(#1\right)}
+%\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+\chapter{Methodology}
+	Some of the simulation parameters are dependent of the cosmological model used, unless otherwise specified, all data is acquired using the $\Lambda$-CDM model with a matter density parameter $\Omega_M = 0.309$, $\Omega_\Lambda = 0.6911$, and a baryonic fraction $f_b = 0.156$ \cite{choksi2017recoiling}. 
+	
+	\section{Units}
+		Computer simulations are sensitive to rounding errors due to the lack of infinite precision when representing decimal numbers. Really small numbers as well as really big ones tend to have bigger errors than those close to the unity, as can be seen on \autoref{fig: IEEE-754}.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.8\linewidth]{"../Files/Week 3/floating"}
+			\caption{Floating point precision for different values, for a 32 bit and 64 bit holders.}
+			\label{fig: IEEE-754}
+		\end{figure}
+		
+		Under the International System of Units, distances are measured on meters, times on seconds, and masses on kilograms, nevertheless black holes are too heavy to be measured on kilograms, galaxies sizes too big to be quantified on meters, and time scales too large for a second. Because of that, the following units will be used throughout this document:
+		\begin{table}[h]
+			\centering
+			\caption{Units of measure used on the simulations.}
+			\label{tb: units}
+			\begin{tabular}{c|c}
+				\hline
+				\textbf{Physical property} & \textbf{unit} \\
+				\hline
+				Length & 1 kilo-parsec (kpc) \\
+				Mass & $10^5$ solar masses ($10^5$ \sm) \\
+				Time & 1 giga-year (Gyr) \\
+				\hline
+			\end{tabular}
+		\end{table}
+	
+		Along with the change of units, the universal gravitational constant and the Hubble parameter values are required to change.
+		
+		\subsection{Universal gravitational constant}
+			First quantified by Henry Cavendish the gravitational constant has a value of $G_0 = 6.67408\times10^{-11}$ on SI units of m$^3$s$^{-2}$kg$^{-1}$. With the units of length, mass and time on \autoref{tb: units}, the constant of gravity used is given by:
+			\begin{equation}
+				\begin{array}{ccl}
+					G & = & G_0 \left(\dfrac{1 \text{ kpc}^3}{\left(3.0857\times10^{19}\right)^3  \text{ m}^3}\right)\left(\dfrac{\left(3.154\times10^{16}\right)^2 \text{ s}^2}{1 \text{ Gyr}^2}\right)\left(\dfrac{1.98847\times10^{35} \text{ kg}}{10^5 M_\theta}\right) \\
+					& = & 0.4493 \quad \dfrac{\text{kpc$^3$}}{\text{Gy$r^210^5$\sm}}	
+				\end{array}
+			\end{equation}
+				
+		
+		\subsection{Hubble parameter}
+			The Hubble constant is frequently used as $H_0 = 67.66 \pm 0.42$ kms$^{-1}$Mpc$^{-1}$ \cite{aghanim2018planck}, stating the speed of an astronomical body on kms$^{-1}$ at a distance of 1 Mpc. Nevertheless, the hubble constant has units of 1/time, thus, taking into account the units on \autoref{tb: units} one gets:
+			\begin{equation}
+				\begin{array}{ccl}
+					H & = & H_0 \left(\dfrac{1 \text{ kpc}}{3.0857\times10^{16} \text{ km}}\right)\left(\dfrac{3.154\times10^{16} \text{ s}}{1 \text{ Gyr}}\right)\left(\dfrac{1 \text{ Mpc}}{1000 \text{ kpc}}\right) \\
+					& \approx & 1.023 H_0 \times10^{-3} \text{ Gyr$^{-1}$} \\ 
+					& = & 6.916\times10^{-2}\text{ Gyr$^{-1}$}
+				\end{array}
+			\end{equation}
+			
+			Although the Hubble parameter is often called Hubble constant, its value changes with time as can be seen on \autoref{fig: hubbleTime}. %In particular, at $z = 20$, the moment at which the kick occurs $H$ has a value of 3.699 Gyr$^{-1}$.
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=0.8\linewidth]{"../Files/Week 5/hubble_time"}
+				\caption{Dependency of the Hubble parameter with redshift.}
+				\label{fig: hubbleTime}
+			\end{figure}
+		
+	\section{Critical density and Virial Radius}
+		Mass distributions used for the simulation of the host galaxy, are divergent for distances up to infinity. Because of this, the cumulative mass of all bodies within a given distance is called the virial mass and its value is taken as the mass of the whole system. The distance taken to calculate the virial mass is called virial radius ($R_\text{vir}$), and it is defined as the distance at which the average density of the galaxy is 200 times the critical density of the universe ($\rho_\text{crit}$).
+		\begin{equation}\label{eq: critical_density}
+			\rho_\text{crit} = \dfrac{3H(t)^2}{8\pi G}
+		\end{equation}
+		
+		\begin{equation}\label{eq: R_vir_def}
+			\begin{array}{c}
+				\dfrac{M(R_\text{vir})}{V(R_\text{vir})} = \bar{\rho}(R_\text{vir}) =  200 \rho_\text{crit} = 75\dfrac{H(t)^2}{\pi G}\\
+				\text{where $M(R_\text{vir})$ is the cumulative mass, and $V(R_\text{vir})$: the volume}
+			\end{array}			
+		\end{equation}
+		
+		The relation on \autoref{eq: critical_density} is found by considering the case where the geometry of the universe is flat, as a consequence it is said that the critical density is the minimum density required to stop the expansion of the universe \cite{binney2011galactic}.
+		
+	\section{Equation of motion}
+		Trajectories of the kicked black holes were obtained by numerically solving the equation of motion on \autoref{eq: equationMotion}, where the first term on the right side of the equation is acceleration due to gravity, the second accounts for the drag of dynamical friction, while the third one is the deaceleration due to mass accretion of the black hole \cite{tanaka2009assembly, choksi2017recoiling}.
+		\begin{equation}\label{eq: equationMotion}
+			\ddot{\vec{x}} = -a_\text{grav}(\vec{x})\hat{x} + \left(a_\text{DF}(\vec{x}, \dot{\vec{x}})-\dot{x}\dfrac{\dot{M_\bullet}(x, \dot{x})}{M_\bullet}\right)\dot{\hat{x}} \qquad \text{where $M_\bullet$ is the black hole mass}
+		\end{equation}
+		
+		\subsection{Dynamical friction}
+			As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on its source, collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{binney2011galactic, madau2004effect, tanaka2009assembly, choksi2017recoiling}.
+			\begin{equation}
+				a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2} M_\bullet\rho(\vec{x})\ln\Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)\text{, } \quad \rho(\vec{x}) = \rho_\text{DM}(\vec{x}) + \rho_\text{stars}(\vec{x})
+			\end{equation}
+			\begin{equation}
+				X \equiv \dfrac{|\dot{x}|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM} = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
+			\end{equation}
+			
+			$\sigma_\text{DM}$ is called the local velocity dispersion of the dark matter halo, and since varies little over the entire host, can be taken as constant \cite{tanaka2009assembly, choksi2017recoiling}. The Coulomb logarithm ($\ln\Lambda$) is not known but authors take it in the range of 2 - 4 \cite{choksi2017recoiling}. Gas on the other hand is collisional, special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by Tanaka, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
+			\begin{equation}
+				\mathcal{M}(\dot{x}) \equiv \dfrac{|\dot{x}|}{c_s}
+			\end{equation}
+			
+			where $c_s$ is the local sound speed, which depends on local temperature. It was found that temperature inside the halo varies less than a factor of 3, thus on the simulation it is assumed that the entire halo is isothermal at the virial temperature ($T_\text{vir}$) \cite{choksi2017recoiling}. The isothermal sound speed is \cite{barkana2001beginning}:
+			\begin{equation}\label{eq: soundSpeed}
+				c_s = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}T_\text{vir}} = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}\left(\dfrac{\mu m_p G M_h}{2k_BR_\text{vir}}\right)} = \sqrt{\dfrac{\gamma R\mu m_pG}{2\mathcal{M}_wk_B}} \sqrt{\dfrac{M_h}{R_\text{vir}}} \approx 0.614 \sqrt{\dfrac{M_h}{R_\text{vir}}}\text{ kpcGyr$^{-1}$}
+			\end{equation}
+			
+			where $\mu$ is the value of the mean molecular weight of the gas ($\mathcal{M}_w$), $m_p$ is the proton mass and $\gamma$ is the adiabatic index \cite{barkana2001beginning}. Approximating the gas to a monoatomic one $\gamma \approx 5/3$, yields the last expression on \autoref{eq: soundSpeed}. By knowing $\mathcal{M}$, the acceleration caused by gas can be written as \cite{tanaka2009assembly, choksi2017recoiling}:
+			\begin{equation}
+				a^\text{c}_\text{DF}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2}M_\bullet\rho_\text{gas}(\vec{x})f(\mathcal{M})
+			\end{equation}
+			
+			with
+			\begin{equation}
+				f(\mathcal{M}) = \left\{
+				\begin{matrix}
+				0.5\ln\Lambda \left[\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right]& \text{if $\mathcal{M} \leq 0.8$}\\
+				1.5\ln\Lambda \left[\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right] & \text{if $0.8 < \mathcal{M} \leq \mathcal{M}_{eq}$}\\
+				0.5\ln\left(1 - \mathcal{M}^{-2}\right) + \ln\Lambda & \text{if $\mathcal{M} > \mathcal{M}_{eq}$}
+				\end{matrix}
+				\right.
+			\end{equation}
+			
+			$M_{eq}$ is the mach number that fulfills the following equation:
+			\begin{equation}\label{eq: machEq}
+				\ln\Lambda\left[1.5\left(\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right) - 1\right] - 0.5\ln\left(1 - \mathcal{M}^{-2}\right) = 0
+			\end{equation}
+			
+			Numerically solving \autoref{eq: machEq}, yields $M_{eq} \approx 1.731$ for a value of the Coulomb logarithm $\ln\Lambda = 2.3$.
+		
+		\subsection{Accretion onto the black hole}
+	
+		
+	
+%\section{Metodología}
+%	El paso inicial consiste en generar un cuerpo con $10^8$ \sm usando la librer\'ia REBOUND, el cual tendr\'a la siguiente ecuaci\'on de movimiento:
+
+	
+%	donde $M_h$ corresponde con la masa del halo de la galaxia, $a_{DF}$ con la aceleraci\'on debida a la fricci\'on din\'amica, la cual se modela usando la f\'ormula de Chandrasekhar para la materia oscura y el modelo h\'ibrido descrito por Choksi para la materia visible \cite{choksi2017recoiling}. El tercer t\'ermino tiene en cuenta la acreci\'on de masa por el agujero negro, y el \'ultimo la aceleraci\'on cosmol\'ogica.
+%	
+%	Dicha ecuaci\'on ser\'a integrada usando un esquema \textit{Leapfrog}, el cual se encuentra implementado en la librer\'ia REBOUND. Usando como condiciones iniciales $\vec{x} = (0,0,0)$ km y $\dot{\vec{x}} = (70, 0, 0)$ km$s^{-1}$, e intervalos de integraci\'on temporales de 1000 años, se busca reproducir los comportamientos observados por Choksi y colaboradores, para comprobar que el algoritmo implementado funcione de manera adecuada.
+%	
+%	Posteriormente ser\'an introducidas las modificaciones al potencial cambiando $M_h(x)$ por $M_h(x, y, z)$, donde los pesos de cada dimensi\'on ser\'an determinados de manera aleatoria para cada simulaci\'on. Al mismo tiempo se asignar\'an velocidades iniciales aleatorias, logar\'itmicamente espaciadas en el rango de 0 kms$^{-1}$ hasta 3000 kms$^{-1}$, sin ninguna direcci\'on preferente. Para cada sistema generado se realizar\'a la evoluci\'on en el tiempo usando integradores num\'ericos distintos. El tiempo aproximado de cada simulaci\'on se encuentra en el orden de 100$^6$ a\~nos, por lo cual ser\'an necesarias cerca de cien mil interaciones por cada conjunto de par\'ametros escogidos.
+%	
+%	Las simulaciones ser\'an realizadas en el cluster de la universidad (HPC) con el fin de paralelizar procesos, minimizando el tiempo de simulación y de esta forma lograr la mayor cantidad de simulaciones posibles, con el fin de obtener una cantidad significativa de datos de validación. A partir de estos, se obtendr\'an las distribuciones de probabilidad de los tiempos de retorno, y la cuantificaci\'on de la caoticidad de la trayectoria.

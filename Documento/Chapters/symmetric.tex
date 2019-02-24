@@ -7,70 +7,12 @@
 
 %----------------------------------------------------------------------------------------
 
-% Define some commands to keep the formatting separated from the content 
-\newcommand{\keyword}[1]{\textit{#1}}
-\newcommand{\sm}[0]{$M_\odot$}
-\newcommand{\todo}[1]{\texttt{\color{red}\#TODO: #1}}
-\newcommand{\erf}[1]{\text{erf}\left(#1\right)}
+% Define some commands to keep the formatting separated from the content
 %\newcommand{\option}[1]{\texttt{\itshape#1}}
 
 %----------------------------------------------------------------------------------------
-
-\section{Galatic setup}
-	Some of the simulation parameters are dependent of the cosmological model used, unless otherwise specified, all data is acquired using the $\Lambda$-CDM model with matter density parameter $\Omega_M = 0.309$, $\Omega_\Lambda = 0.6911$, and baryonic fraction $f_b = 0.156$ \cite{choksi2017recoiling}. 
-	
-	\subsection{Units}
-		Computer simulations are sensitive to rounding errors due to the lack of infinite precision when representing decimal numbers. Really small numbers as well as really big ones tend to have bigger errors than those close to the unity, as can be seen on \autoref{fig: IEEE-754}.
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.8\linewidth]{"../Files/Week 3/floating"}
-			\caption{Floating point precision for different values, for a 32 bit and 64 bit holders.}
-			\label{fig: IEEE-754}
-		\end{figure}
-		
-		Under the International System of Units, distances are measured on meters, times on seconds, and mass on kilograms, nevertheless black holes are too heavy to be measured on kilograms, galaxies sizes too big to be quantified on meters, and time scales too large for a second. Because of that, the following units will be used throughout this document:
-		\begin{table}[h]
-			\centering
-			\caption{Natural units}
-			\label{tb: units}
-			\begin{tabular}{c|c}
-				\hline
-				\textbf{Physical property} & \textbf{unit} \\
-				\hline
-				Length & 1 kilo-parsec (kpc) \\
-				Mass & $10^5$ solar masses ($10^5$ \sm) \\
-				Time & 1 giga-year (Gyr) \\
-				\hline
-			\end{tabular}
-		\end{table}		
-		
-		\subsubsection{Universal gravitational constant}
-			First quantified by Henry Cavendish the gravitational constant has a value of $G_0 = 6.67408\times10^{-11}$ on SI units of m$^3$s$^{-2}$kg$^{-1}$. With the units of length, mass and time on \autoref{tb: units}, the constant of gravity to be used is given by:
-			\begin{equation}
-				\small
-				G = G_0 \left(\dfrac{1 \text{ kpc}^3}{\left(3.0857\times10^{19}\right)^3  \text{ m}^3}\right)\left(\dfrac{\left(3.154\times10^{16}\right)^2 \text{ s}^2}{1 \text{ Gyr}^2}\right)\left(\dfrac{1.98847\times10^{35} \text{ kg}}{10^5 M_\theta}\right) = 0.4493 \dfrac{\text{kpc$^3$}}{\text{Gy$r^210^5$\sm}}
-			\end{equation}
-			
-		\subsubsection{Hubble parameter}
-		The Hubble constant is frequently used as $H_0 = 67.66 \pm 0.42$ kms$^{-1}$Mpc$^{-1}$ \cite{aghanim2018planck}, stating the speed of an astronomical body on kms$^{-1}$ at a distance of 1 Mpc. Nevertheless, the hubble constant has units of 1/time, thus, taking into account the units on \autoref{tb: units} one gets:
-		\begin{equation}
-			\begin{array}{ccl}
-				H & = & H_0 \left(\dfrac{1 \text{ kpc}}{3.0857\times10^{16} \text{ km}}\right)\left(\dfrac{3.154\times10^{16} \text{ s}}{1 \text{ Gyr}}\right)\left(\dfrac{1 \text{ Mpc}}{1000 \text{ kpc}}\right) \\
-				& \approx & 1.023 H_0 \times10^{-3} \text{ Gyr$^{-1}$} \\ 
-				& = & 6.916\times10^{-2}\text{ Gyr$^{-1}$}
-			\end{array}
-		\end{equation}
-		
-		Although the Hubble parameter is often called Hubble constant, its value changes with time as can be seen on \autoref{fig: hubbleTime}. In particular, at $z = 20$, the moment at which the kick occurs $H$ has a value of 3.699 Gyr$^{-1}$.
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.8\linewidth]{"../Files/Week 5/hubble_time"}
-			\caption{Dependency of the Hubble parameter with redshift.}
-			\label{fig: hubbleTime}
-		\end{figure}
-		
-		
-	\subsection{Mass distributions}
+\chapter{Base case}
+	\section{Mass distributions}
 		The host galaxy has two mass distributions that are superimposed, one for dark matter and the other one for all the luminous or baryonic matter.
 		\begin{figure}[h]
 			\centering
@@ -80,7 +22,7 @@
 	
 		The dark matter halo used on the host, follows a NFW (Navarro–Frenk–White) profile, while the baryonic mass distribution of the galaxy depends on the redshift $z$. For high redshifts a gaseous disk with constant density followed by a density dependance with $r^{-2.2}$ is used, while for $z \approx 0$ a Hernquist model is applied \cite{choksi2017recoiling}.
 		
-	\subsection{Dark matter halo}
+	\section{Dark matter halo}
 		For a dark matter halo following a NFW profile, the density at some distance $r$ is given by the formula:
 		\begin{equation}\label{eq: dmdensity}
 			\rho_\text{DM}(r) = \dfrac{\rho_0^\text{DM}}{\frac{r}{R_s}\left(1 + \frac{r}{R_s}\right)^2}
@@ -143,7 +85,7 @@
 		
 		By considering a fixed concentration parameter $c(M_h, z) \equiv 4$, one obtains $R_s = 0.0635$ kpc, and $\rho_0^\text{DM} = 383457$ $10^5$\sm kpc$^{-3}$.
 	
-		\subsubsection{Baryonic profile}
+		\subsection{Baryonic profile}
 			For high redshift the baryonic profile resembles that of a gaseous galaxy with a constant density for distances lower than $r_0 = 1\times10^{-3}$ kpc, followed by an $r^{-2.2}$ profile for greater distances as in \autoref{fig: baryonicprofilehigh}.
 			
 			\begin{equation}
@@ -194,40 +136,7 @@
 			R_{1/2} = \left(1 + \sqrt{2}\right)\mathcal{R}_s
 		\end{equation}
 		
-	\subsection{Dynamical friction}
-		As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on it source, collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{choksi2017recoiling}.
-		\begin{equation}
-			a_\text{DF}^\text{DM}(r, v) = -4\pi G^2 M_\bullet\rho(r) \times \ln \Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)\dfrac{\vec{v}}{v^3}
-		\end{equation}
-		\begin{equation}
-			X \equiv \dfrac{|v|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM}(r) = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
-		\end{equation}
 		
-		 Gas on the other hand is collisional, special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by Choksi, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
-		 \begin{equation}
-			 \mathcal{M} \equiv \dfrac{v}{c_s}
-		 \end{equation}
-		 
-		 where $v$ is the speed of the black hole, and $c_s$ is the local sound speed, which depends on local temperature, nevertheless it can be approximated to an isothermal halo as:
-		 \begin{equation}
-		 	c_s \approx 1.8(1 + z)^{1/2}\left(\dfrac{M_h}{10^7M_\odot}\right)^{1/3}\left(\dfrac{\Omega_M h^2}{0.14}\right)\text{ kms$^{-1}$}
-		 \end{equation}
-		 
-		 where $\Omega_M$ and $h$ depend on the cosmology chosen. By knowing $\mathcal{M}$, the acceleration caused by gas can be written as:
-		 \begin{equation}
-		 	a^\text{gas}_\text{DF}(r, \vec{v}) = -4\pi G^2M_\bullet\rho_\text{gas}(r)\times f(\mathcal{M})\dfrac{\vec{v}}{v^3}
-		 \end{equation}
-		 
-		 with
-		 \begin{equation}
-		 	f(\mathcal{M}) = \left\{
-			\begin{matrix}
-			0.5\ln\Lambda \left[\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right]& \text{if $\mathcal{M} \leq 0.8$}\\
-			1.5\ln\Lambda \left[\erf{\dfrac{\mathcal{M}}{\sqrt{2}}} - \sqrt{\dfrac{2}{\pi}}\mathcal{M}e^{-\mathcal{M}^2/2}\right] & \text{if $0.8 < \mathcal{M} \leq 1.7$}\\
-			0.5\ln\left(1 - \mathcal{M}^{-2}\right) + \ln\Lambda & \text{if $\mathcal{M} > 1.7$}
-			\end{matrix}
-			\right.
-		 \end{equation}
 		 
 		 finally, the gas density is taken as a power-law profile, $\rho_\text{gas}=\rho_0^\text{gas}r^{-n}$, were $1 \leq n \leq 3$ \cite{choksi2017recoiling}.
 	

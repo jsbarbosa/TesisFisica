@@ -53,14 +53,15 @@ func_info = [('setR_vir', None, c_double),
             ('SMBHAccretion', c_double, (POINTER(c_double), POINTER(c_double))),
             ('dynamicalFrictionDM', c_double, (c_double, c_double)),
             ('dynamicalFrictionGas', c_double, (c_double, c_double)),
-            ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_int, c_char_p)),
+            ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_char_p)),
             ('getRedshift', c_double, c_double),
             ('getHubbleParameter', c_double, c_double),
             ('calculateR_vir', c_double, (c_double, c_double)),
             ('dampingFactor', c_double, (c_double, c_double)),
             ('setBaryonicFraction', None, c_double),
             ('setStellarRatio', None, c_double),
-            ('darkMatterVelocityDispersion', c_double, None)]
+            ('darkMatterVelocityDispersion', c_double, None),
+            ('machFunction', c_double, c_double)]
 
 for func in func_info:
     name = func[0]
@@ -77,12 +78,12 @@ def pointerReturn(pointer):
     lib.free(pointer)
     return np.array(values)
 
-def run(positions, speeds, smbh_mass, dt, n_points, n_saves, filename, delete_file = True):
+def run(positions, speeds, smbh_mass = 1, dt = 1e-6, save_every = 10, filename = "results.dat", delete_file = True):
     global lib
     pos = (c_double * len(positions))(*positions)
     speeds = (c_double * len(speeds))(*speeds)
     try:
-        lib.run(pos, speeds, smbh_mass, dt, int(n_points), int(n_saves), filename.encode())
+        lib.run(pos, speeds, smbh_mass, dt, int(save_every), filename.encode())
     except Exception as e:
         print(e)
 

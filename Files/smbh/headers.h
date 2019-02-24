@@ -1,11 +1,14 @@
-#define PI acos(0) * 2
 #define LN_LAMBDA 2.3
 
 #define CONCENTRATION_PARAMETER 4
 #define MATTER_DENSITY_PARAMETER 0.309 // LAMBDA_CDM model
 
+#define SOUND_SPEED_FACTOR 0.6141441129704023
 #define HALO_MASS 1e3
 
+#define MAX_DENSITY_DM 1e8
+#define MAX_DENSITY_STARS 1e8
+#define MAX_DENSITY_GAS 1e8
 
 #define G0 0.449849
 // #define G0 4.49849e-06 // kpc gyr m0
@@ -19,6 +22,7 @@ void printConstants(void);
 double gasDensity(double r);
 double getNorm(double *vector);
 double darkMatterMass(double r);
+double machFunction(double mach);
 double darkMatterDensity(double r);
 double darkMatterDensity0(double c);
 double getLocalSoundSpeed(double z);
@@ -35,9 +39,8 @@ void printStatus(struct reb_simulation *sim, const char *filename, int header);
 
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
                             void (*additional_force)(struct reb_simulation*));
-void runSimulation(struct reb_simulation *sim, int n_points, int save_points, const char *filename);
-
-void run(double *positions, double *speeds, double smbh_mass, double dt, int n_points, int n_saves, const char *filename);
+void runSimulation(struct reb_simulation *sim, int save_every, const char *filename);
+void run(double *positions, double *speeds, double smbh_mass, double dt, int save_every, const char *filename);
 
 // void integrate(struct reb_simulation* sim);
 // double *baseCase(double *position, double *speed);
