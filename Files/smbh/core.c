@@ -8,6 +8,7 @@ volatile double Z = 20;
 
 volatile double FB = 0.156;
 
+volatile double GAS_CORE = 1e-3;
 volatile double GAS_POWER = -2.2;
 volatile double STELLAR_FRACTION = 0.0; // complement of gas percent
 
@@ -59,7 +60,11 @@ void setStellarTotalMass(void)
 
 void setGasDensity(void)
 {
-  GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / (4 * M_PI * pow(R_VIR, GAS_POWER + 3));
+  double m = 3 + GAS_POWER;
+  double f1 = (pow(R_VIR, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
+  f1 = 4 * M_PI * (f1 + pow(GAS_CORE, 3) / 3);
+  GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / f1;
+  // GAS_DENSITY =  / (4 * M_PI * pow(R_VIR, GAS_POWER + 3));
 }
 
 void setGasPower(double n)
@@ -142,14 +147,22 @@ double getLocalSoundSpeed(double z)
 
 double gasDensity(double r)
 {
-  double factor = GAS_DENSITY * pow(r, GAS_POWER);
-  if(factor > MAX_DENSITY_GAS) return MAX_DENSITY_GAS;
-  return factor;
+  if (r < GAS_CORE) return GAS_DENSITY;
+  return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
+  // double factor = GAS_DENSITY * pow(r, GAS_POWER);
+  // if(factor > MAX_DENSITY_GAS) return MAX_DENSITY_GAS;
+  // return factor;
 }
 
 double gasMass(double r)
 {
-  return 4 * M_PI * GAS_DENSITY * pow(r, GAS_POWER + 3);
+  if (r < GAS_CORE)
+  {
+    return 4 * M_PI * GAS_DENSITY * pow(r, 3) / 3;
+  }
+  double m = 3 + GAS_POWER;
+  double f1 = (pow(r, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
+  return 4 * M_PI * GAS_DENSITY * (f1 + pow(GAS_CORE, 3) / 3);
 }
 
 double getSoftenedLength(double r)

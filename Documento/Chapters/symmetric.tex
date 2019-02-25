@@ -51,14 +51,6 @@
 			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0^\text{DM}R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
 		\end{equation}
 		
-		
-		
-%		\begin{figure}[h]
-%			\centering
-%			\includegraphics[width=0.7\linewidth]{"../Files/Week 3/NFW_profile"}
-%			\caption{Density and cumulative mass for a NFW profile with $\rho_0^\text{DM} = $ and $R_s = $.}
-%		\end{figure}
-		
 		Considering a concentration parameter $c(M_h, z)$ of dark matter in the halo, the following relation holds for the viral radius $R_\text{vir}$ and the scale radius $R_s$:
 		\begin{equation}\label{eq: virialConcentration}
 			R_\text{vir} = c(M_h, z)R_s
@@ -85,7 +77,7 @@
 			\label{fig: dmconcentration}
 		\end{figure}
 	
-		For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}, nevertheless for high redshifts concentration is approximately constant. By using \autoref{eq: virialConcentration} one can obtain the value of $\rho_0^\text{DM}$ by evaluating \autoref{eq: cumulativeDM} at $R_\text{vir}$.
+		For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}, nevertheless for high redshifts concentration is approximately constant at $c \approx 3$ for all halos \cite{choksi2017recoiling}. By using \autoref{eq: virialConcentration} one can obtain the value of $\rho_0^\text{DM}$ by evaluating \autoref{eq: cumulativeDM} at $R_\text{vir}$.
 		\begin{equation}\label{eq: dmM_virial}
 			M_\text{DM}(R_\text{vir}) = 4\pi\rho_0^\text{DM}R_s^3 \left[\ln\left(\dfrac{R_s + c(M_h, z)R_s}{R_s}\right) - \dfrac{c(M_h, z)R_s}{R_s + c(M_h, z)R_s}\right] = (1 - f_b)M_h
 		\end{equation}
@@ -140,9 +132,10 @@
 				M_\text{gas}(R_\text{vir}) = 4\pi\rho_0^\text{gas}\left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right) = (1 - f_s) f_bM_h
 			\end{equation}
 			\begin{equation}
-				\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right)} \qquad \text{ if $R_\text{vir} > r_0$}
+				\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right)} = \qquad \text{ if $R_\text{vir} > r_0$}
 			\end{equation}
 			
+			All of the profiles are shown on \autoref{fig: massprofiles}, where the effect of the stellar fraction can be seen.
 			\begin{figure}[h]
 				\centering
 				\begin{subfigure}[b]{0.49\textwidth}
@@ -152,21 +145,27 @@
 				\end{subfigure}
 				~ 
 				\begin{subfigure}[b]{0.49\textwidth}
-					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs1"}
-					\caption{Stellar fraction $f_s = 0.1$.}
+					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs3"}
+					\caption{Stellar fraction $f_s = 0.30$.}
 					\label{fig: baryonicprofilelow}
 				\end{subfigure}
-				\caption{Baryonic mass distributions for $z \gg 0$ and $z \approx 0$.}
-				\label{fig: baryonicprofile}
+				\caption{Mass distributions for $R_\text{vir} = 0.69$ kpc (red line), $c = 4$, and $f_b = 0.156$.}
+				\label{fig: massprofiles}
 			\end{figure}
+		
+	\section{Effect of the baryonic fraction}
 	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=\textwidth]{"../Files/Week 5/stellar_density_comparison"}
-	\end{figure}
-
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.7\textwidth]{"../Files/Week 5/properties_s02v70"}
-	\end{figure}
+	\section{Effect of the power law exponent}
 	
+	\section{Effect of the stellar fraction}
+	
+%	\begin{figure}[h]
+%		\centering
+%		\includegraphics[width=\textwidth]{"../Files/Week 5/stellar_density_comparison"}
+%	\end{figure}
+%
+%	\begin{figure}[h]
+%		\centering
+%		\includegraphics[width=0.7\textwidth]{"../Files/Week 5/properties_s02v70"}
+%	\end{figure}
+%	

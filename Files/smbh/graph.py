@@ -51,11 +51,13 @@ def plotDensityMass(distance, densities, masses, figsize = (8, 4.5)):
     ax2.set_yscale('log')
 
     n = len(densities)
-    if n <= 3:
-        lines = ["-", "--", ":"]
+    if n <= 4:
+        lines = [":", "--", "-.", "-"]
         for i in range(n):
-            ax1.plot(distance, densities[i], lines[i], c = 'b')
-            ax2.plot(distance, masses[i], lines[i], c = 'g')
+            alpha = 1
+            # if i < (n - 1): alpha = 0.5
+            ax1.plot(distance, densities[i], lines[i], c = 'b', alpha = alpha)
+            ax2.plot(distance, masses[i], lines[i], c = 'g', alpha = alpha)
     else:
         ax1.plot(distance, densities, c = 'b')
         ax2.plot(distance, masses, c = 'g')
@@ -89,12 +91,15 @@ def plotDensityMassForAll(r, r_vir = None, baryonic_fraction = None, stellar_rat
     d_g = gasDensity(r)
     m_g = gasMass(r)
 
-    ds = [d_dm, d_s, d_g]
-    ms = [m_dm, m_s, m_g]
+    d = d_dm + d_s + d_g
+    ds = [d_dm, d_s, d_g, d]
+
+    m = m_dm + m_s + m_g
+    ms = [m_dm, m_s, m_g, m]
 
     fig, (ax1, ax2) = plotDensityMass(r, ds, ms, figsize)
 
-    ax1.legend(["Dark matter", "Stars", "Gas"])
+    ax1.legend(["Dark matter", "Stars", "Gas", "Cumulative"])
 
     return fig, (ax1, ax2)
 
