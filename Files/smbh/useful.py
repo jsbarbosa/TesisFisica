@@ -43,7 +43,7 @@ def findLocalMaxima(array):
     return argrelextrema(array, np.greater)[0]
 
 def findLocalMinima(array):
-    return argrelextrema(array, np.lower)[0]
+    return argrelextrema(array, np.less)[0]
 
 class Results(object):
     def __init__(self, filename):
@@ -66,6 +66,8 @@ class Results(object):
         self.distance = magnitude(self.positions)
         self.speed = magnitude(self.speeds)
 
+        self.return_index = -1
+
     def getReturnTime(self, threshold = R_VIR_THRESHOLD):
         try:
             return self.return_time
@@ -80,4 +82,10 @@ class Results(object):
             except Exception as e:
                 i = -1
             self.return_time = self.times[i]
+            self.return_index = i
             return self.return_time
+
+    def getMassAtReturnTime(self, threshold = R_VIR_THRESHOLD):
+        if self.return_index < 0:
+            getReturnTime(threshold)
+        return self.masses[self.return_index]

@@ -178,6 +178,33 @@ def plotProperties(results, figsize = (6, 8.5)):
 
     return fig, (ax1, ax2, ax3)
 
+def plotOrbits(results):
+    t_max = 0
+    fig, ax = plt.subplots(figsize = (8, 4.5))
+    for result in results:
+        t = 1000 * result.times
+        if t[-1] > t_max: t_max = t[-1]
+        ratio = result.STELLAR_FRACTION
+        fb = result.FB
+        y = result.distance / result.R_VIR
+        ax.fill_between(t, 0, y, alpha = 0.7, zorder = 1, linewidth = 1, edgecolor = 'k')
+
+    ax.set_xlabel('Time (Myr)')
+    ax.set_ylabel(r'$R / R_{vir}$')
+
+    ax.set_xlim(0, t_max)
+    ax.set_ylim(0, ax.get_ylim()[1])
+    ax.grid()
+    return fig, ax
+
+def coolLegend(ax, labels = None, loc = 'upper center', bbox_to_anchor = (0.5, 1.15), ncol = 4):
+    if labels == None:
+        ax.legend(loc = loc, bbox_to_anchor = bbox_to_anchor,
+                  ncol = ncol, fancybox = True, shadow = True)
+    else:
+        ax.legend(labels, loc = loc, bbox_to_anchor = bbox_to_anchor,
+                  ncol = ncol, fancybox = True, shadow = True)
+
 def make3dPlot(positions):
     fig = plt.figure()
     ax = Axes3D(fig)

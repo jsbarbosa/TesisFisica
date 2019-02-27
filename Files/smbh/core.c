@@ -203,11 +203,11 @@ double dynamicalFrictionGas(double r, double v)
 double SMBHAccretion(double *position, double *speed)
 {
     double r = getNorm(position);
-    r = sqrt(r * r + SOFTENING_RADIUS);
     double v = getNorm(speed);
+    r = sqrt(r * r + SOFTENING_RADIUS);
     v = sqrt(v * v + SOFTENING_SPEED);
     v = pow(pow(getLocalSoundSpeed(Z), 2) + pow(v, 2), 1.5);
-    double rho = stellarDensityHernquist(r) + gasDensity(r);
+    double rho = gasDensity(r); // + stellarDensityHernquist(r)
     double bondi = 4 * M_PI * pow(G0 * SMBH_MASS, 2) * rho / v;
     double eddington = (1 - 0.1) * SMBH_MASS / (0.1 * 0.44);
     if (bondi < eddington) return bondi;
@@ -222,17 +222,23 @@ double gravitationalForce(double r)
   return -G0 * m / pow(r, 2);
 }
 
-void localMaxima(double v, double sim_time)
+void localMaxima(double r, double v, double sim_time)
 {
   if (LAST_SPEEDS[0] + LAST_SPEEDS[1] > 0)
   {
-    if((LAST_SPEEDS[1] >= LAST_SPEEDS[0]) & (LAST_SPEEDS[1] >= v))
+    if((LAST_SPEEDS[1] >= LAST_SPEEDS[0]) & (LAST_SPEEDS[1] >= v)) // is a local maxima
     {
       if ((v > LAST_MAXIMA) & (sim_time > 1e-3))
       {
         STOP_SIMULATION = 1;
         return ;
       }
+      //
+      // else if(r < 1e-3 * R_VIR)
+      // {
+      //   STOP_SIMULATION = 1;
+      //   return ;
+      // }
       LAST_MAXIMA = v;
     }
     LAST_SPEEDS[0] = LAST_SPEEDS[1];
@@ -331,7 +337,7 @@ void baseCase(struct reb_simulation* sim)
     particle->ay = ay;
     particle->az = az;
 
-    localMaxima(v, sim->t);
+    localMaxima(r, v, sim->t);
 }
 
 void printConstants(void)
@@ -456,6 +462,7 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, int int
       break;
     case INT_IAS15:
       sim->integrator = REB_INTEGRATOR_IAS15;
+      if(dt > 1e-10) SIM_DT = 1e-10;
       break;
     case INT_WHFAST:
       sim->integrator = REB_INTEGRATOR_WHFAST;
