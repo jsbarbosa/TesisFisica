@@ -63,3 +63,6 @@ void setStellarRatio(double ratio);
 void setStellarTotalMass(void);
 void setGasDensity(void);
 void setGasPower(double n);
+
+void setTriaxalCoeffs(double, double, double);
+double darkMatterDensityTriaxial(double x, double y, double z);

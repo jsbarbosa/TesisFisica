@@ -37,6 +37,10 @@ volatile int STOP_SIMULATION = 0;
 double const Z_TIME_COEFFS[Z_TIME_DEGREE + 1] = {-2.22289277, 5.13671586, -4.92900515, 3.71708597};
 double const Z_HUBBLE_COEFFS[Z_HUBBLE_DEGREE + 1] = {0.0039385, 0.11201693, -0.11131262};
 
+volatile double TRIAXIAL_X = 1;
+volatile double TRIAXIAL_Y = 1;
+volatile double TRIAXIAL_Z = 1;
+
 void setBaryonicFraction(double fb)
 {
   FB = fb;
@@ -103,6 +107,17 @@ double darkMatterDensity(double r)
   factor = DARK_MATTER_DENSITY_0 / (factor * pow(1 + factor, 2));
   if(factor > MAX_DENSITY_DM) return MAX_DENSITY_DM;
   return factor;
+}
+
+double darkMatterDensityTriaxial(double x, double y, double z)
+{
+  // double b = 0.5;
+  // double c = 0.2;
+  // double r = sqrt(x * x + pow(y / b, 2) + pow(z / c, 2));
+
+  double r = pow(x / TRIAXIAL_X, 2) + pow(y / TRIAXIAL_Y, 2) + pow(z / TRIAXIAL_Z, 2);
+  r = sqrt(r);
+  return darkMatterDensity(r);
 }
 
 double darkMatterMass(double r)
@@ -265,6 +280,13 @@ void setR_vir(double r)
   STELLAR_SCALE_LENGTH = 0.01 * R_VIR / (1 + pow(2, 0.5));
 
   setGasDensity();
+}
+
+void setTriaxalCoeffs(double x, double y, double z)
+{
+  TRIAXIAL_X = x;
+  TRIAXIAL_Y = y;
+  TRIAXIAL_Z = z;
 }
 
 double getR_vir(void)

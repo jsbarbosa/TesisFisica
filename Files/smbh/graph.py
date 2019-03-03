@@ -2,12 +2,20 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+
+from matplotlib import cm
+import matplotlib.colors as colors
+from mpl_toolkits.mplot3d import Axes3D
+
 from smbh.lib import *
 from smbh.useful import magnitude
 
 mpl.rcParams['grid.color'] = 'k'
 mpl.rcParams['grid.linestyle'] = ':'
 mpl.rcParams['grid.linewidth'] = 0.5
+
+def getColors(n_points):
+    return cm.jet(np.linspace(0, 1, n_points))
 
 def slicePlot(data, axes = None):
     if axes == None:
@@ -204,6 +212,79 @@ def coolLegend(ax, labels = None, loc = 'upper center', bbox_to_anchor = (0.5, 1
     else:
         ax.legend(labels, loc = loc, bbox_to_anchor = bbox_to_anchor,
                   ncol = ncol, fancybox = True, shadow = True)
+
+def evaluateMesh(function, array, symmetric):
+    n = len(array)
+    if symmetric: f = lambda x, y, z: function((x * x + y * y + z * z)**0.5)
+    else: f = function
+
+    all = []
+    for axis in range(3):
+        answer = np.zeros((n, n))
+        for i in range(n):
+            for j in range(n):
+                if axis == 0: answer[j, i] = f(array[i], array[j], 0)
+                elif axis == 1: answer[i, j] = f(0, array[j], array[i])
+                elif axis == 2: answer[i, j] = f(array[j], 0, array[i])
+#         answer = np.log10(answer)
+        all.append(answer)
+    return all
+
+def slice3d(from_, to_, function, symmetric = True, points = 35, alpha = 1, label = r'$1\times10^5M_\odot$ kpc$^{-3}$'):
+    fig = plt.figure()
+
+    ax = fig.add_subplot(111, projection = '3d')
+
+    distance = np.linspace(from_, to_, points)
+    X, Y = np.meshgrid(distance, distance)
+    PLANE =  0 * np.ones(X.shape)
+
+    data_XY, data_XZ, data_YZ = evaluateMesh(function, distance, symmetric)
+
+    norm = colors.LogNorm(vmin = data_XY.min(), vmax = data_XY.max())
+
+    color_XY = cm.jet(norm(data_XY))
+    color_XZ = cm.jet(norm(data_XZ))
+    color_YZ = cm.jet(norm(data_YZ))
+
+    ax.plot_surface(X, Y, PLANE, rstride = 1, cstride = 1, facecolors = color_XY,
+                    alpha = alpha, shade = False)
+
+    X, Z = np.meshgrid(distance, distance)
+    ax.plot_surface(PLANE, X, Z, rstride = 1, cstride = 1, facecolors = color_XZ,
+                    alpha = alpha, shade = False)
+
+    Y, Z = np.meshgrid(distance, distance)
+    surf = ax.plot_surface(Y, PLANE, Z, rstride = 1, cstride = 1, facecolors = color_YZ,
+                    alpha = alpha, shade = False)
+
+    ax.invert_yaxis()
+
+    ax.set_xlabel("$x$ (kpc)")
+    ax.set_ylabel("$y$ (kpc)")
+    ax.set_zlabel("$z$ (kpc)")
+
+    ax.xaxis.pane.fill = False
+    ax.yaxis.pane.fill = False
+    ax.zaxis.pane.fill = False
+
+    ax.grid(False)
+
+    m = cm.ScalarMappable(cmap = plt.cm.jet, norm = norm)
+    m.set_array([])
+    cbar = fig.colorbar(m, shrink = 0.5, aspect = 5)
+
+    cbar.ax.set_ylabel(label, rotation = 90)
+    ax.set_aspect('equal')
+
+    fig.tight_layout()
+
+    return fig, ax, cbar
+
+
+
+
+
 
 def make3dPlot(positions):
     fig = plt.figure()

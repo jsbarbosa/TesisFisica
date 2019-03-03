@@ -29,7 +29,7 @@ def setResArgs(func, res, args):
     try:
         f.argtypes = tuple(args)
     except TypeError:
-        if args != None:f.argtypes = args,
+        if args != None: f.argtypes = args,
     setattr(lib, func, f)
 
 def function(func, *args):
@@ -67,7 +67,9 @@ func_info = [('getR_vir', c_double, None),
             ('setStellarRatio', None, c_double),
             ('darkMatterVelocityDispersion', c_double, None),
             ('machFunction', c_double, c_double),
-            ('setGasPower', None, c_double)]
+            ('setGasPower', None, c_double),
+            ('darkMatterDensityTriaxial', c_double, (c_double, c_double, c_double)),
+            ('setTriaxalCoeffs', None, (c_double, c_double, c_double))]
 
 INT_LEAPFROG = 0
 INT_IAS15 = 1

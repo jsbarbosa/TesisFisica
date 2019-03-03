@@ -7,7 +7,7 @@ KPC = 3.0856776e19 # in meters
 GYR = 60 * 60 * 24 * 365.25 * 1e9 # in seconds
 SOLAR_MASSES = 1.98847e30 # in kg
 
-R_VIR_THRESHOLD = 0.1
+R_VIR_THRESHOLD = 0.01
 
 def kmsTokpcGyr(kms):
     global GYR, KPC
@@ -72,17 +72,10 @@ class Results(object):
         try:
             return self.return_time
         except AttributeError:
-            r = self.distance / self.R_VIR
-            indexes = findLocalMaxima(r)
             try:
-                first_in = np.where(r[indexes] < threshold)[0][0]
-                first_in = indexes[first_in]
-                for i in range(first_in, 0, -1):
-                    if r[i] >= threshold: break
-            except Exception as e:
-                i = -1
-            self.return_time = self.times[i]
-            self.return_index = i
+                self.return_index = np.where(self.distance >= self.R_VIR * R_VIR_THRESHOLD)[0][-1]
+            except IndexError: self.return_index = 0
+            self.return_time = self.times[self.return_index]
             return self.return_time
 
     def getMassAtReturnTime(self, threshold = R_VIR_THRESHOLD):
