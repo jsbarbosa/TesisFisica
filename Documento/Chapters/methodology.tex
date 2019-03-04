@@ -171,11 +171,11 @@
 	\subsection{Initial conditions and numerical integration}
 		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen densities profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, as it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (0, 0, 0)$ kpc.
 		
-		Numerical integration is carried out using a leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years, simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the age of the universe. 
+		Numerical integration is carried out using a leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years, the simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the age of the universe. 
 		
 	\section{Definitions}
 		\subsection{Escape velocity}
 			Minimum initial velocity required for the maximum distance of a single orbit of the black hole to stay outside $0.1R_\text{vir}$ after $z = 0$, $z = 6$ or 10 \% of the age of the universe at the moment of the kick \cite{tanaka2009assembly, choksi2017recoiling}.
 		
 		\subsection{Time of return}
-			Time required by the black hole to orbit with maximum distances of less than  $0.1R_\text{vir}$.
+			Time required by the black hole to orbit with maximum distances of less than  $0.01R_\text{vir}$.

@@ -10,7 +10,7 @@ volatile double FB = 0.156;
 
 volatile double GAS_CORE = 1e-3;
 volatile double GAS_POWER = -2.2;
-volatile double STELLAR_FRACTION = 0.0; // complement of gas percent
+volatile double STELLAR_FRACTION = 0.01; // complement of gas percent
 
 /* FIXED AT MAIN */
 volatile double R_VIR = 0;
@@ -30,7 +30,7 @@ volatile double GAS_DENSITY = 0; //fixed at main
 volatile double SIM_DT;
 
 volatile double LAST_MAXIMA = -1;
-volatile double LAST_SPEEDS[2] = {-1, -1};
+volatile double LAST_POSITIONS[2] = {-1, -1};
 
 volatile int STOP_SIMULATION = 0;
 
@@ -68,7 +68,6 @@ void setGasDensity(void)
   double f1 = (pow(R_VIR, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
   f1 = 4 * M_PI * (f1 + pow(GAS_CORE, 3) / 3);
   GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / f1;
-  // GAS_DENSITY =  / (4 * M_PI * pow(R_VIR, GAS_POWER + 3));
 }
 
 void setGasPower(double n)
@@ -111,12 +110,11 @@ double darkMatterDensity(double r)
 
 double darkMatterDensityTriaxial(double x, double y, double z)
 {
-  // double b = 0.5;
-  // double c = 0.2;
-  // double r = sqrt(x * x + pow(y / b, 2) + pow(z / c, 2));
+  double r_a = 10;
+  double r = sqrt(x * x + y * y + z * z);
+  double r_e = sqrt(pow(x / TRIAXIAL_X, 2) + pow(y / TRIAXIAL_Y, 2) + pow(z / TRIAXIAL_Z, 2));
 
-  double r = pow(x / TRIAXIAL_X, 2) + pow(y / TRIAXIAL_Y, 2) + pow(z / TRIAXIAL_Z, 2);
-  r = sqrt(r);
+  r = (r_a + r) * r_e / (r_a + r_e);
   return darkMatterDensity(r);
 }
 
@@ -153,20 +151,12 @@ void sphericalToCartesian(double *r, double *theta, double *phi)
 double getLocalSoundSpeed(double z)
 {
   return SOUND_SPEED_FACTOR * sqrt(HALO_MASS / R_VIR);
-    // double factor1, factor2, h;
-    // h = getHubbleParameter(z);
-    // factor1 = pow(HALO_MASS / 1e2, 1./3);
-    // factor2 = pow(MATTER_DENSITY_PARAMETER * pow(h, 2) / 0.14, 1/6.);
-    // return 1.8 * pow(1 + z, 0.5) * factor1 * factor2;
 }
 
 double gasDensity(double r)
 {
   if (r < GAS_CORE) return GAS_DENSITY;
   return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
-  // double factor = GAS_DENSITY * pow(r, GAS_POWER);
-  // if(factor > MAX_DENSITY_GAS) return MAX_DENSITY_GAS;
-  // return factor;
 }
 
 double gasMass(double r)
@@ -222,7 +212,7 @@ double SMBHAccretion(double *position, double *speed)
     r = sqrt(r * r + SOFTENING_RADIUS);
     v = sqrt(v * v + SOFTENING_SPEED);
     v = pow(pow(getLocalSoundSpeed(Z), 2) + pow(v, 2), 1.5);
-    double rho = gasDensity(r); // + stellarDensityHernquist(r)
+    double rho = gasDensity(r);
     double bondi = 4 * M_PI * pow(G0 * SMBH_MASS, 2) * rho / v;
     double eddington = (1 - 0.1) * SMBH_MASS / (0.1 * 0.44);
     if (bondi < eddington) return bondi;
@@ -239,34 +229,35 @@ double gravitationalForce(double r)
 
 void localMaxima(double r, double v, double sim_time)
 {
-  if (LAST_SPEEDS[0] + LAST_SPEEDS[1] > 0)
+  if (LAST_POSITIONS[0] + LAST_POSITIONS[1] > 0)
   {
-    if((LAST_SPEEDS[1] >= LAST_SPEEDS[0]) & (LAST_SPEEDS[1] >= v)) // is a local maxima
+    if((LAST_POSITIONS[1] >= LAST_POSITIONS[0]) & (LAST_POSITIONS[1] >= r)) // is a local maxima
     {
-      if ((v > LAST_MAXIMA) & (sim_time > 1e-3))
+      if(LAST_MAXIMA > 0)
       {
-        STOP_SIMULATION = 1;
-        return ;
+        if ((r > LAST_MAXIMA) & (sim_time > 1e-3))
+        {
+          STOP_SIMULATION = 1;
+          return ;
+        }
       }
-      //
-      // else if(r < 1e-3 * R_VIR)
-      // {
-      //   STOP_SIMULATION = 1;
-      //   return ;
-      // }
-      LAST_MAXIMA = v;
+      LAST_MAXIMA = r;
     }
-    LAST_SPEEDS[0] = LAST_SPEEDS[1];
-    LAST_SPEEDS[1] = v;
+    if((LAST_MAXIMA < 1e-3 * R_VIR) & (LAST_MAXIMA > 0))
+    {
+      STOP_SIMULATION = 1;
+      return ;
+    }
+    LAST_POSITIONS[0] = LAST_POSITIONS[1];
+    LAST_POSITIONS[1] = r;
   }
-  else if(LAST_SPEEDS[0] == -1)
+  else if(LAST_POSITIONS[0] == -1)
   {
-    LAST_MAXIMA = v;
-    LAST_SPEEDS[0] = v;
+    LAST_POSITIONS[0] = r;
   }
   else
   {
-    LAST_SPEEDS[1] = v;
+    LAST_POSITIONS[1] = r;
   }
 }
 
@@ -326,7 +317,7 @@ void baseCase(struct reb_simulation* sim)
 {
     Z = getRedshift(sim->t + T0);
 
-    struct reb_particle*  particle = &(sim->particles[0]);
+    struct reb_particle* particle = &(sim->particles[0]);
     double pos[3] = {particle->x, particle->y, particle->z};
     double speed[3] = {particle->vx, particle->vy, particle->vz};
     double r = getSoftenedLength(getNorm(pos));
@@ -358,6 +349,8 @@ void baseCase(struct reb_simulation* sim)
     particle->ax = ax;
     particle->ay = ay;
     particle->az = az;
+
+    sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
 
     localMaxima(r, v, sim->t);
 }
@@ -430,26 +423,44 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
                             void (*additional_force)(struct reb_simulation * ))
 {
-    struct reb_simulation* sim = reb_create_simulation();
-    sim->G = G0;
-    sim->gravity = REB_GRAVITY_NONE;
-    sim->additional_forces = additional_force;
-    sim->force_is_velocity_dependent = 1;
+  int coeff = 1;
+  struct reb_simulation* sim = reb_create_simulation();
+  sim->G = G0;
+  sim->gravity = REB_GRAVITY_NONE;
+  sim->additional_forces = additional_force;
+  sim->force_is_velocity_dependent = 1;
 
-    struct reb_particle particle = {0};
-    particle.m = mass;
-    particle.x = position[0];
-    particle.y = position[1];
-    particle.z = position[2];
-    particle.vx = speed[0];
-    particle.vy = speed[1];
-    particle.vz = speed[2];
+  struct reb_particle particle = {0};
+  particle.m = mass;
+  particle.x = coeff * position[0];
+  particle.y = coeff * position[1];
+  particle.z = coeff * position[2];
+  particle.vx = coeff * speed[0];
+  particle.vy = coeff * speed[1];
+  particle.vz = coeff * speed[2];
 
-    reb_add(sim, particle);
-    SMBH_MASS = mass;
+  reb_add(sim, particle);
 
-    reb_tools_megno_init(sim);
-    return sim;
+  if(coeff == 2)
+  {
+    struct reb_particle particle2 = {0};
+    particle2.m = mass;
+    particle2.x = 0;
+    particle2.y = 0;
+    particle2.z = 0;
+    particle2.vx = 0;
+    particle2.vy = 0;
+    particle2.vz = 0;
+
+    reb_add(sim, particle2);
+    reb_move_to_com(sim);
+  }
+
+  SMBH_MASS = mass;
+
+  reb_tools_megno_init(sim);
+  sim->exact_finish_time = 0;
+  return sim;
 }
 
 void runSimulation(struct reb_simulation* sim, int save_every, const char *filename)
@@ -459,8 +470,8 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   sim->dt = SIM_DT;
   STOP_SIMULATION = 0;
   LAST_MAXIMA = -1;
-  LAST_SPEEDS[0] = -1;
-  LAST_SPEEDS[1] = -1;
+  LAST_POSITIONS[0] = -1;
+  LAST_POSITIONS[1] = -1;
 
   while((!STOP_SIMULATION) & (sim->t + T0 < 13.78))
   {
@@ -484,9 +495,9 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, int int
       break;
     case INT_IAS15:
       sim->integrator = REB_INTEGRATOR_IAS15;
-      if(dt > 1e-10) SIM_DT = 1e-10;
       break;
     case INT_WHFAST:
+      SIM_DT *= 1. / 10;
       sim->integrator = REB_INTEGRATOR_WHFAST;
       break;
     case INT_JANUS:
@@ -496,7 +507,7 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, int int
       sim->integrator = REB_INTEGRATOR_MERCURIUS;
       break;
     default :
-      sim->integrator = REB_INTEGRATOR_WHFAST;
+      sim->integrator = REB_INTEGRATOR_LEAPFROG;
  }
 
   runSimulation(sim, save_every, filename);

@@ -7,7 +7,17 @@ from ctypes import cdll, CDLL, c_double, POINTER, c_int, c_char_p, pointer, Argu
 
 from .useful import Results
 
+G = 0.449338
 R_VIR_z20 = 0.6899734690284971
+DEFAULT_STELLAR_FRACTION = 0.01
+DEFAULT_GAS_POWER = -2.2
+
+INT_LEAPFROG = 0
+INT_IAS15 = 1
+INT_WHFAST = 2
+INT_SEI = 3
+INT_JANUS = 4
+INT_MERCURIUS = 5
 
 dir = os.path.dirname(__file__)
 os.environ['PATH'] = dir + ';' + os.environ['PATH']
@@ -20,8 +30,6 @@ except OSError:
     os.chdir(dir)
     lib = CDLL(path)
     os.chdir(cwd)
-
-G = 0.449338
 
 def setResArgs(func, res, args):
     f = getattr(lib, func)
@@ -71,13 +79,6 @@ func_info = [('getR_vir', c_double, None),
             ('darkMatterDensityTriaxial', c_double, (c_double, c_double, c_double)),
             ('setTriaxalCoeffs', None, (c_double, c_double, c_double))]
 
-INT_LEAPFROG = 0
-INT_IAS15 = 1
-INT_WHFAST = 2
-INT_SEI = 3
-INT_JANUS = 4
-INT_MERCURIUS = 5
-
 for func in func_info:
     name = func[0]
     setResArgs(*func)
@@ -93,18 +94,19 @@ def pointerReturn(pointer):
     lib.free(pointer)
     return np.array(values)
 
-def run(speeds, smbh_mass = 1, dt = 1e-6, integrator = INT_LEAPFROG, save_every = 10, filename = None):
+def run(speeds, smbh_mass = 1, dt = 1e-6, integrator = INT_LEAPFROG, save_every = 10, filename = None, read = True):
     global lib
     delete_file = False
-    pos = (c_double * 3)(*[0, 0, 0])
+    pos = (1e-3 / (3**0.5)) * np.ones(3)
+    pos = (c_double * 3)(*pos)
     speeds = (c_double * len(speeds))(*speeds)
     if filename == None:
         filename = "temp.dat"
         delete_file = True
     lib.run(pos, speeds, smbh_mass, dt, integrator, int(save_every), filename.encode())
 
-    data = Results(filename)
-
+    if read: data = Results(filename)
+    else: data = None
     if delete_file: os.remove(filename)
 
     return data
@@ -116,3 +118,7 @@ def SMBHAccretion(pos, speeds):
         else:
             return pointerFunction(lib.SMBHAccretion, pos, speeds)
     return pointerFunction(lib.SMBHAccretion, pos, speeds)
+
+setR_vir(R_VIR_z20)
+setGasPower(-2.2)
+setStellarRatio(0.01)

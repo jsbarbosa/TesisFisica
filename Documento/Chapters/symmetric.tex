@@ -105,6 +105,22 @@
 			\begin{equation}
 				\mathcal{R}_s = \dfrac{0.01}{\left(1 + \sqrt{2}\right)}\left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3} \approx 6.835\times 10^{-4}\left({\dfrac{M_h}{H(t)^2}}\right)^{1/3}
 			\end{equation}
+			\begin{figure}[h]
+				\centering
+				\begin{subfigure}[b]{0.49\textwidth}
+					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs01"}
+					\caption{Stellar fraction $f_s = 0.01$.}
+					\label{fig: baryonicprofilehigh}
+				\end{subfigure}
+				~ 
+				\begin{subfigure}[b]{0.49\textwidth}
+					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs3"}
+					\caption{Stellar fraction $f_s = 0.30$.}
+					\label{fig: baryonicprofilelow}
+				\end{subfigure}
+				\caption{Mass distributions for $R_\text{vir} = 0.69$ kpc (red line), $c = 4$, and $f_b = 0.156$.}
+				\label{fig: massprofiles}
+			\end{figure}
 	
 		\subsection{Gas profile}
 			For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^n = r^{-2.2}$. The complete density is described as follows:
@@ -132,40 +148,49 @@
 				M_\text{gas}(R_\text{vir}) = 4\pi\rho_0^\text{gas}\left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right) = (1 - f_s) f_bM_h
 			\end{equation}
 			\begin{equation}
-				\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right)} = \qquad \text{ if $R_\text{vir} > r_0$}
+				\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right)} \qquad \text{ if $R_\text{vir} > r_0$}
 			\end{equation}
 			
-			All of the profiles are shown on \autoref{fig: massprofiles}, where the effect of the stellar fraction can be seen.
-			\begin{figure}[h]
-				\centering
-				\begin{subfigure}[b]{0.49\textwidth}
-					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs01"}
-					\caption{Stellar fraction $f_s = 0.01$.}
-					\label{fig: baryonicprofilehigh}
-				\end{subfigure}
-				~ 
-				\begin{subfigure}[b]{0.49\textwidth}
-					\includegraphics[width=\textwidth]{"../Files/Week 6/density_mass_fs3"}
-					\caption{Stellar fraction $f_s = 0.30$.}
-					\label{fig: baryonicprofilelow}
-				\end{subfigure}
-				\caption{Mass distributions for $R_\text{vir} = 0.69$ kpc (red line), $c = 4$, and $f_b = 0.156$.}
-				\label{fig: massprofiles}
-			\end{figure}
+			All of the profiles are shown on \autoref{fig: massprofiles}, where the effect of the stellar fraction can be seen.			
+	\section{Results}
+	For a single simulation, the following data is saved: iteration time, current position, speed, and the black hole mass. With these information, accelerations and densities can be later reconstructed as on \autoref{fig: overallOutput}.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.52\textwidth]{"../Files/Week 6/properties_s01v70"}
+		\caption{Upper two plots show the output of a single simulation, while the lower one shows most the local properties per data point.}
+		\label{fig: overallOutput}
+	\end{figure}
+	
+	\subsection{Effect of the baryonic fraction}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.7\textwidth]{"../Files/Week 5/baryonic_fraction_comparison"}
+		\caption{.}
+		\label{fig: baryonicfraction}
+	\end{figure}
 		
-	\section{Effect of the baryonic fraction}
+	\subsection{Effect of the power law exponent}
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 6/power_law"}
+			\caption{.}
+			\label{fig: powerLawOrbits}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 6/power_law_density"}
+			\caption{.}
+			\label{fig: powerLawDensities}
+		\end{subfigure}
+		\caption{.}
+		\label{fig: powerLaw}
+	\end{figure}
 	
-	\section{Effect of the power law exponent}
-	
-	\section{Effect of the stellar fraction}
-	
-%	\begin{figure}[h]
-%		\centering
-%		\includegraphics[width=\textwidth]{"../Files/Week 5/stellar_density_comparison"}
-%	\end{figure}
-%
-%	\begin{figure}[h]
-%		\centering
-%		\includegraphics[width=0.7\textwidth]{"../Files/Week 5/properties_s02v70"}
-%	\end{figure}
-%	
+	\subsection{Effect of the stellar fraction}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.7\textwidth]{"../Files/Week 7/Symmetric/returntimes_stellar_speed"}
+		\caption{.}
+		\label{fig: stellarfraction}
+	\end{figure}

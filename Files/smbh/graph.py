@@ -43,7 +43,7 @@ def slicePlot(data, axes = None):
 
     return plt.gcf(), (ax1, ax2, ax3)
 
-def plotDensityMass(distance, densities, masses, figsize = (8, 4.5)):
+def plotDensityMass(distance, densities, masses, lines = [":", "--", "-.", "-"], figsize = (8, 4.5)):
     fig, ax1 = plt.subplots(figsize = figsize)
     ax2 = ax1.twinx()
 
@@ -59,13 +59,15 @@ def plotDensityMass(distance, densities, masses, figsize = (8, 4.5)):
     ax2.set_yscale('log')
 
     n = len(densities)
-    if n <= 4:
-        lines = [":", "--", "-.", "-"]
-        for i in range(n):
-            alpha = 1
-            # if i < (n - 1): alpha = 0.5
-            ax1.plot(distance, densities[i], lines[i], c = 'b', alpha = alpha)
-            ax2.plot(distance, masses[i], lines[i], c = 'g', alpha = alpha)
+    if n > 1:
+        if lines != None:
+            for i in range(n):
+                ax1.plot(distance, densities[i], lines[i], c = 'b')
+                ax2.plot(distance, masses[i], lines[i], c = 'g')
+        else:
+            for i in range(n):
+                ax1.plot(distance, densities[i], c = 'b')
+                ax2.plot(distance, masses[i], c = 'g')
     else:
         ax1.plot(distance, densities, c = 'b')
         ax2.plot(distance, masses, c = 'g')
@@ -105,7 +107,7 @@ def plotDensityMassForAll(r, r_vir = None, baryonic_fraction = None, stellar_rat
     m = m_dm + m_s + m_g
     ms = [m_dm, m_s, m_g, m]
 
-    fig, (ax1, ax2) = plotDensityMass(r, ds, ms, figsize)
+    fig, (ax1, ax2) = plotDensityMass(r, ds, ms, figsize = figsize)
 
     ax1.legend(["Dark matter", "Stars", "Gas", "Cumulative"])
 
@@ -186,9 +188,9 @@ def plotProperties(results, figsize = (6, 8.5)):
 
     return fig, (ax1, ax2, ax3)
 
-def plotOrbits(results):
+def plotOrbits(results, figsize = (5, 4)):
     t_max = 0
-    fig, ax = plt.subplots(figsize = (8, 4.5))
+    fig, ax = plt.subplots(figsize = figsize)
     for result in results:
         t = 1000 * result.times
         if t[-1] > t_max: t_max = t[-1]
@@ -226,7 +228,6 @@ def evaluateMesh(function, array, symmetric):
                 if axis == 0: answer[j, i] = f(array[i], array[j], 0)
                 elif axis == 1: answer[i, j] = f(0, array[j], array[i])
                 elif axis == 2: answer[i, j] = f(array[j], 0, array[i])
-#         answer = np.log10(answer)
         all.append(answer)
     return all
 
