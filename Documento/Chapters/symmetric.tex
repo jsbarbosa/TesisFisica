@@ -87,7 +87,7 @@
 	
 		\subsection{Stellar profile}
 			Stellar density is modeled as a Hernquist profile with half-mass radius $R_{1/2} = 0.01 R_\text{vir}$, as in \citeauthor{choksi2017recoiling}. Density for a Hernquist profile is given by \cite{hernquist1990analytical}:
-			\begin{equation}
+			\begin{equation}\label{eq: sdensity}
 				\rho_s(r) = \dfrac{f_sf_bM_h \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3} \qquad \text{$\mathcal{R}_s$ is known as scale length}
 			\end{equation}
 			
@@ -124,7 +124,7 @@
 	
 		\subsection{Gas profile}
 			For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^n = r^{-2.2}$. The complete density is described as follows:
-			\begin{equation}
+			\begin{equation}\label{eq: rdensity}
 				\rho_\text{gas}(r) = \left \{
 					\begin{matrix}
 					\rho_0^\text{gas} & \text{if $r < r_0$}\\
