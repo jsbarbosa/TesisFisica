@@ -11,7 +11,7 @@
 #define MAX_DENSITY_GAS 1e8
 
 #define G0 0.449849
-// #define G0 4.49849e-06 // kpc gyr m0
+#define INT_STEPS 1e2
 
 #define Z_TIME_DEGREE 3
 #define Z_HUBBLE_DEGREE 2

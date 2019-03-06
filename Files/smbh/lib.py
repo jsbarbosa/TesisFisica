@@ -77,7 +77,12 @@ func_info = [('getR_vir', c_double, None),
             ('machFunction', c_double, c_double),
             ('setGasPower', None, c_double),
             ('darkMatterDensityTriaxial', c_double, (c_double, c_double, c_double)),
-            ('setTriaxalCoeffs', None, (c_double, c_double, c_double))]
+            ('getM', c_double, (c_double, c_double, c_double)),
+            ('setTriaxalCoeffs', None, (c_double, c_double, c_double)),
+            ('triaxial_gravDM', POINTER(c_double), (c_double, c_double, c_double)),
+            ('triaxial_gravS', POINTER(c_double), (c_double, c_double, c_double)),
+            ('triaxial_gravitationalDarkMatter', POINTER(c_double), (c_double, c_double, c_double, c_double)),
+            ('triaxial_gravitationalStellar', c_double, (c_double, c_double, c_double, c_double, c_int))]
 
 for func in func_info:
     name = func[0]

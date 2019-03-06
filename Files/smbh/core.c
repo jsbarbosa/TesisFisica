@@ -37,9 +37,9 @@ volatile int STOP_SIMULATION = 0;
 double const Z_TIME_COEFFS[Z_TIME_DEGREE + 1] = {-2.22289277, 5.13671586, -4.92900515, 3.71708597};
 double const Z_HUBBLE_COEFFS[Z_HUBBLE_DEGREE + 1] = {0.0039385, 0.11201693, -0.11131262};
 
-volatile double TRIAXIAL_X = 1;
-volatile double TRIAXIAL_Y = 1;
-volatile double TRIAXIAL_Z = 1;
+volatile double TRIAXIAL_A_1 = 1;
+volatile double TRIAXIAL_A_2 = 0.5;
+volatile double TRIAXIAL_A_3 = 0.5;
 
 void setBaryonicFraction(double fb)
 {
@@ -100,6 +100,19 @@ double getNorm(double *vector)
   return sqrt(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
 }
 
+double getM(double x, double y, double z)
+{
+  return sqrt(x * x + pow(y / TRIAXIAL_A_2, 2) + pow(z / TRIAXIAL_A_3, 2));
+}
+
+double getMTau(double x, double y, double z, double tau)
+{
+  x = x * x / (TRIAXIAL_A_1 * TRIAXIAL_A_1 + tau);
+  y = y * y / (TRIAXIAL_A_2 * TRIAXIAL_A_2 + tau);
+  z = z * z / (TRIAXIAL_A_3 * TRIAXIAL_A_3 + tau);
+  return TRIAXIAL_A_1 * sqrt(x + y + z);
+}
+
 double darkMatterDensity(double r)
 {
   double factor = r / DARK_MATTER_SCALE_RADIUS;
@@ -110,12 +123,8 @@ double darkMatterDensity(double r)
 
 double darkMatterDensityTriaxial(double x, double y, double z)
 {
-  double r_a = 10;
-  double r = sqrt(x * x + y * y + z * z);
-  double r_e = sqrt(pow(x / TRIAXIAL_X, 2) + pow(y / TRIAXIAL_Y, 2) + pow(z / TRIAXIAL_Z, 2));
-
-  r = (r_a + r) * r_e / (r_a + r_e);
-  return darkMatterDensity(r);
+  double m = getM(x, y, z);
+  return darkMatterDensity(m);
 }
 
 double darkMatterMass(double r)
@@ -227,6 +236,98 @@ double gravitationalForce(double r)
   return -G0 * m / pow(r, 2);
 }
 
+double *phiVector(double x, double y, double z, double tau)
+{
+  int i;
+  double pos[3] = {x, y, z};
+  double *phi = malloc(3 * sizeof(double));
+  double a[3] = {TRIAXIAL_A_1, TRIAXIAL_A_2, TRIAXIAL_A_3};
+
+  double factor = 1;
+  for(i = 0; i < 3; i++) factor *= sqrt(tau + a[i] * a[i]);
+  for(i = 0; i < 3; i++)
+  {
+    phi[i] = pos[i] / (factor * (tau + a[i] * a[i]));
+  }
+  return phi;
+}
+
+double *triaxial_gravitationalDarkMatter(double x, double y, double z, double tau)
+{
+  int i;
+  double *phi = phiVector(x, y, z, tau);
+  double m = getMTau(x, y, z, tau);
+
+  double factor = m * pow(DARK_MATTER_SCALE_RADIUS + m, 2);
+  for(i = 0; i < 3; i++) phi[i] *= 1.0 / factor;
+  return phi;
+}
+
+double *triaxial_gravitationalStellar(double x, double y, double z, double tau)
+{
+  int i;
+  double *phi = phiVector(x, y, z, tau);
+  double m = getMTau(x, y, z, tau);
+
+  double factor = m * pow(STELLAR_SCALE_LENGTH + m, 3);
+  for(i = 0; i < 3; i++) phi[i] *= 1.0 / factor;
+  return phi;
+}
+
+double *simpson(double *(*func)(double, double, double, double), double x, double y, double z, double gamma)
+{
+  int i, j, coeff;
+  double value, h, tau, omega, diff;
+
+  h = (1.0) / (INT_STEPS - 1.0);
+  // h = 0.5 * M_PI / (INT_STEPS - 1.0);
+
+  double *temp;
+  double *grad = calloc(3, sizeof(double));
+  for(i = 0; i < INT_STEPS; i++)
+  {
+    if ((i == 0) | (i == INT_STEPS - 1)) coeff = 1;
+    else if(i % 3 == 0) coeff = 2;
+    else coeff = 3;
+
+    omega = h * i;
+    tau = pow(omega / (1.0 - omega), 1.0 / gamma);
+    diff = tau / (omega * gamma * (1 - omega));
+    if(!isnormal(diff) & (diff != 0)) diff = 0;
+    temp = func(x, y, z, tau);
+
+    for(j = 0; j < 3; j++)
+    {
+      value = temp[j];
+      if (isnormal(value) | (value == 0))
+      {
+        grad[j] += coeff * value * diff;
+      }
+    }
+    free(temp);
+  }
+
+  for(i = 0; i < 3; i++) grad[i] *= (3 * h / 8) * 0.9988627714549503;
+  return grad;
+}
+
+double *triaxial_gravDM(double x, double y, double z)
+{
+  int i;
+  double *grad = simpson(triaxial_gravitationalDarkMatter, x, y, z, 0.1);
+  for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * pow(DARK_MATTER_SCALE_RADIUS, 3) *
+          DARK_MATTER_DENSITY_0 * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
+  return grad;
+}
+
+double *triaxial_gravS(double x, double y, double z)
+{
+  int i;
+  double *grad = simpson(triaxial_gravitationalStellar, x, y, z, 0.1);
+  for(i = 0; i < 3; i++) grad[i] *= G0 * STELLAR_TOTAL_MASS * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3 * STELLAR_SCALE_LENGTH;
+  return grad;
+}
+
 void localMaxima(double r, double v, double sim_time)
 {
   if (LAST_POSITIONS[0] + LAST_POSITIONS[1] > 0)
@@ -275,9 +376,9 @@ void setR_vir(double r)
 
 void setTriaxalCoeffs(double x, double y, double z)
 {
-  TRIAXIAL_X = x;
-  TRIAXIAL_Y = y;
-  TRIAXIAL_Z = z;
+  TRIAXIAL_A_1 = x;
+  TRIAXIAL_A_2 = y;
+  TRIAXIAL_A_3 = z;
 }
 
 double getR_vir(void)
