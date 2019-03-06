@@ -11,7 +11,7 @@ def getPotential(func, x, y, z):
     return sum(int_ ** 2) ** 0.5
 
 n = 100
-xs = np.logspace(-4, 4, n)
+xs = np.logspace(-4, 1, n)
 y = 0
 z = 0
 

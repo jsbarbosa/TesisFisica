@@ -117,13 +117,13 @@ def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True, integrator = INT_LEAP
 
     return data
 
-def SMBHAccretion(pos, speeds):
-    if type(pos) is np.ndarray:
-        if len(pos.shape) > 1:
-            return [pointerFunction(lib.SMBHAccretion, pos[i], speeds[i]) for i in range(len(pos))]
-        else:
-            return pointerFunction(lib.SMBHAccretion, pos, speeds)
-    return pointerFunction(lib.SMBHAccretion, pos, speeds)
+# def SMBHAccretion(pos, speeds):
+#     if type(pos) is np.ndarray:
+#         if len(pos.shape) > 1:
+#             return [pointerFunction(lib.SMBHAccretion, pos[i], speeds[i]) for i in range(len(pos))]
+#         else:
+#             return pointerFunction(lib.SMBHAccretion, pos, speeds)
+#     return pointerFunction(lib.SMBHAccretion, pos, speeds)
 
 setR_vir(R_VIR_z20)
 setGasPower(-2.2)

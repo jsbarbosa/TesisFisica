@@ -133,7 +133,6 @@ def plotProperties(results, figsize = (6, 8.5)):
     setR_vir(r_vir)
     pos = results.positions
     speeds = results.speeds
-    accr = SMBHAccretion(pos, speeds)
 
     t = results.times * 1000
     r = results.distance
@@ -143,6 +142,7 @@ def plotProperties(results, figsize = (6, 8.5)):
     dm = dynamicalFrictionDM(r, v)
     dg = dynamicalFrictionGas(r, v)
     factor = dampingFactor(r, v)
+    accr = SMBHAccretion(r, v)
 
     grav = gravitationalForce(r)
     rho_dm = darkMatterDensity(r)

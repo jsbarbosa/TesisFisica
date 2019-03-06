@@ -12,7 +12,6 @@
 \usetheme{Antibes}
 
 \usecolortheme{whale}
-
 \setbeamertemplate{footline}[frame number]
 
 \usepackage[backend = bibtex, style = verbose, sorting = none, autocite = footnote]{biblatex}
@@ -33,12 +32,9 @@
 }
 \newcommand{\fcite}[1]{\blfootnote{\tiny\cite{#1}}}
 
-%\usepackage{default}
-
-%\newcounter{stepsBarnes}
-%\newcommand{\seti}{\setcounter{stepsBarnes}{\value{enumi}}}
-%\newcommand{\conti}{\setcounter{enumi}{\value{stepsBarnes}}}
-%\definecolor{green}{RGB}{0, 150, 0}
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+	\insertshorttitle\hfill%
+	\insertframenumber\,/\,\inserttotalframenumber}
 
 \begin{document}
 \begin{frame}
@@ -165,15 +161,7 @@
 %\end{frame}
 
 \subsection{Units}
-\begin{frame}
-	Computer simulations are sensitive to rounding errors due to the lack of infinite precision when representing decimal numbers.
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.7\linewidth]{"../Files/Week 3/floating"}
-		\caption{Floating point precision for different values, for a 32 bit and 64 bit holders.}
-		\label{fig: IEEE-754}
-	\end{figure}
-\end{frame}
+
 
 \begin{frame}{}
 	\begin{table}[h]
@@ -211,71 +199,68 @@
 	\end{equation}
 	
 	where $M_\bullet$ is the black hole mass
-\end{frame}
-
-\begin{frame}{Dynamical friction}
-	As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force.
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width = 0.25\linewidth]{images/dyn_friction}
-		\caption{Collisionless dynamical friction}
-	\end{figure}
-	\fcite{df_image}
-\end{frame}
-
-\begin{frame}%{DF: Collisionless}
+	
 	\begin{itemize}
-		\item Collisionless matter interacts with the black hole gravitational only
-		\begin{equation}\label{eq: df_cl}
-		a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2} M_\bullet\rho(\vec{x})\ln\Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)
-		\end{equation}
-		
-		\item On the other side gas is in direct contact with the black hole
-		\begin{equation}\label{eq: df_c}
-		a^\text{c}_\text{DF}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2}M_\bullet\rho_\text{gas}(\vec{x})f(\mathcal{M})
-		\end{equation}
-		
+		\item Dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force.
+		\item The black hole accretes matter from the surroundings
 	\end{itemize}
-	
-	
-	
-%	\begin{equation}
-%		\rho(\vec{x}) = \rho_\text{DM}(\vec{x}) + \rho_\text{stars}(\vec{x})
-%	\end{equation}
-%	\begin{equation}
-%		X \equiv \dfrac{|\dot{x}|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM} = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
-%	\end{equation}
-\end{frame}
-
-\begin{frame}{Accretion into the black hole}
-	As the black hole accretes matter from the surroundings, an acceleration appears, due to the second law of Newton.
-	\begin{equation}
-		\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
-		\begin{array}{lc}
-		\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) & \text{if $\dot{M}_\bullet^\text{BHL} < \dot{M}_\bullet^\text{Edd}$} \\
-		\dot{M}_\bullet^\text{Edd} & \text{else}
-		\end{array}
-		\right.
-	\end{equation}
-	
-	\begin{equation}
-		\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_G(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} % \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
-	\end{equation}
-	\begin{equation}
-		\dot{M}_\bullet^\text{Edd} = \dfrac{(1 - \epsilon)M_\bullet}{\epsilon t_\text{Edd}} \qquad \epsilon = 0.1, \quad t_\text{Edd} = 0.44 \text{ Gyr}
-	\end{equation}
 \end{frame}
 
 \section{Studies}
 \subsection{Symmetrical}
 \subsubsection{Results}
+\begin{frame}{Results}
+	\begin{columns}
+		\begin{column}{0.3\linewidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s02v70"}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.7\linewidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width = \linewidth]{"../Files/Week 6/properties_s02v70_1"}
+				\caption{Distances and speeds.}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
 
 \begin{frame}{Results}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s01v70"}
-		\caption{Properties of a single simulation.}
-	\end{figure}
+	\begin{columns}
+		\begin{column}{0.3\linewidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s02v70"}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.7\linewidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width = \linewidth]{"../Files/Week 6/properties_s02v70_2"}
+				\caption{Mass of the black hole.}
+			\end{figure}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Results}
+	\begin{columns}
+		\begin{column}{0.3\linewidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s02v70"}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.7\linewidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width = \linewidth]{"../Files/Week 6/properties_s02v70_3"}
+				\caption{Multiple properties of a single simulation.}
+			\end{figure}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}{Effect of the power law exponent}
@@ -305,20 +290,9 @@
 \end{frame}
 
 \subsection{Triaxial}
-\begin{frame}{Triaxial setup}
-	Density shells for each profile are ellipsoids
-	\begin{equation}
-		m^2(\vec{x}) \equiv x_1^2 + \left(\dfrac{a_1}{a_2}\right)^2x_2^2 + \left(\dfrac{a_1}{a_3}\right)^2x_3^2
-	\end{equation}
-	
-	A thin shell, whose inner and outer skins are the surfaces $m$ and $m + \delta m$ is described by:
-	\begin{equation}\label{eq: m2}
-	m^2(\vec{x}, \tau) = a_1^2\left(\frac{x_1^{2}}{\tau + a_{1}^{2}} + \frac{x_2^{2}}{\tau + a_{2}^{2}} + \frac{x_3^{2}}{\tau + a_{3}^{2}}\right)
-	\end{equation}
-	 where $\tau \geq 0$ labels the surfaces \fcite{binney2011galactic}
-\end{frame}
 
-\begin{frame}
+
+\begin{frame}{Triaxial setup}
 	\begin{columns}
 		\begin{column}{0.3\linewidth}
 			\begin{figure}[h]
@@ -466,6 +440,15 @@
 %
 %
 %
+\begin{frame}
+	Computer simulations are sensitive to rounding errors due to the lack of infinite precision when representing decimal numbers.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{"../Files/Week 3/floating"}
+		\caption{Floating point precision for different values, for a 32 bit and 64 bit holders.}
+		\label{fig: IEEE-754}
+	\end{figure}
+\end{frame}
 
 \begin{frame}
 	Mass distributions between components are given by:
@@ -482,6 +465,49 @@
 	with $f_b = 0.156$ and $M_h = 10^8$ \sm
 	\begin{equation}
 		R_\text{vir} = \left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Dynamical friction}
+	As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.25\linewidth]{images/dyn_friction}
+		\caption{Collisionless dynamical friction}
+	\end{figure}
+	\fcite{df_image}
+\end{frame}
+
+\begin{frame}
+	\begin{itemize}
+	\item Collisionless matter interacts with the black hole gravitational only
+	\begin{equation}\label{eq: df_cl}
+	a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2} M_\bullet\rho(\vec{x})\ln\Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)
+	\end{equation}
+	
+	\item On the other side gas is in direct contact with the black hole
+	\begin{equation}\label{eq: df_c}
+	a^\text{c}_\text{DF}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2}M_\bullet\rho_\text{gas}(\vec{x})f(\mathcal{M})
+	\end{equation}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Accretion into the black hole}
+	As the black hole accretes matter from the surroundings, an acceleration appears, due to the second law of Newton.
+	\begin{equation}
+	\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
+	\begin{array}{lc}
+	\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) & \text{if $\dot{M}_\bullet^\text{BHL} < \dot{M}_\bullet^\text{Edd}$} \\
+	\dot{M}_\bullet^\text{Edd} & \text{else}
+	\end{array}
+	\right.
+	\end{equation}
+	
+	\begin{equation}
+	\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_G(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} % \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
+	\end{equation}
+	\begin{equation}
+	\dot{M}_\bullet^\text{Edd} = \dfrac{(1 - \epsilon)M_\bullet}{\epsilon t_\text{Edd}} \qquad \epsilon = 0.1, \quad t_\text{Edd} = 0.44 \text{ Gyr}
 	\end{equation}
 \end{frame}
 
@@ -508,6 +534,19 @@
 	\end{matrix}
 	\right.
 	\end{equation}
+\end{frame}
+
+\begin{frame}{Triaxial setup}
+	Density shells for each profile are ellipsoids
+	\begin{equation}
+	m^2(\vec{x}) \equiv x_1^2 + \left(\dfrac{a_1}{a_2}\right)^2x_2^2 + \left(\dfrac{a_1}{a_3}\right)^2x_3^2
+	\end{equation}
+	
+	A thin shell, whose inner and outer skins are the surfaces $m$ and $m + \delta m$ is described by:
+	\begin{equation}\label{eq: m2}
+	m^2(\vec{x}, \tau) = a_1^2\left(\frac{x_1^{2}}{\tau + a_{1}^{2}} + \frac{x_2^{2}}{\tau + a_{2}^{2}} + \frac{x_3^{2}}{\tau + a_{3}^{2}}\right)
+	\end{equation}
+	where $\tau \geq 0$ labels the surfaces \fcite{binney2011galactic}
 \end{frame}
 
 \begin{frame}
