@@ -44,18 +44,20 @@
 	
 	Most of the triaxials potentials cannot be analytically integrated, nevertheless it can be done numerically if the integral is not improper and converges. To make the integral proper, the following change of variable is done:
 	\begin{equation}
-		\omega = \dfrac{\tau}{\tau + 1}, \qquad d\tau = \dfrac{d\omega}{(1 - \omega)^2}
+		\omega = \dfrac{\tau^\gamma}{\tau^\gamma + 1}, \qquad d\tau = \dfrac{d\omega}{(1 - \omega)^2}
 	\end{equation} 
+	
+	Since the gravitational acceleration is given by the gradient of the potential, to numerically calculate the gradient, a total of 6 numerical integrals must be done (two for each dimension). Another option is to take advantage of the fact that $\vec{x}$ and $\tau$ are independent variables, thus:
 	\begin{equation}
-		\Phi(\vec{x}) = -\pi G \dfrac{a_2a_3}{a_1}\int\limits_{0}^{1}\dfrac{\psi(\infty) - \psi(m)}{\sqrt{\left(\dfrac{\omega}{1 - \omega} + a_1^2\right)\left(\dfrac{\omega}{1 - \omega} + a_2^2\right)\left(\dfrac{\omega}{1 - \omega} + a_3^2\right)}}\dfrac{d\omega}{(1 - \omega)^2}
+		\nabla \int f(\vec{x}, \tau)d\tau = \int [\nabla f(\vec{x}, \tau)] d\tau
 	\end{equation}
 	
-	Since the gravitational acceleration is given by the gradient of the potential, to numerically calculate the gradient, a total of 6 numerical integrals must be done (two for each dimension). Another option is to advantage of the fact that $\vec{x}$ and $\omega$ are independent variables, thus:
+	By doing this, the number of numerical integrals reduces to 3. Defining a vector $\vec{\phi}$, whose components are given by:
 	\begin{equation}
-		\nabla \int f(\omega)d\omega = \int [\nabla f(\omega)] d\omega
+		\phi_i(x_i, \tau) = \dfrac{x_i}{\left(\tau + a_i^2\right)^{\frac{3}{2}} \prod\limits_{i \neq j}^3\sqrt{\tau + a_j^2}}, \qquad \vec{\phi}(\vec{x}, \tau) = (\phi_1(x_1, \tau), \phi_2(x_2, \tau), \phi_3(x_3, \tau))
 	\end{equation}
 	
-	By doing this, the number of numerical integrals reduces to 3.
+	Potentials for each of the components of the galaxy are found by integrating ...
 	
 	\subsection{Dark matter halo}
 	\begin{figure}[h]
@@ -75,37 +77,24 @@
 		\label{fig: symmetricTriaxial}
 	\end{figure}
 	\begin{equation}
-		\nabla \Phi_\text{DM}(\vec{x}) = 
-		\int\limits_{0}^{\infty}\dfrac{2 \pi G R_{s}^{3} \rho_0 a_{2} a_{3}}{m(\vec{x}, \tau)\left(R_{s} + a_{1} m(\vec{x}, \tau)\right)^{2}} \left(\begin{array}{l}
-		\frac{x_1}{\left(\tau + a_{1}^{2}\right)^{\frac{3}{2}} \sqrt{\tau + a_{2}^{2}} \sqrt{\tau + a_{3}^{2}}}, \\
-		\frac{x_2}{\sqrt{\tau + a_{1}^{2}} \left(\tau + a_{2}^{2}\right)^{\frac{3}{2}} \sqrt{\tau + a_{3}^{2}}}, \\
-		\frac{x_3}{\sqrt{\tau + a_{1}^{2}} \sqrt{\tau + a_{2}^{2}} \left(\tau + a_{3}^{2}\right)^{\frac{3}{2}}}
-		\end{array}\right)
-		d\tau
+		\begin{array}{rl}
+			\nabla \Phi_\text{DM}(\vec{x}) & = 
+			\displaystyle\int\limits_{0}^{\infty}
+			\dfrac{2 \pi G R_{s}^{3}\rho_0 a_{1} a_{2} a_{3}}{m(\vec{x}, \tau)\left(R_{s} + m(\vec{x}, \tau)\right)^{2}}
+			\vec{\phi}(\vec{x}, \tau) d\tau \\
+			& = 2 \pi G R_{s}^{3}\rho_0 a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty}
+			\dfrac{\vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(R_{s} + m(\vec{x}, \tau)\right)^{2}}	
+		\end{array}
 	\end{equation}
+	
 	\subsection{Stellar profile}
-	\begin{equation*}
-		\nabla \Phi_\text{S}(\vec{x}) = \int\limits_{0}^{\infty}\dfrac{G M_{s} a_{2} a_{3} }{2 a_{1} \sqrt{\tau + a_{1}^{2}} \sqrt{\tau + a_{2}^{2}} \sqrt{\tau + a_{3}^{2}} \left(\mathcal{R_s}^{2} + 2 \mathcal{R_s} a_{1} m(\vec{x}, \tau)+ a_{1}^{2} m^{2}\right)^{2}}
-	\end{equation*}
 	\begin{equation}
-		\left(\begin{array}{l}
-		\frac{2 \mathcal{R_s} a_{1} x}{m(\vec{x}, \tau)\left(\tau + a_{1}^{2}\right)} + \frac{2 a_{1}^{2} x}{\tau + a_{1}^{2}}, \\
-		\frac{2 \mathcal{R_s} a_{1} y}{m(\vec{x}, \tau)\left(\tau + a_{2}^{2}\right)} + \frac{2 a_{1}^{2} y}{\tau + a_{2}^{2}}, \\
-		\frac{2 \mathcal{R_s} a_{1} z}{m(\vec{x}, \tau)\left(\tau + a_{3}^{2}\right)} + \frac{2 a_{1}^{2} z}{\tau + a_{3}^{2}}
-		\end{array}\right)
-		d\tau
+		\begin{array}{rl}
+			\nabla \Phi_\text{S}(\vec{x}) & = \displaystyle\int\limits_{0}^{\infty} \frac{G M_{s} a_{1} a_{2} a_{3}}{m(\vec{x}, \tau)\left(\mathcal{R_s} + m(\vec{x}, \tau)\right)^{3}}
+			\vec{\phi}(\vec{x}, \tau) d\tau \\
+			& = G M_{s} a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty} \frac{ \vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(\mathcal{R_s} + m(\vec{x}, \tau)\right)^{3}}
+		\end{array}
 	\end{equation}
 	\subsection{Gas profile}
 	
 	\section{Results}
-		
-
-	\begin{equation}
-		r_E = \sqrt{\left(\dfrac{x}{a}\right)^2 + \left(\dfrac{y}{b}\right)^2 + \left(\dfrac{z}{c}\right)^2}
-	\end{equation}
-	
-	\begin{equation}
-		\tilde{r} = \dfrac{(r_a + r)}{(r_a + r_E)}r
-	\end{equation}
-	
-	$\Phi(x, y, z) = \Phi(\tilde{r})$ \cite{vogelsberger2008fine}
