@@ -15,11 +15,23 @@
 
 \setbeamertemplate{footline}[frame number]
 
+\usepackage[backend = bibtex, style = verbose, sorting = none, autocite = footnote]{biblatex}
+\addbibresource{../Documento/bibliography.bib}
+
 %\usepackage[table, dvipsnames]{xcolor}
 
 \newcommand{\sm}[0]{$M_\odot$}
 \newcommand{\erf}[1]{\text{erf}\left(#1\right)}
-\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
+\def\checkmark{{\color{red}\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}}
+
+\newcommand\blfootnote[1]
+{%
+	\begingroup
+	\renewcommand\thefootnote{}\footnote{#1}%
+	\addtocounter{footnote}{-1}%
+	\endgroup
+}
+\newcommand{\fcite}[1]{\blfootnote{\tiny\cite{#1}}}
 
 %\usepackage{default}
 
@@ -37,10 +49,18 @@
 	\vspace{2.5cm}
 	Juan Barbosa\\
 	\vspace{1cm}
+	\small
+	Jaime Forero\\ 
+	Advisor\\
+	\vspace{0.5cm}
 	\footnotesize
 	Departamento de F\'isica\\
 	Facultad de Ciencias\\
 	Universidad de los Andes
+\end{frame}
+
+\begin{frame}{Overview}
+	\tableofcontents
 \end{frame}
 
 \section{Introduction}
@@ -65,8 +85,10 @@
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.4\linewidth]{images/example}
+		\caption{\href{run:/home/juan/Documents/TesisFisica/Slides/images/super_kick.mp4}{Binary black hole explorer}}
 	\end{figure}
-	\href{run:/home/juan/Documents/TesisFisica/Slides/images/super_kick.mp4}{Binary black hole explorer}
+	
+	\fcite{varma2018binary}
 \end{frame}
 
 \begin{frame}{Objectives}
@@ -81,8 +103,69 @@
 \end{frame}
 
 \section{Methodology}
+	\begin{frame}{Galactic setup}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\linewidth]{../Documento/Figures/NGC4414_modified}
+		\caption{NGC4414 galaxy as seen by the Hubble telescope.}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{enumerate}
+		\item Dark matter (NWF):
+		\begin{equation}\label{eq: dmdensity}
+		\rho_\text{DM}(r) = \dfrac{\rho_0^\text{DM}}{\frac{r}{R_s}\left(1 + \frac{r}{R_s}\right)^2}
+		\end{equation}
+		\item Stellar density (Hernquist):
+		\begin{equation}
+		\rho_s(r) = \dfrac{f_sf_bM_h \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3}
+		\end{equation}
+		\item Gas density (Power law):
+		\begin{equation}
+		\rho_\text{gas}(r) = \left \{
+		\begin{matrix}
+		\rho_0^\text{gas} & \text{if $r < r_0$}\\
+		\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{-n} & \text{if $r \geq r_0$}\\
+		\end{matrix}
+		\right.
+		\end{equation}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	Mass distributions of the host galaxy, are divergent. The end of the host is taken at the virial radius.
+	\begin{equation}\label{eq: critical_density}
+	\rho_\text{crit} = \dfrac{3H(t)^2}{8\pi G}
+	\end{equation}
+	
+	\begin{equation}\label{eq: R_vir_def}
+	\dfrac{M(R_\text{vir})}{V(R_\text{vir})} = \bar{\rho}(R_\text{vir}) =  200 \rho_\text{crit} = 75\dfrac{H(t)^2}{\pi G}
+	\end{equation}
+	
+	where $M(R_\text{vir})$ is the cumulative mass, and $V(R_\text{vir})$: the volume
+\end{frame}
+
+%\begin{frame}
+%	Mass distributions between components are given by:
+%	\begin{equation}
+%		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_h
+%	\end{equation}
+%	\begin{equation}
+%		M_\text{stars}(R_\text{vir}) = f_sf_bM_h
+%	\end{equation}
+%	\begin{equation}
+%		M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_h
+%	\end{equation}
+%	
+%	with $f_b = 0.156$ and $M_h = 10^8$ \sm
+%	\begin{equation}
+%		R_\text{vir} = \left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
+%	\end{equation}
+%\end{frame}
+
 \subsection{Units}
-\begin{frame}{Methodology}
+\begin{frame}
 	Computer simulations are sensitive to rounding errors due to the lack of infinite precision when representing decimal numbers.
 	\begin{figure}[h]
 		\centering
@@ -119,38 +202,286 @@
 	\end{enumerate}
 \end{frame}
 
-\begin{frame}
-	Mass distributions of the host galaxy, are divergent. The end of the host is taken at the virial radius.
-	\begin{equation}\label{eq: critical_density}
-		\rho_\text{crit} = \dfrac{3H(t)^2}{8\pi G}
-	\end{equation}
-	
-	\begin{equation}\label{eq: R_vir_def}
-		\dfrac{M(R_\text{vir})}{V(R_\text{vir})} = \bar{\rho}(R_\text{vir}) =  200 \rho_\text{crit} = 75\dfrac{H(t)^2}{\pi G}
-	\end{equation}
-	where $M(R_\text{vir})$ is the cumulative mass, and $V(R_\text{vir})$: the volume
-\end{frame}
 
 \subsection{Equation of motion}
-\begin{frame}{}
-Trajectories of the kicked black holes are obtained by numerically solving the equation of motion.
-\begin{equation}\label{eq: equationMotion}
-	\ddot{\vec{x}} = -a_\text{grav}(\vec{x})\hat{x} + \left(a_\text{DF}(\vec{x}, \dot{\vec{x}})-\dot{x}\dfrac{\dot{M_\bullet}(x, \dot{x})}{M_\bullet}\right)\dot{\hat{x}} 
-\end{equation}
-
-where $M_\bullet$ is the black hole mass
+	\begin{frame}{Equation of motion}
+	Trajectories of the kicked black holes are obtained by numerically solving the equation of motion.
+	\begin{equation}\label{eq: equationMotion}
+		\ddot{\vec{x}} = -a_\text{grav}(\vec{x})\hat{x} + \left(a_\text{DF}(\vec{x}, \dot{\vec{x}})-\dot{x}\dfrac{\dot{M_\bullet}(x, \dot{x})}{M_\bullet}\right)\dot{\hat{x}} 
+	\end{equation}
+	
+	where $M_\bullet$ is the black hole mass
 \end{frame}
 
 \begin{frame}{Dynamical friction}
-	As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. 
-	\begin{equation}\label{eq: df_cl}
+	As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.25\linewidth]{images/dyn_friction}
+		\caption{Collisionless dynamical friction}
+	\end{figure}
+	\fcite{df_image}
+\end{frame}
+
+\begin{frame}%{DF: Collisionless}
+	\begin{itemize}
+		\item Collisionless matter interacts with the black hole gravitational only
+		\begin{equation}\label{eq: df_cl}
 		a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2} M_\bullet\rho(\vec{x})\ln\Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)
-	\end{equation}
+		\end{equation}
+		
+		\item On the other side gas is in direct contact with the black hole
+		\begin{equation}\label{eq: df_c}
+		a^\text{c}_\text{DF}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2}M_\bullet\rho_\text{gas}(\vec{x})f(\mathcal{M})
+		\end{equation}
+		
+	\end{itemize}
+	
+	
+	
 %	\begin{equation}
 %		\rho(\vec{x}) = \rho_\text{DM}(\vec{x}) + \rho_\text{stars}(\vec{x})
 %	\end{equation}
+%	\begin{equation}
+%		X \equiv \dfrac{|\dot{x}|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM} = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
+%	\end{equation}
+\end{frame}
+
+\begin{frame}{Accretion into the black hole}
+	As the black hole accretes matter from the surroundings, an acceleration appears, due to the second law of Newton.
 	\begin{equation}
-	X \equiv \dfrac{|\dot{x}|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM} = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
+		\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
+		\begin{array}{lc}
+		\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) & \text{if $\dot{M}_\bullet^\text{BHL} < \dot{M}_\bullet^\text{Edd}$} \\
+		\dot{M}_\bullet^\text{Edd} & \text{else}
+		\end{array}
+		\right.
+	\end{equation}
+	
+	\begin{equation}
+		\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_G(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} % \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
+	\end{equation}
+	\begin{equation}
+		\dot{M}_\bullet^\text{Edd} = \dfrac{(1 - \epsilon)M_\bullet}{\epsilon t_\text{Edd}} \qquad \epsilon = 0.1, \quad t_\text{Edd} = 0.44 \text{ Gyr}
+	\end{equation}
+\end{frame}
+
+\section{Studies}
+\subsection{Symmetrical}
+\subsubsection{Results}
+
+\begin{frame}{Results}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s01v70"}
+		\caption{Properties of a single simulation.}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Effect of the power law exponent}
+	\begin{figure}[h]
+		\centering
+		\begin{tabular}{cc}
+			\includegraphics[width = 0.5\textwidth]{"../Files/Week 6/power_law"} & \includegraphics[width = 0.5\textwidth]{"../Files/Week 6/power_law_density"}
+		\end{tabular}
+		\caption{Smaller exponents increase the return time.}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Effect of the baryonic fraction}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[height=0.7\textheight]{"../Files/Week 5/baryonic_fraction_comparison"}
+		\caption{5 \% increase on baryonic fraction decreases return times.}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Effect of the stellar fraction}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.9\linewidth]{"../Files/Week 7/Symmetric/returntimes_stellar_speed"}
+		\caption{Return time for different stellar densities.}
+	\end{figure}
+\end{frame}
+
+\subsection{Triaxial}
+\begin{frame}{Triaxial setup}
+	Density shells for each profile are ellipsoids
+	\begin{equation}
+		m^2(\vec{x}) \equiv x_1^2 + \left(\dfrac{a_1}{a_2}\right)^2x_2^2 + \left(\dfrac{a_1}{a_3}\right)^2x_3^2
+	\end{equation}
+	
+	A thin shell, whose inner and outer skins are the surfaces $m$ and $m + \delta m$ is described by:
+	\begin{equation}\label{eq: m2}
+	m^2(\vec{x}, \tau) = a_1^2\left(\frac{x_1^{2}}{\tau + a_{1}^{2}} + \frac{x_2^{2}}{\tau + a_{2}^{2}} + \frac{x_3^{2}}{\tau + a_{3}^{2}}\right)
+	\end{equation}
+	 where $\tau \geq 0$ labels the surfaces \fcite{binney2011galactic}
+\end{frame}
+
+\begin{frame}
+	\begin{columns}
+		\begin{column}{0.3\linewidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width = \linewidth]{"../Files/Week 7/triaxial_mass_issue"}
+				\caption{Effective gravitational mass}
+				\label{fig: triaxial_mass_issue}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.7\linewidth}
+			The contributions of all ellipsoidal shells that make up the profile are taken into account
+			\begin{equation}
+				\psi(m) \equiv \int\limits_{0}^{m^2} \rho(m^2)dm^2 = \int\limits_{0}^{k = m^2} \rho(k)dk
+			\end{equation}
+			
+			The potential of any body in which $\rho = \rho(m^2)$ is:
+		\end{column}
+	\end{columns}
+	\begin{equation}\label{eq: generalPotential}
+	\Phi(\vec{x}) = -\pi G \dfrac{a_2a_3}{a_1}\int\limits_{0}^{\infty}\dfrac{\psi(\infty) - \psi(m)}{\sqrt{(\tau + a_1^2)(\tau + a_2^2)(\tau + a_3^2)}}d\tau
+	\end{equation}
+	\fcite{binney2011galactic}
+\end{frame}
+
+\begin{frame}
+	Numerical integration of the gradients of the potentials is made with Simpson 3/8 rule.
+	\begin{equation}
+		\nabla \Phi_\text{DM}(\vec{x}) = 2 \pi G R_{s}^{3}\rho_0 a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty}
+		\dfrac{\vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(R_{s} + m(\vec{x}, \tau)\right)^{2}}	
+	\end{equation}
+	\begin{equation}
+		\nabla \Phi_\text{S}(\vec{x})= G M_{s} a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty} \frac{ \vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(\mathcal{R_s} + m(\vec{x}, \tau)\right)^{3}}
+	\end{equation}
+	
+	\begin{equation}
+		\small
+		\nabla \Phi_\text{G}(\vec{x}) = 2 \pi G \rho_0 a_{1} a_{2} a_{3}
+		\left\{
+		\begin{array}{l}
+		\displaystyle\int\limits_{0}^{\infty} \vec{\phi}(\vec{x}, \tau) d\tau \qquad \text{for $m(\vec{x}, \tau) < r_0$}\\
+		r_{0}^{- n} \displaystyle\int\limits_{0}^{\infty} m(\vec{x}, \tau)^{n}  \vec{\phi}(\vec{x}, \tau) d\tau \qquad \text{else}
+		\end{array}
+		\right.		
+	\end{equation}
+\end{frame}
+
+\subsubsection{Results}
+\begin{frame}{Results}
+	\begin{figure}[h]
+		\centering
+		\begin{tabular}{cc}
+			\includegraphics[width = 0.49\textwidth]{"../Files/Week 7/error"} & 
+			\includegraphics[width = 0.49\textwidth]{"../Files/Week 7/symmetric_triaxial"}
+		\end{tabular}
+		\caption{Differences for analytical and numerical integration of the potentials. Analytical is taken as: $-GM(r) / r^2$}
+		\label{fig: numericalErrors}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\begin{figure}[h]
+		\begin{tabular}{cc}
+			\includegraphics[width = 0.6\textwidth]{"../Files/Week 7/orthogonal_triaxial"} &
+			\includegraphics[width = 0.4\textwidth]{"../Files/Week 7/ellipsoid"}
+		\end{tabular}
+		\caption{Orthogonal launches for a triaxial profile with semi-axis ($a_1$:$a_2$:$a_3$) = (1:0.99:0.95)}
+		\label{fig: mainOrthogonalLaunches}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Schedule}
+	\begin{table}[h]
+		\centering
+		\caption{Activity schedule}
+		\tiny
+		\begin{tabular}{|c|c|c|c|c|c|c|c|}
+			\hline
+			& \multicolumn{7}{c|}{\textbf{Week}} \\ \cline{2-8} 
+			\multirow{-2}{*}{\textbf{Activities}} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} \\ \hline
+			\textbf{Task 1} & x & & & & & & \\ \hline
+			\textbf{Task 2} & x & x & & & & & \\ \hline
+			\textbf{Task 3} & & x & x & x & & & \\ \hline
+			\textbf{Task 4} & & & & & x & x & \\ \hline
+			\textbf{Task 5} & & & & & & & x \\ \hline
+		\end{tabular}
+	\end{table}
+	\footnotesize\centering
+	\textbf{Task 1:} REBOUND instalaci\'on in HPC \checkmark
+	
+	\textbf{Task 2:} Understanding REBOUND examples \checkmark
+	
+	\textbf{Task 3:} Implementation of a Choksi simulation \checkmark
+	
+	\textbf{Task 4:} Implementation of a triaxial simulation \checkmark
+	
+	\textbf{Task 5:} 30 \% thesis dissertation \checkmark
+\end{frame}
+
+\begin{frame}{Schedule}
+	\begin{table}[h]
+		\centering
+		\caption{Activity schedule}
+		\tiny
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			& \multicolumn{9}{c|}{\textbf{Week}} \\ \cline{2-10} 
+			\multirow{-2}{*}{\textbf{Activities}} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16}\\ \hline
+			\textbf{Task 6} & x & x & & & & & & & \\ \hline
+			\textbf{Task 7} & & & x & x & x & & & & \\ \hline
+			\textbf{Task 8} & & & & & & x & x & x & x \\ \hline
+		\end{tabular}
+	\end{table}
+	\footnotesize
+	\textbf{Task 6:} Optimization of the time step for \textit{WHFast} y \textit{IAS15}
+	
+	\textbf{Task 7:} Implementation of an automated algorithm for the space of parameters of initial velocities and parameters of the triaxial potential, for the integrators \textit{Leapfrog, WHFast} and \textit{IAS15}
+	
+	\textbf{Task 8:} Analysis and writing of the document
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\scshape\huge
+		Thank You
+	\end{center}
+\end{frame}
+
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+
+\begin{frame}
+	Mass distributions between components are given by:
+	\begin{equation}
+		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_h
+	\end{equation}
+	\begin{equation}
+		M_\text{stars}(R_\text{vir}) = f_sf_bM_h
+	\end{equation}
+	\begin{equation}
+		M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_h
+	\end{equation}
+	
+	with $f_b = 0.156$ and $M_h = 10^8$ \sm
+	\begin{equation}
+		R_\text{vir} = \left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
 	\end{equation}
 \end{frame}
 
@@ -179,145 +510,17 @@ where $M_\bullet$ is the black hole mass
 	\end{equation}
 \end{frame}
 
-\begin{frame}{Accretion into the black hole}
-	As the black hole accretes matter from the surroundings, an acceleration appears, due to the second law of Newton.
+\begin{frame}
 	\begin{equation}
-		\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
-		\begin{array}{lc}
-		\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) & \text{if $\dot{M}_\bullet^\text{BHL} < \dot{M}_\bullet^\text{Edd}$} \\
-		\dot{M}_\bullet^\text{Edd} & \text{else}
-		\end{array}
-		\right.
+		\omega = \dfrac{\tau^\gamma}{\tau^\gamma + 1}, \qquad \tau = \left(\frac{\omega}{1-\omega}\right)^{\frac{1}{\gamma}}, \qquad d\tau = \dfrac{\left(- \frac{\omega}{\omega - 1}\right)^{\frac{1}{\gamma}}}{\gamma \omega \left(- \omega + 1\right)}
 	\end{equation}
 	
 	\begin{equation}
-		\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_G(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} % \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
+		\phi_i(x_i, \tau) = \dfrac{x_i}{\left(\tau + a_i^2\right)^{\frac{3}{2}} \prod\limits_{i \neq j}^3\sqrt{\tau + a_j^2}}
 	\end{equation}
 	\begin{equation}
-		\dot{M}_\bullet^\text{Edd} = \dfrac{(1 - \epsilon)M_\bullet}{\epsilon t_\text{Edd}} \qquad \epsilon = 0.1, \quad t_\text{Edd} = 0.44 \text{ Gyr}
+		\vec{\phi}(\vec{x}, \tau) = (\phi_1(x_1, \tau), \phi_2(x_2, \tau), \phi_3(x_3, \tau))
 	\end{equation}
 \end{frame}
 
-\section{Studies}
-\begin{frame}{Spherical case}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.8\linewidth]{../Documento/Figures/NGC4414_modified}
-		\caption{NGC4414 galaxy as seen by the Hubble telescope.}
-	\end{figure}
-\end{frame}
-
-\begin{frame}
-	Mass distribution between components is given by:
-	\begin{equation}
-		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_h
-	\end{equation}
-	\begin{equation}
-		M_\text{stars}(R_\text{vir}) = f_sf_bM_h
-	\end{equation}
-	\begin{equation}
-		M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_h
-	\end{equation}
-	
-	with $f_b = 0.156$ and $M_h = 10^8$ \sm
-	\begin{equation}
-		R_\text{vir} = \left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
-	\end{equation}
-\end{frame}
-
-\begin{frame}
-	\begin{enumerate}
-		\item Dark matter (NWF):
-		\begin{equation}\label{eq: dmdensity}
-			\rho_\text{DM}(r) = \dfrac{\rho_0^\text{DM}}{\frac{r}{R_s}\left(1 + \frac{r}{R_s}\right)^2}
-		\end{equation}
-		\item Stellar density (Hernquist):
-		\begin{equation}
-			\rho_s(r) = \dfrac{f_sf_bM_h \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3}
-		\end{equation}
-		\item Gas density (Power law):
-		\begin{equation}
-			\rho_\text{gas}(r) = \left \{
-			\begin{matrix}
-			\rho_0^\text{gas} & \text{if $r < r_0$}\\
-			\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{-n} & \text{if $r \geq r_0$}\\
-			\end{matrix}
-			\right.
-		\end{equation}
-	\end{enumerate}
-\end{frame}
-
-
-\subsection{Results}
-\begin{frame}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[height=0.9\textheight]{"../Files/Week 6/properties_s01v70"}
-		\caption{Properties of a single simulation.}
-	\end{figure}
-\end{frame}
-
-\begin{frame}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.9\linewidth]{"../Files/Week 6/returntimes_stellar_speed"}
-		\caption{Return time for different stellar densities.}
-	\end{figure}
-\end{frame}
-
-\begin{frame}
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.9\linewidth]{"../Files/Week 6/mass_stellar_speed"}
-	\caption{Black holes mass as function of initial speed and stellar fraction.}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.9\linewidth]{"../Files/Week 6/mass_stellar_speed_2"}
-	%	\caption{NGC4414 galaxy as seen by the Hubble telescope.}
-\end{figure}
-\end{frame}
-\begin{frame}
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.9\linewidth]{"../Files/Week 6/mass_stellar_speed_3"}
-%	\caption{NGC4414 galaxy as seen by the Hubble telescope.}
-\end{figure}
-\end{frame}
-
-\begin{frame}{Schedule}
-	\begin{table}[h]
-		\centering
-		\caption{Activity schedule}
-		\label{tb: cronograma}
-		\tiny
-		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-			\hline
-			& \multicolumn{16}{c|}{\textbf{Week}} \\ \cline{2-17} 
-			\multirow{-2}{*}{\textbf{Activities}} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} & \textbf{15} & \textbf{16} \\ \hline
-			\textbf{Task 1} & x & & & & & & & & & & & & & & & \\ \hline
-			\textbf{Task 2} & x & x & & & & & & & & & & & & & & \\ \hline
-			\textbf{Task 3} & & x & x & x & & & & & & & & & & & & \\ \hline
-			\textbf{Task 4} & & & & & x & x & & & & & & & & & & \\ \hline
-			\textbf{Task 5} & & & & & & & x & & & & & & & & & \\ \hline
-			\textbf{Task 6} & & & & & & & & x & x & & & & & & & \\ \hline
-			\textbf{Task 7} & & & & & & & & & & x & x & x & & & & \\ \hline
-			\textbf{Task 8} & & & & & & & & & & & & & x & x & x & x \\ \hline
-		\end{tabular}
-	\end{table}
-	\begin{itemize}
-		\footnotesize
-		\item \textbf{Task 1:} REBOUND instalaci\'on in HPC \checkmark
-		\item \textbf{Task 2:} Understanding REBOUND examples \checkmark
-		\item \textbf{Task 3:} Implementation of a Choksi simulation \checkmark
-		\item \textbf{Task 4:} Implementation of a triaxial simulation
-		\item \textbf{Task 5:} 30 \% thesis dissertation
-		\item \textbf{Task 6:} Optimization of the time step for \textit{WHFast} y \textit{IAS15}
-%		\item \textbf{Task 7:} Implementaci\'on de un algoritmo automatizado para barrer el espacio de par\'ametros de velocidades iniciales y par\'ametros del potencial triaxial, para los integradores \textit{Leapfrog, WHFast} y \textit{IAS15}
-%		\item \textbf{Task 8:} An\'alisis de resultados y escritura de la monograf\'ia
-	\end{itemize}
-\end{frame}
 \end{document}
