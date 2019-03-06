@@ -214,12 +214,8 @@ double dynamicalFrictionGas(double r, double v)
     return -4 * M_PI * pow(G0, 2) * SMBH_MASS * rho * f / (v * v);
 }
 
-double SMBHAccretion(double *position, double *speed)
+double SMBHAccretion(double r, double v)
 {
-    double r = getNorm(position);
-    double v = getNorm(speed);
-    r = sqrt(r * r + SOFTENING_RADIUS);
-    v = sqrt(v * v + SOFTENING_SPEED);
     v = pow(pow(getLocalSoundSpeed(Z), 2) + pow(v, 2), 1.5);
     double rho = gasDensity(r);
     double bondi = 4 * M_PI * pow(G0 * SMBH_MASS, 2) * rho / v;
@@ -274,6 +270,21 @@ double *triaxial_gravitationalStellar(double x, double y, double z, double tau)
   return phi;
 }
 
+double *triaxial_gravitationalGas(double x, double y, double z, double tau)
+{
+  int i;
+  double *phi = phiVector(x, y, z, tau);
+  double m = getMTau(x, y, z, tau);
+  // double m_ = getM(x, y, z);
+  if (m < GAS_CORE) return phi;
+  else
+  {
+    double factor = pow(m / GAS_CORE, GAS_POWER);
+    for(i = 0; i < 3; i++) phi[i] *= factor;
+    return phi;
+  }
+}
+
 double *simpson(double *(*func)(double, double, double, double), double x, double y, double z, double gamma)
 {
   int i, j, coeff;
@@ -325,6 +336,14 @@ double *triaxial_gravS(double x, double y, double z)
   int i;
   double *grad = simpson(triaxial_gravitationalStellar, x, y, z, 0.1);
   for(i = 0; i < 3; i++) grad[i] *= G0 * STELLAR_TOTAL_MASS * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3 * STELLAR_SCALE_LENGTH;
+  return grad;
+}
+
+double *triaxial_gravG(double x, double y, double z)
+{
+  int i;
+  double *grad = simpson(triaxial_gravitationalGas, x, y, z, 0.2);
+  for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * GAS_DENSITY * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
   return grad;
 }
 
@@ -414,7 +433,7 @@ double calculateR_vir(double G, double H)
   return pow((G * HALO_MASS) / (100 * pow(H, 2)), 1/3.);
 }
 
-void baseCase(struct reb_simulation* sim)
+void sphericalCase(struct reb_simulation* sim)
 {
     Z = getRedshift(sim->t + T0);
 
@@ -438,7 +457,7 @@ void baseCase(struct reb_simulation* sim)
     double df_g = dynamicalFrictionGas(r, v);
     double df = df_dm + df_g;
 
-    double m_change = SMBHAccretion(pos, speed);
+    double m_change = SMBHAccretion(r, v);
     SMBH_MASS += m_change * SIM_DT;
 
     double accretion = - v * m_change / SMBH_MASS;
@@ -454,6 +473,56 @@ void baseCase(struct reb_simulation* sim)
     sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
 
     localMaxima(r, v, sim->t);
+}
+
+void triaxialCase(struct reb_simulation* sim)
+{
+    Z = getRedshift(sim->t + T0);
+
+    struct reb_particle* particle = &(sim->particles[0]);
+    double pos[3] = {particle->x, particle->y, particle->z};
+    double speed[3] = {particle->vx, particle->vy, particle->vz};
+
+    double ax, ay, az;
+    double m = getM(pos[0], pos[1], pos[2]);
+    double v = getSoftenedSpeed(getNorm(speed));
+    double dir_v[3] = {speed[0] / v, speed[1] / v, speed[2] / v};
+
+    double *p_dm = triaxial_gravDM(pos[0], pos[1], pos[2]);
+    double *p_stars = triaxial_gravS(pos[0], pos[1], pos[2]);
+    double *p_gas = triaxial_gravG(pos[0], pos[1], pos[2]);
+
+    int i;
+    for(i = 0; i < 3; i++) p_dm[i] += p_stars[i] + p_gas[i];
+
+    ax = - p_dm[0];
+    ay = - p_dm[1];
+    az = - p_dm[2];
+
+    free(p_dm);
+    free(p_stars);
+    free(p_gas);
+
+    double df_dm = dynamicalFrictionDM(m, v);
+    double df_g = dynamicalFrictionGas(m, v);
+    double df = df_dm + df_g;
+
+    double m_change = SMBHAccretion(m, v);
+    SMBH_MASS += m_change * SIM_DT;
+
+    double accretion = - v * m_change / SMBH_MASS;
+
+    ax += (accretion + df) * dir_v[0];
+    ay += (accretion + df) * dir_v[1];
+    az += (accretion + df) * dir_v[2];
+
+    particle->ax = ax;
+    particle->ay = ay;
+    particle->az = az;
+
+    // sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
+
+    localMaxima(m, v, sim->t);
 }
 
 void printConstants(void)
@@ -585,10 +654,12 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   }
 }
 
-void run(double *positions, double *speeds, double smbh_mass, double dt, int integrator, int save_every, const char *filename)
+void run(double *positions, double *speeds, double smbh_mass, double dt, int triaxial, int integrator, int save_every, const char *filename)
 {
   SIM_DT = dt;
-  struct reb_simulation* sim = setupSimulation(smbh_mass, positions, speeds, baseCase);
+  struct reb_simulation* sim;
+  if(triaxial == 1) sim = setupSimulation(smbh_mass, positions, speeds, triaxialCase);
+  else sim = setupSimulation(smbh_mass, positions, speeds, sphericalCase);
   switch(integrator)
   {
     case INT_LEAPFROG:

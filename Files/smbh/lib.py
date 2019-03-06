@@ -63,10 +63,10 @@ func_info = [('getR_vir', c_double, None),
             ('gravitationalForce', c_double, c_double),
             ('stellarMassHernquist', c_double, c_double),
             ('stellarDensityHernquist', c_double, c_double),
-            ('SMBHAccretion', c_double, (POINTER(c_double), POINTER(c_double))),
+            ('SMBHAccretion', c_double, (c_double, c_double)),
             ('dynamicalFrictionDM', c_double, (c_double, c_double)),
             ('dynamicalFrictionGas', c_double, (c_double, c_double)),
-            ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_int, c_char_p)),
+            ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_int, c_int, c_char_p)),
             ('getRedshift', c_double, c_double),
             ('getHubbleParameter', c_double, c_double),
             ('calculateR_vir', c_double, (c_double, c_double)),
@@ -81,6 +81,7 @@ func_info = [('getR_vir', c_double, None),
             ('setTriaxalCoeffs', None, (c_double, c_double, c_double)),
             ('triaxial_gravDM', POINTER(c_double), (c_double, c_double, c_double)),
             ('triaxial_gravS', POINTER(c_double), (c_double, c_double, c_double)),
+            ('triaxial_gravG', POINTER(c_double), (c_double, c_double, c_double)),
             ('triaxial_gravitationalDarkMatter', POINTER(c_double), (c_double, c_double, c_double, c_double)),
             ('triaxial_gravitationalStellar', c_double, (c_double, c_double, c_double, c_double, c_int))]
 
@@ -99,7 +100,7 @@ def pointerReturn(pointer):
     lib.free(pointer)
     return np.array(values)
 
-def run(speeds, smbh_mass = 1, dt = 1e-6, integrator = INT_LEAPFROG, save_every = 10, filename = None, read = True):
+def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True, integrator = INT_LEAPFROG, save_every = 10, filename = None, read = True):
     global lib
     delete_file = False
     pos = (1e-3 / (3**0.5)) * np.ones(3)
@@ -108,7 +109,7 @@ def run(speeds, smbh_mass = 1, dt = 1e-6, integrator = INT_LEAPFROG, save_every 
     if filename == None:
         filename = "temp.dat"
         delete_file = True
-    lib.run(pos, speeds, smbh_mass, dt, integrator, int(save_every), filename.encode())
+    lib.run(pos, speeds, smbh_mass, dt, triaxial, integrator, int(save_every), filename.encode())
 
     if read: data = Results(filename)
     else: data = None

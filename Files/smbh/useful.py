@@ -63,10 +63,14 @@ class Results(object):
         self.masses = data[:, -2]
         self.lyapunov = data[:, -1]
 
-        self.distance = magnitude(self.positions)
         self.speed = magnitude(self.speeds)
+        self.setDistance()
 
         self.return_index = -1
+
+    def setDistance(self, a_1 = 1, a_2 = 1, a_3 = 1):
+        x, y, z = self.positions.T
+        self.distance = (x ** 2 + (a_1 * y / a_2) ** 2 + (a_1 * z / a_3) ** 2) ** 0.5
 
     def getReturnTime(self, threshold = R_VIR_THRESHOLD):
         try:

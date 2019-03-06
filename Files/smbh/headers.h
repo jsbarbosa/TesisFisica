@@ -39,7 +39,7 @@ double gravitationalForce(double r);
 double baryonicMassHernquist(double r);
 double baryonicDensityHernquist(double r);
 void baseCase(struct reb_simulation* sim);
-double SMBHAccretion(double *position, double *speed);
+double SMBHAccretion(double r, double v);
 double dynamicalFrictionDM(double r, double v);
 double dynamicalFrictionGas(double r, double v);
 
@@ -49,7 +49,7 @@ void printStatus(struct reb_simulation *sim, const char *filename, int header);
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
                             void (*additional_force)(struct reb_simulation*));
 void runSimulation(struct reb_simulation *sim, int save_every, const char *filename);
-void run(double *positions, double *speeds, double smbh_mass, double dt, int integrator, int save_every, const char *filename);
+void run(double *positions, double *speeds, double smbh_mass, double dt, int triaxial, int integrator, int save_every, const char *filename);
 
 // void integrate(struct reb_simulation* sim);
 // double *baseCase(double *position, double *speed);

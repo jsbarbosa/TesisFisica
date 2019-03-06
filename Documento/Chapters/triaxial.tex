@@ -38,13 +38,13 @@
 	\end{equation}
 	
 	The potential of any body in which $\rho = \rho(m^2)$ is \cite{binney2011galactic}:
-	\begin{equation}
+	\begin{equation}\label{eq: generalPotential}
 		\Phi(\vec{x}) = -\pi G \dfrac{a_2a_3}{a_1}\int\limits_{0}^{\infty}\dfrac{\psi(\infty) - \psi(m)}{\sqrt{(\tau + a_1^2)(\tau + a_2^2)(\tau + a_3^2)}}d\tau \qquad m = m(\vec{x}, \tau)
 	\end{equation}
 	
 	Most of the triaxials potentials cannot be analytically integrated, nevertheless it can be done numerically if the integral is not improper and converges. To make the integral proper, the following change of variable is done:
 	\begin{equation}
-		\omega = \dfrac{\tau^\gamma}{\tau^\gamma + 1}, \qquad d\tau = \dfrac{d\omega}{(1 - \omega)^2}
+		\omega = \dfrac{\tau^\gamma}{\tau^\gamma + 1}, \qquad \tau = \left(\frac{\omega}{1-\omega}\right)^{\frac{1}{\gamma}}, \qquad d\tau = \dfrac{\left(- \frac{\omega}{\omega - 1}\right)^{\frac{1}{\gamma}}}{\gamma \omega \left(- \omega + 1\right)}
 	\end{equation} 
 	
 	Since the gravitational acceleration is given by the gradient of the potential, to numerically calculate the gradient, a total of 6 numerical integrals must be done (two for each dimension). Another option is to take advantage of the fact that $\vec{x}$ and $\tau$ are independent variables, thus:
@@ -57,23 +57,23 @@
 		\phi_i(x_i, \tau) = \dfrac{x_i}{\left(\tau + a_i^2\right)^{\frac{3}{2}} \prod\limits_{i \neq j}^3\sqrt{\tau + a_j^2}}, \qquad \vec{\phi}(\vec{x}, \tau) = (\phi_1(x_1, \tau), \phi_2(x_2, \tau), \phi_3(x_3, \tau))
 	\end{equation}
 	
-	Potentials for each of the components of the galaxy are found by integrating ...
+	Potentials for each of the components of the galaxy are found by finding $\psi(\infty) - \psi(m)$ and replacing on \autoref{eq: generalPotential}.
 	
 	\subsection{Dark matter halo}
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[b]{0.49\textwidth}
 			\includegraphics[width = \textwidth]{"../Files/Week 7/symmetric"}
-			\caption{.}
+			\caption{Spherical case}
 			\label{fig: symmetricDensity3d}
 		\end{subfigure}
 		~ 
 		\begin{subfigure}[b]{0.49\textwidth}
 			\includegraphics[width=\textwidth]{"../Files/Week 7/triaxial"}
-			\caption{.}
+			\caption{Triaxial case with ($a_1$:$a_2$:$a_3$) = (1:0.5:0.3)}
 			\label{fig: triaxialDensity3d}
 		\end{subfigure}
-		\caption{.}
+		\caption{Dark matter densities comparison.}
 		\label{fig: symmetricTriaxial}
 	\end{figure}
 	\begin{equation}
@@ -96,5 +96,46 @@
 		\end{array}
 	\end{equation}
 	\subsection{Gas profile}
-	
+	\begin{equation}
+		\nabla \Phi_\text{G}(\vec{x}) = 2 \pi G \rho_0 a_{1} a_{2} a_{3}
+		\left\{
+		\begin{array}{l}
+		\displaystyle\int\limits_{0}^{\infty} \vec{\phi}(\vec{x}, \tau) d\tau \qquad \text{for $m(\vec{x}, \tau) < r_0$}\\
+		r_{0}^{- n} \displaystyle\int\limits_{0}^{\infty} m(\vec{x}, \tau)^{n}  \vec{\phi}(\vec{x}, \tau) d\tau \qquad \text{else}
+		\end{array}
+		\right.		
+	\end{equation}
 	\section{Results}
+	\subsection{Numerical errors}
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 7/error"}
+			\caption{Errors on potential}
+			\label{fig: potentialErrors}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 7/symmetric_triaxial"}
+			\caption{Cumulative errors on simulations}
+			\label{fig: simulationErrors}
+		\end{subfigure}
+		\caption{Differences for analytical and numerical integration of the potentials. Analytical is taken as: $-GM(r) / r^2$}
+		\label{fig: numericalErrors}
+	\end{figure}
+
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 7/orthogonal_triaxial"}
+			\caption{Orbits for three orthogonal launches}
+			\label{fig: orthogonalLaunches}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 7/ellipsoid"}
+			\caption{Elliptical geometry}
+		\end{subfigure}
+		\caption{Orthogonal launches for a triaxial profile with semi-axis ($a_1$:$a_2$:$a_3$) = (1:0.99:0.95)}
+		\label{fig: mainOrthogonalLaunches}
+	\end{figure}
