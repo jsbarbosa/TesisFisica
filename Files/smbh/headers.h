@@ -11,7 +11,7 @@
 #define MAX_DENSITY_GAS 1e8
 
 #define G0 0.449849
-#define INT_STEPS 1e2
+#define INT_STEPS 1e3
 
 #define Z_TIME_DEGREE 3
 #define Z_HUBBLE_DEGREE 2
@@ -23,6 +23,8 @@
 #define INT_SEI 3
 #define INT_JANUS 4
 #define INT_MERCURIUS 5
+
+#define GAUSS_DEGREE 50
 
 double getR_vir(void);
 void setR_vir(double r);

@@ -41,6 +41,28 @@ volatile double TRIAXIAL_A_1 = 1;
 volatile double TRIAXIAL_A_2 = 0.5;
 volatile double TRIAXIAL_A_3 = 0.5;
 
+const double ROOTS[GAUSS_DEGREE] = {-0.9988664 , -0.99403197, -0.98535408, -0.97286439, -0.95661096,
+        -0.93665662, -0.91307856, -0.88596798, -0.85542977, -0.82158207,
+        -0.78455583, -0.7444943 , -0.70155247, -0.65589647, -0.60770293,
+        -0.5571583 , -0.50445814, -0.44980633, -0.39341431, -0.33550025,
+        -0.27628819, -0.21600724, -0.15489059, -0.0931747 , -0.03109834,
+         0.03109834,  0.0931747 ,  0.15489059,  0.21600724,  0.27628819,
+         0.33550025,  0.39341431,  0.44980633,  0.50445814,  0.5571583 ,
+         0.60770293,  0.65589647,  0.70155247,  0.7444943 ,  0.78455583,
+         0.82158207,  0.85542977,  0.88596798,  0.91307856,  0.93665662,
+         0.95661096,  0.97286439,  0.98535408,  0.99403197,  0.9988664 };
+
+const double WEIGHTS[GAUSS_DEGREE] = {0.00290862, 0.0067598 , 0.01059055, 0.01438082, 0.01811556,
+        0.02178024, 0.02536067, 0.02884299, 0.03221373, 0.03545984,
+        0.03856876, 0.04152846, 0.0443275 , 0.04695505, 0.04940094,
+        0.0516557 , 0.05371062, 0.05555774, 0.05718993, 0.05860085,
+        0.05978506, 0.06073797, 0.0614559 , 0.06193607, 0.06217662,
+        0.06217662, 0.06193607, 0.0614559 , 0.06073797, 0.05978506,
+        0.05860085, 0.05718993, 0.05555774, 0.05371062, 0.0516557 ,
+        0.04940094, 0.04695505, 0.0443275 , 0.04152846, 0.03856876,
+        0.03545984, 0.03221373, 0.02884299, 0.02536067, 0.02178024,
+        0.01811556, 0.01438082, 0.01059055, 0.0067598 , 0.00290862};
+
 void setBaryonicFraction(double fb)
 {
   FB = fb;
@@ -275,8 +297,7 @@ double *triaxial_gravitationalGas(double x, double y, double z, double tau)
   int i;
   double *phi = phiVector(x, y, z, tau);
   double m = getMTau(x, y, z, tau);
-  // double m_ = getM(x, y, z);
-  if (m < GAS_CORE) return phi;
+  if (m <= GAS_CORE) return phi;
   else
   {
     double factor = pow(m / GAS_CORE, GAS_POWER);
@@ -322,10 +343,41 @@ double *simpson(double *(*func)(double, double, double, double), double x, doubl
   return grad;
 }
 
+double *gaussLegendre(double *(*func)(double, double, double, double), double x, double y, double z, double gamma)
+{
+  int i, j;
+  double tau, omega, diff, value;
+
+  double *temp;
+  double *grad = calloc(3, sizeof(double));
+  for(i = 0; i < GAUSS_DEGREE; i++)
+  {
+    omega = 0.5 * ROOTS[i] + 0.5;
+    tau = pow(omega / (1.0 - omega), 1.0 / gamma);
+    diff = tau / (omega * gamma * (1 - omega));
+    if(!isnormal(diff) & (diff != 0)) diff = 0;
+    temp = func(x, y, z, tau);
+
+    for(j = 0; j < 3; j++)
+    {
+      value = temp[j];
+      if (isnormal(value) | (value == 0))
+      {
+        grad[j] += value * diff * WEIGHTS[i];
+      }
+    }
+    free(temp);
+  }
+
+  for(i = 0; i < 3; i++) grad[i] *= 0.5 * 0.9988627714549503;
+  return grad;
+}
+
 double *triaxial_gravDM(double x, double y, double z)
 {
   int i;
-  double *grad = simpson(triaxial_gravitationalDarkMatter, x, y, z, 0.1);
+  // double *grad = simpson(triaxial_gravitationalDarkMatter, x, y, z, 0.1);
+  double *grad = gaussLegendre(triaxial_gravitationalDarkMatter, x, y, z, 0.2);
   for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * pow(DARK_MATTER_SCALE_RADIUS, 3) *
           DARK_MATTER_DENSITY_0 * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
   return grad;
@@ -334,7 +386,8 @@ double *triaxial_gravDM(double x, double y, double z)
 double *triaxial_gravS(double x, double y, double z)
 {
   int i;
-  double *grad = simpson(triaxial_gravitationalStellar, x, y, z, 0.1);
+  // double *grad = simpson(triaxial_gravitationalStellar, x, y, z, 0.1);
+  double *grad = gaussLegendre(triaxial_gravitationalStellar, x, y, z, 0.1);
   for(i = 0; i < 3; i++) grad[i] *= G0 * STELLAR_TOTAL_MASS * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3 * STELLAR_SCALE_LENGTH;
   return grad;
 }
@@ -342,7 +395,8 @@ double *triaxial_gravS(double x, double y, double z)
 double *triaxial_gravG(double x, double y, double z)
 {
   int i;
-  double *grad = simpson(triaxial_gravitationalGas, x, y, z, 0.2);
+  // double *grad = simpson(triaxial_gravitationalGas, x, y, z, 0.2);
+  double *grad = gaussLegendre(triaxial_gravitationalGas, x, y, z, 0.4);
   for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * GAS_DENSITY * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
   return grad;
 }
