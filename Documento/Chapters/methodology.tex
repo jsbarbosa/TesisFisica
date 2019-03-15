@@ -88,9 +88,19 @@
 			\begin{equation}
 				\mathcal{R}_s = \dfrac{0.01}{\left(1 + \sqrt{2}\right)}\left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3} \approx 6.835\times 10^{-4}\left({\dfrac{M_h}{H(t)^2}}\right)^{1/3}
 			\end{equation}
+		\subsection{Gas density}
+			For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^{-n} = r^{-2.2}$. The complete density is described as follows:
+			\begin{equation}\label{eq: rdensity}
+				\rho_\text{gas}(r) = \left \{
+				\begin{matrix}
+				\rho_0^\text{gas} & \text{if $r < r_0$}\\
+				\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{n} & \text{if $r \geq r_0$}\\
+				\end{matrix}
+				\right.
+			\end{equation}
 	
 	\section{Equation of motion}
-		Trajectories of the kicked black holes were obtained by numerically solving the equation of motion on \autoref{eq: equationMotion}, where the first term on the right side of the equation is acceleration due to gravity, the second accounts for the drag of dynamical friction, while the third one is the deaceleration due to mass accretion of the black hole \cite{tanaka2009assembly, choksi2017recoiling}.
+		Trajectories of the kicked black holes are obtained by numerically solving the equation of motion on \autoref{eq: equationMotion}, where the first term on the right side of the equation is acceleration due to gravity, the second accounts for the drag of dynamical friction, while the third one is the deaceleration due to mass accretion of the black hole \cite{tanaka2009assembly, choksi2017recoiling}.
 		\begin{equation}\label{eq: equationMotion}
 			\ddot{\vec{x}} = a_\text{grav}(\vec{x})\hat{x} + \left(a_\text{DF}(\vec{x}, \dot{\vec{x}})-\dot{x}\dfrac{\dot{M_\bullet}(x, \dot{x})}{M_\bullet}\right)\dot{\hat{x}} \qquad \text{where $M_\bullet$ is the black hole mass}
 		\end{equation}
@@ -178,7 +188,7 @@
 		
 	\section{Definitions}
 		\subsection{Escape velocity}
-			Minimum initial velocity required for the maximum distance of a single orbit of the black hole to stay outside $0.1R_\text{vir}$ after $z = 0$, $z = 6$ or 10 \% of the age of the universe at the moment of the kick \cite{tanaka2009assembly, choksi2017recoiling}.
+			Minimum initial velocity required for the maximum distance of a single orbit of the black hole to stay outside $0.01R_\text{vir}$ by $z = 0$, $z = 6$ or 10 \% of the age of the universe at the moment of the kick \cite{tanaka2009assembly, choksi2017recoiling}.
 		
 		\subsection{Time of return}
 			Time required by the black hole to orbit with maximum distances of less than  $0.01R_\text{vir}$.
@@ -212,6 +222,27 @@
 		\begin{equation}
 			M_s(r) = \dfrac{f_sf_bM_h r^2}{(r + \mathcal{R}_s)^2}
 		\end{equation}
+	
+	\subsection{Gas profile}		
+		The cumulative mass is found by integrating \autoref{eq: rdensity} in spherical coordinates, which for $n \neq 3$ is equal to:
+		\begin{equation}
+			M_\text{gas}(r) = \left \{
+			\begin{matrix}
+			\dfrac{4}{3}\pi\rho_0^\text{gas}r^3 & \text{if $r < r_0$} \\
+			4\pi\rho_0^\text{gas}\left(\dfrac{r_0^{n}\left(r^{3 - n} - r_0^{3 - n}\right)}{(3 - n)}  + \dfrac{r_0^3}{3}\right) & \text{if $r \geq r_0$} \\
+			\end{matrix}
+			\right.
+		\end{equation}
+		
+		The value of the constant $\rho_0^\text{gas}$ is found using a similar process as in \autoref{eq: dmM_virial} and \ref{eq: rho0dm}.
+		\begin{equation}
+			M_\text{gas}(R_\text{vir}) = 4\pi\rho_0^\text{gas}\left(\dfrac{\left(R_\text{vir}^{3 - n} - r_0^{3 - n}\right)}{(3-n)r_0^{-n}} + \dfrac{r_0^3}{3}\right) = (1 - f_s) f_bM_h
+		\end{equation}
+		\begin{equation}
+			\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{r_0^{n}\left(R_\text{vir}^{3 - n} - r_0^{3 - n}\right)}{(3 - n)} + \dfrac{r_0^3}{3}\right)} \qquad \text{ if $R_\text{vir} > r_0$}
+		\end{equation}
+		
+		All of the profiles are shown on \autoref{fig: massprofiles}, where the effect of the stellar fraction can be seen.
 		
 		\begin{figure}[h]
 			\centering
@@ -230,33 +261,153 @@
 			\label{fig: massprofiles}
 		\end{figure}
 	
-	\subsection{Gas profile}
-		For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^n = r^{-2.2}$. The complete density is described as follows:
-		\begin{equation}\label{eq: rdensity}
-		\rho_\text{gas}(r) = \left \{
-		\begin{matrix}
-		\rho_0^\text{gas} & \text{if $r < r_0$}\\
-		\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{-n} & \text{if $r \geq r_0$}\\
-		\end{matrix}
-		\right.
+	\section{Triaxial setup}
+		\begin{figure}[h]
+			\centering
+			\begin{subfigure}[b]{0.49\textwidth}
+				\includegraphics[width = \textwidth]{"../Files/Week 7/symmetric"}
+				\caption{Spherical case}
+				\label{fig: symmetricDensity3d}
+			\end{subfigure}
+			~ 
+			\begin{subfigure}[b]{0.49\textwidth}
+				\includegraphics[width=\textwidth]{"../Files/Week 7/triaxial"}
+				\caption{Triaxial case with ($a_1$:$a_2$:$a_3$) = (1:0.5:0.3)}
+				\label{fig: triaxialDensity3d}
+			\end{subfigure}
+			\caption{Dark matter densities comparison between spherical and triaxial cases.}
+			\label{fig: symmetricTriaxial}
+		\end{figure}
+	
+		The host galaxy is modeled as a dark matter halo, stars and gas, just as the spherical case. Much of the profiles for each of the components remains the same, the only difference is that a thin shell of uniform density will have the geometry of an ellipsoid, and not that of a sphere. This is achieved by defining an ellipsoid radius $m$, that can be replaced for the spherical radius $r$, on equations \ref{eq: dmdensity}, \ref{eq: sdensity} and \autoref{eq: rdensity}, as can be seen on \autoref{fig: symmetricTriaxial}. 
+		
+		A thin shell, whose inner and outer skins are the surfaces $m$ and $m + \delta m$ is described by \autoref{eq: m2}, where $\tau \geq 0$ labels the surfaces \cite{binney2011galactic}.
+		\begin{equation}\label{eq: m2}
+		m^2(\vec{x}, \tau) = a_1^2\left(\frac{x_1^{2}}{\tau + a_{1}^{2}} + \frac{x_2^{2}}{\tau + a_{2}^{2}} + \frac{x_3^{2}}{\tau + a_{3}^{2}}\right)
 		\end{equation}
 		
-		The cumulative mass is found by integrating the density in spherical coordinates, which for $n \neq -3$ is equal to:
+		Densities are used for the calculation of the dynamical friction and accretion onto the black hole. Although one might think that by integrating the density over an elliptical volume, the acceleration due to gravity would be given by $a_\text{grav} = GM(m)/m^2$, the later is not true because two points $(x_1, x_2, x_3)$ and $(x_1', x_2', x_3')$ might have the same cumulative mass at $m$ (black line), but the effective gravitational mass acting at each point is completely different (blue and orange lines) as it is shown in \autoref{fig: triaxial_mass_issue}.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width = 0.4\linewidth]{"../Files/Week 7/triaxial_mass_issue"}
+			\caption{Although the cumulative mass at the orange and blue dots is the same, the effective gravitational mass is different.}
+			\label{fig: triaxial_mass_issue}
+		\end{figure}
+	
+		Because of this, the potential due to a given triaxial density must be found. Calculating the gravitational potential for such configuration, challenged some great minds of the XVIII and XIX centuries \cite{binney2011galactic}. To do so, the contributions of all ellipsoidal shells that make up the profile are taken into account, following \citeauthor{binney2011galactic}:
 		\begin{equation}
-		M_\text{gas}(r) = \left \{
-		\begin{matrix}
-		\dfrac{4}{3}\pi\rho_0^\text{gas}r^3 & \text{if $r < r_0$} \\
-		4\pi\rho_0^\text{gas}\left(\dfrac{\left(r^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}}  + \dfrac{r_0^3}{3}\right) & \text{if $r \geq r_0$} \\
-		\end{matrix}
-		\right.
+			\psi(m) \equiv \int\limits_{0}^{m^2} \rho(m'^2)dm'^2 = \int\limits_{0}^{m} 2m'\rho(m')dm' 
 		\end{equation}
 		
-		The value of the constant $\rho_0^\text{gas}$ is found using a similar process as in \autoref{eq: dmM_virial} and \ref{eq: rho0dm}.
-		\begin{equation}
-		M_\text{gas}(R_\text{vir}) = 4\pi\rho_0^\text{gas}\left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right) = (1 - f_s) f_bM_h
-		\end{equation}
-		\begin{equation}
-		\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{\left(R_\text{vir}^{3 + n} - r_0^{3 + n}\right)}{(3+n)r_0^{n}} + \dfrac{r_0^3}{3}\right)} \qquad \text{ if $R_\text{vir} > r_0$}
+		The potential of any body in which $\rho = \rho(m^2)$ is \cite{binney2011galactic}:
+		\begin{equation}\label{eq: generalPotential}
+		\Phi(\vec{x}) = -\pi G \dfrac{a_2a_3}{a_1}\int\limits_{0}^{\infty}\dfrac{\psi(\infty) - \psi(m)}{\sqrt{(\tau + a_1^2)(\tau + a_2^2)(\tau + a_3^2)}}d\tau \qquad m = m(\vec{x}, \tau)
 		\end{equation}
 		
-		All of the profiles are shown on \autoref{fig: massprofiles}, where the effect of the stellar fraction can be seen.	
+		Most of the triaxials potentials cannot be analytically integrated, nevertheless it can be done numerically. Since the gravitational acceleration is given by the gradient of the potential, to numerically calculate the gradient, a total of 6 numerical integrals must be done (two for each dimension, and then numerically differentiate). Another option is to take advantage of the fact that $\vec{x}$ and $\tau$ are independent variables, thus:
+		\begin{equation}
+			\nabla \int f(\vec{x}, \tau)d\tau = \int [\nabla f(\vec{x}, \tau)] d\tau
+		\end{equation}
+		
+		By doing this, the number of numerical integrals reduces to 3. Defining a vector $\vec{\phi}$, whose components are given by:
+		\begin{equation}
+			\phi_i(x_i, \tau) = \dfrac{x_i}{\left(\tau + a_i^2\right)^{\frac{3}{2}} \prod\limits_{i \neq j}^3\sqrt{\tau + a_j^2}}, \qquad \vec{\phi}(\vec{x}, \tau) = (\phi_1(x_1, \tau), \phi_2(x_2, \tau), \phi_3(x_3, \tau))
+		\end{equation}
+		
+		Potentials for each of the components of the galaxy are found by finding $\psi(\infty) - \psi(m)$ and replacing on \autoref{eq: generalPotential}.
+		
+		\begin{table}[h]
+			\centering
+			\caption{$\psi$ values for the studied density profiles}
+			\begin{tabular}{c|c}
+				\hline
+				\textbf{Profile} & $\psi(\infty) - \psi(m)$ \\
+				\hline
+				\textbf{NFW} & $\dfrac{2R_s^3\rho_0^\text{DM}}{R_s + m(\vec{x}, \tau)}$\\
+%				\hline
+				\textbf{Hernquist} & $\dfrac{M_s\mathcal{R}_s}{2\pi\left(\mathcal{R}_s + m(\vec{x}, \tau)\right)^2}$ \\
+%				\hline
+				\textbf{Power-law} & $-\rho_0^\text{gas}m(\vec{x}, \tau)^2\left\{
+				\begin{array}{ll}
+				1 & \text{for $m(\vec{x}, \tau) < r_0$}\\
+				\dfrac{2}{2 - n}\left(\dfrac{r_{0}}{m(\vec{x}, \tau)}\right)^n & \text{else}
+				\end{array}\right.$\\
+				\hline
+			\end{tabular}
+		\end{table}
+	
+		\begin{table}[h]
+			\centering
+			\caption{$\nabla\Phi(\vec{x})$ values for the studied density profiles}
+			\label{tb: gradients}
+			\begin{tabular}{c|c}
+				\hline
+				\textbf{Profile} & $\nabla \Phi(\vec{x})$\\
+				\hline
+				\textbf{NFW} & $2 \pi G R_{s}^{3}\rho_0 a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty}
+				\dfrac{\vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(R_{s} + m(\vec{x}, \tau)\right)^{2}}$ \\
+				%				\hline
+				\textbf{Hernquist} &  $G M_{s} \mathcal{R}_s a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty} \frac{ \vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(\mathcal{R}_s + m(\vec{x}, \tau)\right)^{3}}$ \\
+				%				\hline
+				\textbf{Power-law} & $2 \pi G \rho_0^\text{gas} a_{1} a_{2} a_{3}
+				\left\{
+				\begin{array}{ll}
+				\displaystyle\int\limits_{0}^{\infty} \vec{\phi}(\vec{x}, \tau) d\tau & \text{for $m(\vec{x}, \tau) < r_0$}\\
+				r_{0}^{n} \displaystyle\int\limits_{0}^{\infty} m(\vec{x}, \tau)^{-n}  \vec{\phi}(\vec{x}, \tau) d\tau & \text{else}
+				\end{array}
+				\right.$\\
+				\hline
+			\end{tabular}
+			
+		\end{table}	
+		
+		Two Gaussian quadrature integration schemes are tested, Gauss-Legendre and Gauss-Laguerre. Both schemes rely on the use of orthogonal polynomials whose roots yield the nodes $x_i$ at which a function is evaluated, multiplied by a weighting value $w_i$ in order to calculate its integral as in \autoref{eq: gauss}.
+		\begin{equation}\label{eq: gauss}
+			\int\limits_{a}^{b} w(x)f(x)dx \approx \sum_{i = 1}^{k}w_i f(x_i), \qquad \text{where $w(x)$ is a weighting function}
+		\end{equation}
+		
+		\begin{table}[h]
+			\centering
+			\caption{Weighing functions and intervals of integration for Gauss quadratures}
+			\begin{tabular}{ccc}
+				\hline
+				\textbf{Interval} & \textbf{Weighting function} & \textbf{Orthogonal polynomials} \\
+				\hline
+				$[-1, 1]$ & $1$ & Legendre \\
+				$[0, \infty)$ & $e^{-x}$ & Laguerre \\
+				\hline
+			\end{tabular}
+		\end{table}
+		
+		To make the integral proper, for the Gauss-Legendre quadrature, the following change of variable is done:
+		\begin{equation}\label{eq: changeVariable}
+			\omega = \dfrac{\tau^\gamma}{\tau^\gamma + 1}, \qquad \tau = \left(\frac{\omega}{1-\omega}\right)^{\frac{1}{\gamma}}, \qquad d\tau = \dfrac{\left(- \frac{\omega}{\omega - 1}\right)^{\frac{1}{\gamma}}}{\gamma \omega \left(- \omega + 1\right)} d\omega, \qquad \gamma > 0
+		\end{equation} 
+		
+		By using \autoref{eq: changeVariable}, the new interval is $[0, 1]$, thus, to use the Gauss-Legendre, the following change is done:
+		\begin{equation}
+			\int\limits_{0}^{1}f(x)dx = \dfrac{1}{2}\int\limits_{-1}^{1}f\left(\dfrac{x + 1}{2}\right)dx \approx \dfrac{1}{2}\sum_{i = 1}^{k}w_if\left(\dfrac{x + 1}{2}\right)
+		\end{equation}
+		
+		In the case of Gauss-Laguerre a weighting function is required, since non of the integrals on \autoref{tb: gradients} has a term of the form $e^{-\tau}$, it is introduced by multiplying and dividing all expressions by $e^{\tau}$.
+		\begin{equation}
+			\int\limits_{0}^{\infty}e^{-x}e^{x}f(x) = \int\limits_{0}^{\infty}e^{-x}g(x) = \sum_{i = 1}^{k}w_i g(x), \qquad \text{where g$(x) = e^xf(x)$}
+		\end{equation}
+		
+		\begin{figure}[h]
+			\centering
+			\begin{subfigure}[b]{0.49\textwidth}
+				\includegraphics[width = \textwidth]{"../Files/Week 8/gamma_error"}
+				\caption{Spherical case}
+%				\label{fig: symmetricDensity3d}
+			\end{subfigure}
+			~ 
+			\begin{subfigure}[b]{0.49\textwidth}
+				\includegraphics[width=\textwidth]{"../Files/Week 8/scheme_error"}
+				\caption{Triaxial case with ($a_1$:$a_2$:$a_3$) = (1:0.5:0.3)}
+%				\label{fig: triaxialDensity3d}
+			\end{subfigure}
+			\caption{Dark matter densities comparison between spherical and triaxial cases.}
+%			\label{fig: symmetricTriaxial}
+		\end{figure}
+		

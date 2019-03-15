@@ -1,0 +1,91 @@
+% !TeX spellcheck = en_US
+% Chapter 1
+
+%\chapter{Chapter Title Here} % Main chapter title
+%
+%\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content
+%\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+\chapter{Results}
+	\section{Spherical study}
+	For a single simulation, the following data is saved: iteration time, current position, speed, and the black hole mass. With these information, accelerations and densities can be later reconstructed as on \autoref{fig: overallOutput}.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.52\textwidth]{"../Files/Week 6/properties_s02v70"}
+		\caption{Upper two plots show the output of a single simulation, while the lower one shows most the local properties per data point.}
+		\label{fig: overallOutput}
+	\end{figure}
+	
+	\subsection{Effect of the baryonic fraction}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.7\textwidth]{"../Files/Week 5/baryonic_fraction_comparison"}
+		\caption{.}
+		\label{fig: baryonicfraction}
+	\end{figure}
+		
+	\subsection{Effect of the power law exponent}
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 6/power_law"}
+			\caption{.}
+			\label{fig: powerLawOrbits}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 6/power_law_density"}
+			\caption{.}
+			\label{fig: powerLawDensities}
+		\end{subfigure}
+		\caption{.}
+		\label{fig: powerLaw}
+	\end{figure}
+	
+	\subsection{Effect of the stellar fraction}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.7\textwidth]{"../Files/Week 7/Symmetric/returntimes_stellar_speed"}
+		\caption{.}
+		\label{fig: stellarfraction}
+	\end{figure}
+
+	\section{Triaxial study}	
+	\subsection{Numerical errors}
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 7/error"}
+			\caption{Errors on potential}
+			\label{fig: potentialErrors}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 7/symmetric_triaxial"}
+			\caption{Cumulative errors on simulations}
+			\label{fig: simulationErrors}
+		\end{subfigure}
+		\caption{Differences for analytical and numerical integration of the potentials. Analytical is taken as: $-GM(r) / r^2$}
+		\label{fig: numericalErrors}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 7/orthogonal_triaxial"}
+			\caption{Orbits for three orthogonal launches}
+			\label{fig: orthogonalLaunches}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 7/ellipsoid"}
+			\caption{Elliptical geometry}
+		\end{subfigure}
+		\caption{Orthogonal launches for a triaxial profile with semi-axis ($a_1$:$a_2$:$a_3$) = (1:0.99:0.95)}
+		\label{fig: mainOrthogonalLaunches}
+	\end{figure}

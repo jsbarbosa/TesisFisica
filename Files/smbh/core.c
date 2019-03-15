@@ -9,7 +9,7 @@ volatile double Z = 20;
 volatile double FB = 0.156;
 
 volatile double GAS_CORE = 1e-3;
-volatile double GAS_POWER = -2.2;
+volatile double GAS_POWER = 2.2;
 volatile double STELLAR_FRACTION = 0.01; // complement of gas percent
 
 /* FIXED AT MAIN */
@@ -186,9 +186,9 @@ double getLocalSoundSpeed(double z)
 
 double gasDensity(double r)
 {
-  // if (r < GAS_CORE) return GAS_DENSITY;
-  // return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
-  return GAS_DENSITY * pow((r / GAS_CORE + 1), - GAS_POWER);
+  if (r < GAS_CORE) return GAS_DENSITY;
+  return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
+  // return GAS_DENSITY * pow((r / GAS_CORE + 1), - GAS_POWER);
 }
 
 double gasMass(double r)
@@ -388,7 +388,7 @@ double *triaxial_gravS(double x, double y, double z)
 {
   int i;
   // double *grad = simpson(triaxial_gravitationalStellar, x, y, z, 0.1);
-  double *grad = gaussLegendre(triaxial_gravitationalStellar, x, y, z, 0.1);
+  double *grad = gaussLegendre(triaxial_gravitationalStellar, x, y, z, 0.2);
   for(i = 0; i < 3; i++) grad[i] *= G0 * STELLAR_TOTAL_MASS * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3 * STELLAR_SCALE_LENGTH;
   return grad;
 }
@@ -397,7 +397,7 @@ double *triaxial_gravG(double x, double y, double z)
 {
   int i;
   // double *grad = simpson(triaxial_gravitationalGas, x, y, z, 0.2);
-  double *grad = gaussLegendre(triaxial_gravitationalGas, x, y, z, 0.4);
+  double *grad = gaussLegendre(triaxial_gravitationalGas, x, y, z, 0.2);
   for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * GAS_DENSITY * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
   return grad;
 }
