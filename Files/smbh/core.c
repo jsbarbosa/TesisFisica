@@ -186,8 +186,9 @@ double getLocalSoundSpeed(double z)
 
 double gasDensity(double r)
 {
-  if (r < GAS_CORE) return GAS_DENSITY;
-  return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
+  // if (r < GAS_CORE) return GAS_DENSITY;
+  // return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
+  return GAS_DENSITY * pow((r / GAS_CORE + 1), - GAS_POWER);
 }
 
 double gasMass(double r)
