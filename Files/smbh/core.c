@@ -63,6 +63,11 @@ const double WEIGHTS[GAUSS_DEGREE] = {0.00290862, 0.0067598 , 0.01059055, 0.0143
         0.03545984, 0.03221373, 0.02884299, 0.02536067, 0.02178024,
         0.01811556, 0.01438082, 0.01059055, 0.0067598 , 0.00290862};
 
+double getG(void)
+{
+  return G0;
+}
+
 void setBaryonicFraction(double fb)
 {
   FB = fb;
@@ -86,10 +91,12 @@ void setStellarTotalMass(void)
 
 void setGasDensity(void)
 {
-  double m = 3 + GAS_POWER;
-  double f1 = (pow(R_VIR, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
-  f1 = 4 * M_PI * (f1 + pow(GAS_CORE, 3) / 3);
-  GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / f1;
+  // double m = 3 + GAS_POWER;
+  // double f1 = (pow(R_VIR, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
+  // f1 = 4 * M_PI * (f1 + pow(GAS_CORE, 3) / 3);
+  // GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / f1;
+  GAS_DENSITY = 1;
+  GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / gasMass(R_VIR);
 }
 
 void setGasPower(double n)
@@ -186,20 +193,25 @@ double getLocalSoundSpeed(double z)
 
 double gasDensity(double r)
 {
-  if (r < GAS_CORE) return GAS_DENSITY;
-  return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
-  // return GAS_DENSITY * pow((r / GAS_CORE + 1), - GAS_POWER);
+  // if (r < GAS_CORE) return GAS_DENSITY;
+  // return GAS_DENSITY * pow(GAS_CORE / r, -GAS_POWER);
+  return GAS_DENSITY * pow((r / GAS_CORE + 1), - GAS_POWER);
 }
 
 double gasMass(double r)
 {
-  if (r < GAS_CORE)
-  {
-    return 4 * M_PI * GAS_DENSITY * pow(r, 3) / 3;
-  }
-  double m = 3 + GAS_POWER;
-  double f1 = (pow(r, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
-  return 4 * M_PI * GAS_DENSITY * (f1 + pow(GAS_CORE, 3) / 3);
+  // if (r < GAS_CORE)
+  // {
+  //   return 4 * M_PI * GAS_DENSITY * pow(r, 3) / 3;
+  // }
+  // double m = 3 + GAS_POWER;
+  // double f1 = (pow(r, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
+  // return 4 * M_PI * GAS_DENSITY * (f1 + pow(GAS_CORE, 3) / 3);
+  double u = r / GAS_CORE;
+  double factor = pow(u + 1, 1 - GAS_POWER) * (pow(GAS_POWER, 2) - 3 * GAS_POWER + 2) * u * u
+                  + 2 * u * (GAS_POWER -1) + 2;
+  factor *= -4 * M_PI * GAS_DENSITY * pow(GAS_CORE, 3);
+  return factor / ((GAS_POWER - 3) * (GAS_POWER - 2) * (GAS_POWER - 1));
 }
 
 double getSoftenedLength(double r)
@@ -374,30 +386,30 @@ double *gaussLegendre(double *(*func)(double, double, double, double), double x,
   return grad;
 }
 
-double *triaxial_gravDM(double x, double y, double z)
+double *triaxial_gravDM(double x, double y, double z, double gamma)
 {
   int i;
   // double *grad = simpson(triaxial_gravitationalDarkMatter, x, y, z, 0.1);
-  double *grad = gaussLegendre(triaxial_gravitationalDarkMatter, x, y, z, 0.2);
+  double *grad = gaussLegendre(triaxial_gravitationalDarkMatter, x, y, z, gamma);
   for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * pow(DARK_MATTER_SCALE_RADIUS, 3) *
           DARK_MATTER_DENSITY_0 * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
   return grad;
 }
 
-double *triaxial_gravS(double x, double y, double z)
+double *triaxial_gravS(double x, double y, double z, double gamma)
 {
   int i;
   // double *grad = simpson(triaxial_gravitationalStellar, x, y, z, 0.1);
-  double *grad = gaussLegendre(triaxial_gravitationalStellar, x, y, z, 0.2);
+  double *grad = gaussLegendre(triaxial_gravitationalStellar, x, y, z, gamma);
   for(i = 0; i < 3; i++) grad[i] *= G0 * STELLAR_TOTAL_MASS * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3 * STELLAR_SCALE_LENGTH;
   return grad;
 }
 
-double *triaxial_gravG(double x, double y, double z)
+double *triaxial_gravG(double x, double y, double z, double gamma)
 {
   int i;
   // double *grad = simpson(triaxial_gravitationalGas, x, y, z, 0.2);
-  double *grad = gaussLegendre(triaxial_gravitationalGas, x, y, z, 0.2);
+  double *grad = gaussLegendre(triaxial_gravitationalGas, x, y, z, gamma);
   for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * GAS_DENSITY * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
   return grad;
 }
@@ -543,9 +555,9 @@ void triaxialCase(struct reb_simulation* sim)
     double v = getSoftenedSpeed(getNorm(speed));
     double dir_v[3] = {speed[0] / v, speed[1] / v, speed[2] / v};
 
-    double *p_dm = triaxial_gravDM(pos[0], pos[1], pos[2]);
-    double *p_stars = triaxial_gravS(pos[0], pos[1], pos[2]);
-    double *p_gas = triaxial_gravG(pos[0], pos[1], pos[2]);
+    double *p_dm = triaxial_gravDM(pos[0], pos[1], pos[2], 0.2);
+    double *p_stars = triaxial_gravS(pos[0], pos[1], pos[2], 0.2);
+    double *p_gas = triaxial_gravG(pos[0], pos[1], pos[2], 0.2);
 
     int i;
     for(i = 0; i < 3; i++) p_dm[i] += p_stars[i] + p_gas[i];

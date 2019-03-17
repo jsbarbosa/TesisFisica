@@ -36,6 +36,7 @@ ax.set_ylabel(r"$R / R_{vir}$")
 
 ax.legend(["Symmetric", "Triaxial $(a_1 = a_2 = a_3 = 1)$"])
 
+fig.tight_layout()
 fig.savefig("symmetric_triaxial.png", dpi = 300)
 
 plt.show()

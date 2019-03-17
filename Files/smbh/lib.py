@@ -50,7 +50,8 @@ def function(func, *args):
         ls = [func(*row) for row in values]
         return np.array(ls)
 
-func_info = [('getR_vir', c_double, None),
+func_info = [('getG', c_double, None),
+            ('getR_vir', c_double, None),
             ('setR_vir', None, c_double),
             ('printConstants', None, None),
             ('gasDensity', c_double, c_double),
@@ -78,12 +79,10 @@ func_info = [('getR_vir', c_double, None),
             ('setGasPower', None, c_double),
             ('darkMatterDensityTriaxial', c_double, (c_double, c_double, c_double)),
             ('getM', c_double, (c_double, c_double, c_double)),
-            ('setTriaxalCoeffs', None, (c_double, c_double, c_double)),
-            ('triaxial_gravDM', POINTER(c_double), (c_double, c_double, c_double)),
-            ('triaxial_gravS', POINTER(c_double), (c_double, c_double, c_double)),
-            ('triaxial_gravG', POINTER(c_double), (c_double, c_double, c_double)),
-            ('triaxial_gravitationalDarkMatter', POINTER(c_double), (c_double, c_double, c_double, c_double)),
-            ('triaxial_gravitationalStellar', c_double, (c_double, c_double, c_double, c_double, c_int))]
+            ('setTriaxalCoeffs', None, 3 * [c_double]),
+            ('triaxial_gravDM', POINTER(c_double), 4 * [c_double]),
+            ('triaxial_gravS', POINTER(c_double), 4 * [c_double]),
+            ('triaxial_gravG', POINTER(c_double), 4 * [c_double]),]
 
 for func in func_info:
     name = func[0]
@@ -117,14 +116,7 @@ def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True, integrator = INT_LEAP
 
     return data
 
-# def SMBHAccretion(pos, speeds):
-#     if type(pos) is np.ndarray:
-#         if len(pos.shape) > 1:
-#             return [pointerFunction(lib.SMBHAccretion, pos[i], speeds[i]) for i in range(len(pos))]
-#         else:
-#             return pointerFunction(lib.SMBHAccretion, pos, speeds)
-#     return pointerFunction(lib.SMBHAccretion, pos, speeds)
-
+G = getG()
 setR_vir(R_VIR_z20)
-setGasPower(-2.2)
+setGasPower(2.2)
 setStellarRatio(0.01)

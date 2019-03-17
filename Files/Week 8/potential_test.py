@@ -61,6 +61,7 @@ ax.legend()
 ax.grid()
 
 ax.set_xscale('log')
+ax.set_yscale('log')
 ax.set_xlabel("$R/R_{vir}$")
 ax.set_ylabel("Error (%)")
 
