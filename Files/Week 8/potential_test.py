@@ -5,8 +5,8 @@ import smbh
 import numpy as np
 import matplotlib.pyplot as plt
 
-def getPotential(func, x, y, z):
-    int_ = func(x, y, z)
+def getPotential(func, x, y, z, gamma = 0.2):
+    int_ = func(x, y, z, gamma)
     int_ = np.array([int_[i] for i in range(3)])
     return sum(int_ ** 2) ** 0.5
 

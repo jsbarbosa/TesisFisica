@@ -200,17 +200,10 @@ double gasDensity(double r)
 
 double gasMass(double r)
 {
-  // if (r < GAS_CORE)
-  // {
-  //   return 4 * M_PI * GAS_DENSITY * pow(r, 3) / 3;
-  // }
-  // double m = 3 + GAS_POWER;
-  // double f1 = (pow(r, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
-  // return 4 * M_PI * GAS_DENSITY * (f1 + pow(GAS_CORE, 3) / 3);
   double u = r / GAS_CORE;
-  double factor = pow(u + 1, 1 - GAS_POWER) * (pow(GAS_POWER, 2) - 3 * GAS_POWER + 2) * u * u
-                  + 2 * u * (GAS_POWER -1) + 2;
-  factor *= -4 * M_PI * GAS_DENSITY * pow(GAS_CORE, 3);
+  double factor = -pow(GAS_POWER, 2) * (u + 1) * pow(u, 2) + 2 * (pow(u + 1, GAS_POWER) - pow(u, 3) - 1)
+                + GAS_POWER * u * (3 * pow(u, 2) + u - 2);
+  factor *= 4 * M_PI * GAS_DENSITY * pow(GAS_CORE, 3) * pow(u + 1, -GAS_POWER);
   return factor / ((GAS_POWER - 3) * (GAS_POWER - 2) * (GAS_POWER - 1));
 }
 
@@ -310,13 +303,11 @@ double *triaxial_gravitationalGas(double x, double y, double z, double tau)
   int i;
   double *phi = phiVector(x, y, z, tau);
   double m = getMTau(x, y, z, tau);
-  if (m <= GAS_CORE) return phi;
-  else
+  for(i = 0; i < 3; i++)
   {
-    double factor = pow(m / GAS_CORE, GAS_POWER);
-    for(i = 0; i < 3; i++) phi[i] *= factor;
-    return phi;
+    phi[i] *= pow(GAS_CORE / (m + GAS_CORE), GAS_POWER);
   }
+  return phi;
 }
 
 double *simpson(double *(*func)(double, double, double, double), double x, double y, double z, double gamma)
@@ -382,14 +373,13 @@ double *gaussLegendre(double *(*func)(double, double, double, double), double x,
     free(temp);
   }
 
-  for(i = 0; i < 3; i++) grad[i] *= 0.5 * 0.9988627714549503;
+  for(i = 0; i < 3; i++) grad[i] *= 0.5;
   return grad;
 }
 
 double *triaxial_gravDM(double x, double y, double z, double gamma)
 {
   int i;
-  // double *grad = simpson(triaxial_gravitationalDarkMatter, x, y, z, 0.1);
   double *grad = gaussLegendre(triaxial_gravitationalDarkMatter, x, y, z, gamma);
   for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * pow(DARK_MATTER_SCALE_RADIUS, 3) *
           DARK_MATTER_DENSITY_0 * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
@@ -399,7 +389,6 @@ double *triaxial_gravDM(double x, double y, double z, double gamma)
 double *triaxial_gravS(double x, double y, double z, double gamma)
 {
   int i;
-  // double *grad = simpson(triaxial_gravitationalStellar, x, y, z, 0.1);
   double *grad = gaussLegendre(triaxial_gravitationalStellar, x, y, z, gamma);
   for(i = 0; i < 3; i++) grad[i] *= G0 * STELLAR_TOTAL_MASS * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3 * STELLAR_SCALE_LENGTH;
   return grad;
@@ -408,7 +397,6 @@ double *triaxial_gravS(double x, double y, double z, double gamma)
 double *triaxial_gravG(double x, double y, double z, double gamma)
 {
   int i;
-  // double *grad = simpson(triaxial_gravitationalGas, x, y, z, 0.2);
   double *grad = gaussLegendre(triaxial_gravitationalGas, x, y, z, gamma);
   for(i = 0; i < 3; i++) grad[i] *= 2 * M_PI * G0 * GAS_DENSITY * TRIAXIAL_A_1 * TRIAXIAL_A_2 * TRIAXIAL_A_3;
   return grad;

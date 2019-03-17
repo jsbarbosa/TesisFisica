@@ -89,14 +89,9 @@
 				\mathcal{R}_s = \dfrac{0.01}{\left(1 + \sqrt{2}\right)}\left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3} \approx 6.835\times 10^{-4}\left({\dfrac{M_h}{H(t)^2}}\right)^{1/3}
 			\end{equation}
 		\subsection{Gas density}
-			For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^{-n} = r^{-2.2}$. The complete density is described as follows:
+			For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^{-n} = r^{-2.2}$. Density is described as follows: for $r \gg r_0$, $\rho_\text{gas}(r)\propto r^{-n}$ while for $r \ll r_0$, $\rho_\text{gas}(r) \approx \rho_0^\text{gas}$.
 			\begin{equation}\label{eq: rdensity}
-				\rho_\text{gas}(r) = \left \{
-				\begin{matrix}
-				\rho_0^\text{gas} & \text{if $r < r_0$}\\
-				\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{n} & \text{if $r \geq r_0$}\\
-				\end{matrix}
-				\right.
+				\rho_\text{gas}(r) = \dfrac{\rho_0^\text{gas}}{\left(1 + \dfrac{r}{r_0}\right)^n}
 			\end{equation}
 	
 	\section{Equation of motion}
@@ -224,22 +219,20 @@
 		\end{equation}
 	
 	\subsection{Gas profile}		
-		The cumulative mass is found by integrating \autoref{eq: rdensity} in spherical coordinates, which for $n \neq 3$ is equal to:
+		The cumulative mass is found by integrating \autoref{eq: rdensity} in spherical coordinates.
 		\begin{equation}
-			M_\text{gas}(r) = \left \{
-			\begin{matrix}
-			\dfrac{4}{3}\pi\rho_0^\text{gas}r^3 & \text{if $r < r_0$} \\
-			4\pi\rho_0^\text{gas}\left(\dfrac{r_0^{n}\left(r^{3 - n} - r_0^{3 - n}\right)}{(3 - n)}  + \dfrac{r_0^3}{3}\right) & \text{if $r \geq r_0$} \\
-			\end{matrix}
-			\right.
+			\begin{array}{rl}
+			M_\text{gas}(r) 
+			& = 4\pi\rho_0^\text{gas} r_0^3\int\limits_{0}^{u}\dfrac{u'^2}{(1 + u')^n}du' \\
+			& = 4\pi\rho_0^\text{gas} r_0^3\left(u + 1\right)^{-n}\dfrac{-(u + 1)(nu)^2 + 2[(u + 1)^n - u^3-1] + nu[3u^2 + u - 2]}{(n - 3)(n - 2)(n - 1)}
+			\\
+			& \text{where $u = r/r_0$, for $u \leq 0$ and $n \neq {1, 2, 3}$}
+			\end{array}
 		\end{equation}
 		
 		The value of the constant $\rho_0^\text{gas}$ is found using a similar process as in \autoref{eq: dmM_virial} and \ref{eq: rho0dm}.
 		\begin{equation}
-			M_\text{gas}(R_\text{vir}) = 4\pi\rho_0^\text{gas}\left(\dfrac{\left(R_\text{vir}^{3 - n} - r_0^{3 - n}\right)}{(3-n)r_0^{-n}} + \dfrac{r_0^3}{3}\right) = (1 - f_s) f_bM_h
-		\end{equation}
-		\begin{equation}
-			\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{4\pi \left(\dfrac{r_0^{n}\left(R_\text{vir}^{3 - n} - r_0^{3 - n}\right)}{(3 - n)} + \dfrac{r_0^3}{3}\right)} \qquad \text{ if $R_\text{vir} > r_0$}
+			\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{(M_\text{gas}(R_\text{vir}) / \rho_0^\text{gas})}
 		\end{equation}
 		
 		All of the profiles are shown on \autoref{fig: massprofiles}, where the effect of the stellar fraction can be seen.
@@ -310,15 +303,13 @@
 				\hline
 				\textbf{Profile} & $\psi(\infty) - \psi(m)$ \\
 				\hline
+				\rule{0pt}{4ex} 
 				\textbf{NFW} & $\dfrac{2R_s^3\rho_0^\text{DM}}{R_s + m(\vec{x}, \tau)}$\\
 				%				\hline
 				\textbf{Hernquist} & $\dfrac{M_s\mathcal{R}_s}{2\pi\left(\mathcal{R}_s + m(\vec{x}, \tau)\right)^2}$ \\
 				%				\hline
-				\textbf{Power-law} & $-\rho_0^\text{gas}m(\vec{x}, \tau)^2\left\{
-				\begin{array}{ll}
-				1 & \text{for $m(\vec{x}, \tau) < r_0$}\\
-				\dfrac{2}{2 - n}\left(\dfrac{r_{0}}{m(\vec{x}, \tau)}\right)^n & \text{else}
-				\end{array}\right.$\\
+				\textbf{Power-law} & $\dfrac{2 \rho_0^\text{gas} \left(\frac{m(\vec{x}, \tau) + r_{0}}{r_{0}}\right)^{- n} \left(m(\vec{x}, \tau) + r_{0}\right) \left(m(\vec{x}, \tau) \left(n - 1\right) + r_{0}\right)}{\left(n - 2\right) \left(n - 1\right)}$
+				\\
 				\hline
 			\end{tabular}
 		\end{table}
@@ -345,18 +336,13 @@
 				\hline
 				\textbf{Profile} & $\nabla \Phi(\vec{x})$\\
 				\hline
+				\rule{0pt}{4ex}
 				\textbf{NFW} & $2 \pi G R_{s}^{3}\rho_0 a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty}
 				\dfrac{\vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(R_{s} + m(\vec{x}, \tau)\right)^{2}}$ \\
 				%				\hline
 				\textbf{Hernquist} &  $G M_{s} \mathcal{R}_s a_{1} a_{2} a_{3} \displaystyle\int\limits_{0}^{\infty} \frac{ \vec{\phi}(\vec{x}, \tau) d\tau}{m(\vec{x}, \tau)\left(\mathcal{R}_s + m(\vec{x}, \tau)\right)^{3}}$ \\
 				%				\hline
-				\textbf{Power-law} & $2 \pi G \rho_0^\text{gas} a_{1} a_{2} a_{3}
-				\left\{
-				\begin{array}{ll}
-				\displaystyle\int\limits_{0}^{\infty} \vec{\phi}(\vec{x}, \tau) d\tau & \text{for $m(\vec{x}, \tau) < r_0$}\\
-				r_{0}^{n} \displaystyle\int\limits_{0}^{\infty} m(\vec{x}, \tau)^{-n}  \vec{\phi}(\vec{x}, \tau) d\tau & \text{else}
-				\end{array}
-				\right.$\\
+				\textbf{Power-law} & $2 \pi G a_{1} a_{2} a_{3}  \rho_{0}^\text{gas}  \displaystyle\int\limits_{0}^{\infty}\vec{\phi}(\vec{x}, \tau)\left(\dfrac{r_{0}}{m(\vec{x}, \tau) + r_{0}}\right)^{n}d\tau$\\
 				\hline
 			\end{tabular}
 			
@@ -413,7 +399,7 @@
 			\caption{Error assessment of the numerical integrators, at $\vec{x} = (1, 0, 0)$ kpc.}
 		\end{figure}
 	
-		Since $\gamma$ is a free parameter in the Gauss-Legendre scheme, it must be optimized, results on \autoref{fig: gammaError} show a stability region for all potentials close to $\gamma = 0.2$. On \autoref{fig: Gscheme_error}, a comparison of the error for both Gauss schemes is made, finding that Gauss-Legendre is better for all potentials when the degree of the polynomial used is bigger than 10, and that after $k = 40$ there is no variation on the error with Gauss-Legendre.
+		Since $\gamma$ is a free parameter in the Gauss-Legendre scheme, it must be optimized, results on \autoref{fig: gammaError} show a stability region for all potentials close to $\gamma = 0.2$. On \autoref{fig: Gscheme_error}, a comparison of the error for both Gauss schemes is made, finding that Gauss-Legendre is better for all potentials when the degree of the polynomial used is bigger than 10, and that after $k \approx 50$ there is no variation on the error with Gauss-Legendre.
 		\begin{figure}[h]
 			\centering
 			\begin{subfigure}[t]{0.49\textwidth}
@@ -427,7 +413,7 @@
 				\caption{Cumulative errors on simulations}
 				\label{fig: simulationErrors}
 			\end{subfigure}
-			\caption{Differences for analytical and numerical integration of the potentials. Analytical is taken as: $GM(r) / r^2$}
+			\caption{Differences for analytical and numerical integration of the potentials gradients.}
 			\label{fig: numericalErrors}
 		\end{figure}
 	
