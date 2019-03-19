@@ -1,11 +1,13 @@
 import numpy as np
+from copy import copy
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-
 
 from matplotlib import cm
 import matplotlib.colors as colors
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.collections import LineCollection
+from matplotlib.colors import LinearSegmentedColormap
 
 from smbh.lib import *
 from smbh.useful import magnitude
@@ -282,7 +284,100 @@ def slice3d(from_, to_, function, symmetric = True, points = 35, alpha = 1, labe
 
     return fig, ax, cbar
 
+def generateCMap(base_r, base_g, base_b, alpha_start = 0.1, alpha_stop = 1):
+    cdict = {'red':   ((0.0, base_r, base_r),
+                   (1.0, base_r, base_r)),
+         'green': ((0.0, base_g, base_g),
+                   (1.0, base_g, base_g)),
+         'blue':  ((0.0, base_b, base_b),
+                   (1.0, base_b, base_b)),
+        'alpha':((0.0, alpha_start, alpha_start),
+                (1.0, alpha_stop, alpha_stop)),
+            }
+    return LinearSegmentedColormap('map', cdict)
 
+def plotPhaseSpace(result, fig_axes = None, colors = 'Greys', linewidth = 1, figsize = (8, 4.5)):
+    def make_segments(x, y):
+        points = np.array([x, y]).T.reshape(-1, 1, 2)
+        segments = np.concatenate([points[:-1], points[1:]], axis = 1)
+        return segments
+
+    pos = result.positions.T
+    speeds = result.speeds.T
+    momentums = [v * result.masses for v in speeds]
+
+    ymin = 0
+    ymax = 0
+
+    n = len(pos[0])
+    x_labels = ["x", "y", "z"]
+
+    array = np.linspace(0, 1, n)
+
+    if fig_axes == None:
+        fig, axes = plt.subplots(1, 3, sharey = True, figsize = figsize)
+        fig_axes = True
+    else:
+        fig, axes = fig_axes
+        fig_axes = False
+
+    for i in range(3):
+        x, y = pos[i], momentums[i]
+        segments = make_segments(x, y)
+        lc = LineCollection(segments, cmap = colors, array = array,
+            linewidth = linewidth)
+
+        axes[i].add_collection(lc)
+        if fig_axes:
+            axes[i].set_xlim(1.1 * x.min(), 1.1 * x.max())
+            axes[i].set_xlabel("$%s$ (kpc)" % x_labels[i])
+
+            axes[i].grid()
+
+            if min(y) < ymin: ymin = min(y)
+            if max(y) > ymax: ymax = max(y)
+
+    if fig_axes:
+        axes[0].set_ylim(1.1 * ymin, 1.1 * ymax)
+        axes[0].set_ylabel(r'$\vec{P}$ (10$^5M_\odot$kpc/Gyr)')
+
+    return fig, axes
+
+def plotPhaseSpaces(results, max_points = 200, linewidth = 1, figsize = (8, 4.5)):
+    m = len(results)
+    mins = np.zeros((m, 6))
+    maxs = np.zeros_like(mins)
+
+    colors = plt.cm.jet(np.linspace(0, 1, m))[:, :3]
+
+    fig, axes = plt.subplots(1, 3, sharey = True, linewidth = 1, figsize = figsize)
+
+    for (i, result) in enumerate(results):
+        color = generateCMap(*colors[i])
+        skip = int(round(result.positions.shape[0] / max_points, 0))
+        if skip > 0:
+            result = copy(result)
+            result.positions = result.positions[:: skip]
+            result.speeds = result.speeds[:: skip]
+            result.masses = result.masses[:: skip]
+        mins[i, : 3] = result.positions.min(axis = 0)
+        mins[i, 3 :] = result.speeds.min(axis = 0)
+        maxs[i, : 3] = result.positions.max(axis = 0)
+        maxs[i, 3 :] = result.speeds.max(axis = 0)
+        fig, axes = plotPhaseSpace(result, colors = color, fig_axes = [fig, axes], linewidth = linewidth, figsize = (8, 4.5))
+
+    x_labels = ['x', 'y', 'z']
+
+    mins = mins.min(axis = 0)
+    maxs = maxs.max(axis = 0)
+    for (i, ax) in enumerate(axes):
+        ax.grid()
+        ax.set_xlabel('$%s$ (kpc)' % x_labels[i])
+        ax.set_xlim(1.1 * mins[i], 1.1 * maxs[i])
+
+    axes[0].set_ylabel(r'$\vec{P}$ (10$^5M_\odot$kpc/Gyr)')
+    axes[0].set_ylim(1.1 * mins[3:].min(), 1.1 * maxs[3:].max())
+    return fig, axes
 
 
 

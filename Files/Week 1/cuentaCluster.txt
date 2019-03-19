@@ -11,3 +11,9 @@ Descripción:
 Horas CPU: 100
 CPUs: 1
 Almacenamiento: 100 GB
+
+
+js.barbosa10@magnus.uniandes.edu.co
+
+sbatch -> submit job
+module load anaconda/python3
