@@ -1,6 +1,7 @@
 #include "rebound.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "headers.h"
 
@@ -41,6 +42,9 @@ volatile double TRIAXIAL_A_1 = 1;
 volatile double TRIAXIAL_A_2 = 0.5;
 volatile double TRIAXIAL_A_3 = 0.5;
 
+volatile double LYAPUNOV_DISTANCE_X = 1e-5;
+volatile double LYAPUNOV_DISTANCE_P = 0;
+
 const double ROOTS[GAUSS_DEGREE] = {-0.9988664 , -0.99403197, -0.98535408, -0.97286439, -0.95661096,
         -0.93665662, -0.91307856, -0.88596798, -0.85542977, -0.82158207,
         -0.78455583, -0.7444943 , -0.70155247, -0.65589647, -0.60770293,
@@ -51,7 +55,6 @@ const double ROOTS[GAUSS_DEGREE] = {-0.9988664 , -0.99403197, -0.98535408, -0.97
          0.60770293,  0.65589647,  0.70155247,  0.7444943 ,  0.78455583,
          0.82158207,  0.85542977,  0.88596798,  0.91307856,  0.93665662,
          0.95661096,  0.97286439,  0.98535408,  0.99403197,  0.9988664 };
-
 const double WEIGHTS[GAUSS_DEGREE] = {0.00290862, 0.0067598 , 0.01059055, 0.01438082, 0.01811556,
         0.02178024, 0.02536067, 0.02884299, 0.03221373, 0.03545984,
         0.03856876, 0.04152846, 0.0443275 , 0.04695505, 0.04940094,
@@ -62,6 +65,22 @@ const double WEIGHTS[GAUSS_DEGREE] = {0.00290862, 0.0067598 , 0.01059055, 0.0143
         0.04940094, 0.04695505, 0.0443275 , 0.04152846, 0.03856876,
         0.03545984, 0.03221373, 0.02884299, 0.02536067, 0.02178024,
         0.01811556, 0.01438082, 0.01059055, 0.0067598 , 0.00290862};
+
+struct Results
+{
+  char **variables;
+  double *values;
+  double *t;
+  double *x;
+  double *y;
+  double *z;
+  double *vx;
+  double *vy;
+  double *vz;
+  double *mass;
+
+  int n_values, n_points;
+};
 
 double getG(void)
 {
@@ -645,7 +664,7 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
   fclose(file);
 }
 
-struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
+struct reb_simulation* setupSimulation(double mass, double *position, double *speed, int integrator,
                             void (*additional_force)(struct reb_simulation * ))
 {
   int coeff = 1;
@@ -685,6 +704,29 @@ struct reb_simulation* setupSimulation(double mass, double *position, double *sp
 
   reb_tools_megno_init(sim);
   sim->exact_finish_time = 0;
+
+  switch(integrator)
+  {
+    case INT_LEAPFROG:
+      sim->integrator = REB_INTEGRATOR_LEAPFROG;
+      break;
+    case INT_IAS15:
+      sim->integrator = REB_INTEGRATOR_IAS15;
+      break;
+    case INT_WHFAST:
+      SIM_DT *= 1. / 10;
+      sim->integrator = REB_INTEGRATOR_WHFAST;
+      break;
+    case INT_JANUS:
+      sim->integrator = REB_INTEGRATOR_JANUS;
+      break;
+    case INT_MERCURIUS:
+      sim->integrator = REB_INTEGRATOR_MERCURIUS;
+      break;
+    default :
+      sim->integrator = REB_INTEGRATOR_LEAPFROG;
+  }
+
   return sim;
 }
 
@@ -707,35 +749,316 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
     reb_integrate(sim, sim->t + sim->dt);
     i += 1;
   }
+
+  reb_free_simulation(sim);
 }
 
 void run(double *positions, double *speeds, double smbh_mass, double dt, int triaxial, int integrator, int save_every, const char *filename)
 {
   SIM_DT = dt;
   struct reb_simulation* sim;
-  if(triaxial == 1) sim = setupSimulation(smbh_mass, positions, speeds, triaxialCase);
-  else sim = setupSimulation(smbh_mass, positions, speeds, sphericalCase);
-  switch(integrator)
-  {
-    case INT_LEAPFROG:
-      sim->integrator = REB_INTEGRATOR_LEAPFROG;
-      break;
-    case INT_IAS15:
-      sim->integrator = REB_INTEGRATOR_IAS15;
-      break;
-    case INT_WHFAST:
-      SIM_DT *= 1. / 10;
-      sim->integrator = REB_INTEGRATOR_WHFAST;
-      break;
-    case INT_JANUS:
-      sim->integrator = REB_INTEGRATOR_JANUS;
-      break;
-    case INT_MERCURIUS:
-      sim->integrator = REB_INTEGRATOR_MERCURIUS;
-      break;
-    default :
-      sim->integrator = REB_INTEGRATOR_LEAPFROG;
- }
+  if(triaxial == 1) sim = setupSimulation(smbh_mass, positions, speeds, integrator, triaxialCase);
+  else sim = setupSimulation(smbh_mass, positions, speeds, integrator, sphericalCase);
 
   runSimulation(sim, save_every, filename);
+}
+
+void printResults(struct Results results)
+{
+  int i;
+  for(i = 0; i < results.n_values; i ++)
+  {
+    printf("%s = %f\n", results.variables[i], results.values[i]);
+  }
+  for(i = 0; i < results.n_points; i++)
+  {
+    printf("%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", results.t[i], results.x[i], results.y[i], results.z[i],
+              results.vx[i], results.vy[i], results.vz[i], results.mass[i]);
+  }
+}
+
+struct Results loadResults(const char *file_name)
+{
+  FILE *file;
+  int length = 250;
+  struct Results results;
+  int i = 0, j = 0, k = 0;
+  file = fopen(file_name, "r");
+
+  char line_buffer[length]; // prepares a list of length chars to store a single line of the document
+  char *split_buffer; // prepares a pointer of chars to store a single word or number in the line_buffer
+  char *temp_buffer;
+
+  double value;
+
+  if (file == NULL)
+  {
+    // verifies the file exists
+    printf("Error Reading File\n");
+    exit(0);
+  }
+
+  while(fgets(line_buffer, length, file) != NULL) // reads up to length characters of the dataFile and stores them at the line_buffer
+  {
+    j = 0;
+    split_buffer = strtok(line_buffer, "\t"); // first word of the line
+    while (split_buffer != NULL)
+    {
+        temp_buffer = strtok(NULL, "\t");
+        if((j == 0) & (temp_buffer == NULL))
+        {
+          split_buffer = strtok(split_buffer, " = ");
+          temp_buffer = strtok(NULL, " = ");
+
+          if(i == 0)
+          {
+            results.variables = calloc(1, sizeof(char *));
+            results.values = calloc(1, sizeof(double));
+          }
+          else
+          {
+            results.variables = realloc(results.variables, sizeof(char *) * (i + 1));
+            results.values = realloc(results.values, sizeof(double) * (i + 1));
+          }
+
+          results.variables[i] = calloc(50, sizeof(char));
+          results.values[i] = atof(temp_buffer);
+          strcpy(results.variables[i],  split_buffer);
+          temp_buffer = NULL;
+
+          results.n_values = i;
+        }
+        else
+        {
+          if (k == 0)
+          {
+            k += 1;
+            break;
+          }
+          else
+          {
+            value = atof(split_buffer);
+            switch (j)
+            {
+              case 0:
+              {
+                if(k == 2)
+                {
+                  results.t = calloc(1, sizeof(double));
+                  results.x = calloc(1, sizeof(double));
+                  results.y = calloc(1, sizeof(double));
+                  results.z = calloc(1, sizeof(double));
+                  results.vx = calloc(1, sizeof(double));
+                  results.vy = calloc(1, sizeof(double));
+                  results.vz = calloc(1, sizeof(double));
+                  results.mass = calloc(1, sizeof(double));
+                }
+                else
+                {
+                  results.t = realloc(results.t, (k - 1) * sizeof(double));
+                  results.x = realloc(results.x, (k - 1) * sizeof(double));
+                  results.y = realloc(results.y, (k - 1) * sizeof(double));
+                  results.z = realloc(results.z, (k - 1) * sizeof(double));
+                  results.vx = realloc(results.vx, (k - 1) * sizeof(double));
+                  results.vy = realloc(results.vy, (k - 1) * sizeof(double));
+                  results.vz = realloc(results.vz, (k - 1) * sizeof(double));
+                  results.mass = realloc(results.mass, (k - 1) * sizeof(double));
+                }
+                results.t[k - 2] = value;
+                break;
+              }
+              case 1:
+              {
+                results.x[k - 2] = value;
+                break;
+              }
+              case 2:
+              {
+                results.y[k - 2] = value;
+                break;
+              }
+              case 3:
+              {
+                results.z[k - 2] = value;
+                break;
+              }
+              case 4:
+              {
+                results.vx[k - 2] = value;
+                break;
+              }
+              case 5:
+              {
+                results.vy[k - 2] = value;
+                break;
+              }
+              case 6:
+              {
+                results.vz[k - 2] = value;
+                break;
+              }
+              case 7:
+              {
+                results.mass[k - 2] = value;
+                break;
+              }
+              default:
+              {
+
+              }
+            }
+          }
+        }
+
+        split_buffer = temp_buffer;
+        j += 1;
+    }
+    if(k > 0) k += 1;
+    i += 1;
+  }
+
+  results.n_points = k - 2;
+
+  for(i = 0; i < results.n_values; i++)
+  {
+    value = results.values[i];
+    if(strcmp(results.variables[i], "R_VIR") == 0) R_VIR = value;
+    else if(strcmp(results.variables[i], "FB") == 0) FB = value;
+    else if(strcmp(results.variables[i], "STELLAR_FRACTION") == 0) STELLAR_FRACTION = value;
+    else if(strcmp(results.variables[i], "DARK_MATTER_SCALE_RADIUS") == 0) DARK_MATTER_SCALE_RADIUS = value;
+    else if(strcmp(results.variables[i], "STELLAR_SCALE_LENGTH") == 0) STELLAR_SCALE_LENGTH = value;
+    else if(strcmp(results.variables[i], "DARK_MATTER_TOTAL_MASS") == 0) DARK_MATTER_TOTAL_MASS = value;
+    else if(strcmp(results.variables[i], "STELLAR_TOTAL_MASS") == 0) STELLAR_TOTAL_MASS = value;
+    else if(strcmp(results.variables[i], "DARK_MATTER_DENSITY_0") == 0) DARK_MATTER_DENSITY_0 = value;
+    else if(strcmp(results.variables[i], "GAS_DENSITY") == 0) GAS_DENSITY = value;
+  }
+
+  return results;
+}
+
+void getDelta(double **vals, double *refs)
+{
+  int i;
+  for(i = 0; i < 3; i++)
+  {
+    (*vals)[i] = (*vals)[i] - refs[i];
+  }
+}
+
+double getS(double *q, double *p, double *q_0, double *p_0)
+{
+  int i;
+  double num = 0, dem = 0;
+  for(i = 0; i < 3; i++)
+  {
+    num += pow(q[i], 2) + pow(p[i], 2);
+    dem += pow(p_0[i], 2) + pow(q_0[i], 2);
+  }
+
+  return sqrt(num / dem);
+}
+
+void printTriplet(double *array)
+{
+  int i;
+  for(i = 0; i < 3; i++)
+  {
+    printf("%e\t", array[i]);
+  }
+  printf("\n");
+}
+
+double lyapunov(double *positions, double *speeds, double *d_q0, double *d_p0,
+        double smbh_mass, double T, double dt, int l, int triaxial)
+{
+  int i, j;
+  struct reb_simulation* sim;
+  struct reb_particle* particle;
+
+  double ln = 0, s;
+  double *q = malloc(3 * sizeof(double));
+  double *p = malloc(3 * sizeof(double));
+  double *ref_p = malloc(3 * sizeof(double));
+  double *ref_q = malloc(3 * sizeof(double));
+
+  for(i = 0; i < l + 1; i++)
+  {
+    if(i == 0)
+    {
+      if(triaxial == 1) sim = setupSimulation(smbh_mass, positions, speeds, INT_LEAPFROG, triaxialCase);
+      else sim = setupSimulation(smbh_mass, positions, speeds, INT_LEAPFROG, sphericalCase);
+    }
+    else
+    {
+      for(j = 0; j < 3; j++)
+      {
+        q[j] = positions[j] + d_q0[j];
+        // p[j] = speeds[j] + d_p0[j] / smbh_mass;
+      }
+
+      if(triaxial == 1) sim = setupSimulation(smbh_mass, q, speeds, INT_LEAPFROG, triaxialCase);
+      else sim = setupSimulation(smbh_mass, q, speeds, INT_LEAPFROG, sphericalCase);
+    }
+
+    sim->dt = dt;
+    reb_integrate(sim, T);
+
+    particle = &(sim->particles[0]);
+    q[0] = particle->x;
+    q[1] = particle->y;
+    q[2] = particle->z;
+    p[0] = particle->vx * particle->m;
+    p[1] = particle->vy * particle->m;
+    p[2] = particle->vz * particle->m;
+    smbh_mass = particle->m;
+
+    reb_free_simulation(sim);
+
+    if(i == 0)
+    {
+      for(j = 0; j < 3; j++)
+      {
+        ref_q[j] = q[j];
+        ref_p[j] = p[j];
+      }
+      // printTriplet(q);
+      // printTriplet(p);
+    }
+
+    else
+    {
+      // printTriplet(q);
+      // printTriplet(p);
+      getDelta(&q, ref_q);
+      getDelta(&p, ref_p);
+
+      s = getS(q, p, d_q0, d_p0);
+
+      // printTriplet(q);
+      // printTriplet(p);
+      // printTriplet(d_q0);
+      // printTriplet(d_p0);
+      // printf("%d %f %f\n", i, s, log(s));
+      ln += log(s);
+
+      for(j = 0; j < 3; j++)
+      {
+        d_q0[j] = q[j] / s;
+        // d_p0[j] = p[j] / s;
+      }
+    }
+  }
+
+  free(q);
+  free(p);
+  free(ref_p);
+  free(ref_q);
+
+  return ln / (l * T);
+}
+
+void testLoad(const char *file_name)
+{
+  struct Results results = loadResults(file_name);
+  printResults(results);
 }

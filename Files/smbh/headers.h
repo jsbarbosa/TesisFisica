@@ -49,6 +49,7 @@ void sphericalToCartesian(double *r, double *theta, double *phi);
 void printStatus(struct reb_simulation *sim, const char *filename, int header);
 
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
+                            int integrator,
                             void (*additional_force)(struct reb_simulation*));
 void runSimulation(struct reb_simulation *sim, int save_every, const char *filename);
 void run(double *positions, double *speeds, double smbh_mass, double dt, int triaxial, int integrator, int save_every, const char *filename);

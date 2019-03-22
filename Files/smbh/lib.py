@@ -82,7 +82,9 @@ func_info = [('getG', c_double, None),
             ('setTriaxalCoeffs', None, 3 * [c_double]),
             ('triaxial_gravDM', POINTER(c_double), 4 * [c_double]),
             ('triaxial_gravS', POINTER(c_double), 4 * [c_double]),
-            ('triaxial_gravG', POINTER(c_double), 4 * [c_double]),]
+            ('triaxial_gravG', POINTER(c_double), 4 * [c_double]),
+            ('testLoad', None, c_char_p),
+            ('lyapunov', c_double, 4 * [POINTER(c_double)] + 3 * [c_double] + [c_int, c_int])]
 
 for func in func_info:
     name = func[0]
@@ -115,6 +117,14 @@ def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True, integrator = INT_LEAP
     if delete_file: os.remove(filename)
 
     return data
+
+def lyapunov(positions, speeds, d_q0, d_p0, smbh_mass, T = 1e-5, dt = 1e-6, l = 100, triaxial = True):
+    pos = (c_double * 3)(*positions)
+    speeds = (c_double * 3)(*speeds)
+    d_q = (c_double * 3)(*d_q0)
+    d_p = (c_double * 3)(*d_p0)
+
+    return lib.lyapunov(pos, speeds, d_q, d_p, smbh_mass, T, dt, l, triaxial)
 
 G = getG()
 setR_vir(R_VIR_z20)

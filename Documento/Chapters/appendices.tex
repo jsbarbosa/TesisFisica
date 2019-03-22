@@ -71,3 +71,37 @@
 	\end{equation}
 	
 	The relation on \autoref{eq: critical_density} is found by considering the case where the geometry of the universe is flat, as a consequence it is said that the critical density is the minimum density required to stop the expansion of the universe \cite{binney2011galactic}.
+	
+\chapter{Lyapunov exponents}
+	In chaotic behavior, infinitesimally close initial conditions lead to evolutions that diverge exponentially fast. The Maximum Lyapunov Exponent $\mathcal{L}$, is an indicative of the rate of such divergence.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.7\linewidth]{"../Files/Week 9/lyapunov_explain"}
+		\caption{Representation of three arbitrary close orbits, and their evolution in time.}
+		\label{fig: lyapunov_explain}
+	\end{figure}
+	
+	Consider the upper two orbits ($\mathcal{O}^\text{ref}$, $\mathcal{O}^\text{var}$) in \autoref{fig: lyapunov_explain}, with initial conditions $\vec{x}^\text{ ref}(0)$, $\vec{p}^\text{ ref}(0)$ and $\vec{x}^\text{ var}(0)$, $\vec{p}^\text{ var}(0)$. Denoting the distance in each of the components of the phase space as:
+	\begin{equation}\label{eq: deltax}
+		\delta\vec{x}(t) = \vec{x}^\text{ ref}(t) - \vec{x}^\text{ var}(t) = \left(x^\text{ref}(t) - x^\text{var}(t), y^\text{ref}(t) - y^\text{var}(t), z^\text{ref}(t) - z^\text{var}(t)\right)
+	\end{equation}
+	\begin{equation}\label{eq: deltap}
+		\delta\vec{p}(t) = \vec{p}^\text{ ref}(t) - \vec{p}^\text{ var}(t) = \left(p_x^\text{ref}(t) - p_x^\text{var}(t), p_y^\text{ref}(t) - p_y^\text{var}(t), p_z^\text{ref}(t) - p_z^\text{var}(t)\right)
+	\end{equation}
+	
+	the Maximum Lyapunov Exponent can be written as:
+	\begin{equation}
+		\mathcal{L} = \lim_{t\rightarrow\infty}\dfrac{1}{t}\ln\dfrac{\left|\delta\vec{x}(t), \delta\vec{p}(t)\right|}{\left|\delta\vec{x}(0), \delta\vec{p}(0)\right|}
+	\end{equation}
+	
+	where $|\delta\vec{x}(t), \delta\vec{p}(t)|$ is the Euclidean norm of the 6 dimensional phase space. The numerical calculation of $\mathcal{L}$ requires special care, as a computation up to infinity must be done. In 1980 a technique by Benetti solved this problem, as The Maximum Lyapunov Exponent can be calculated as follows:
+	\begin{enumerate}
+		\item Define an arbitrary initial distance in the phase space $\delta\vec{x}(0)$, $\delta\vec{p}(0) \equiv 0$.
+		\item Simulate both $\mathcal{O}^\text{ref}$ and $\mathcal{O}^\text{var}$ until a predefined time $T$.
+		\item Calculate the distance in phase space at time $T$ between the reference orbit and the variational one (equations \ref{eq: deltax} and \ref{eq: deltap}).
+		\item Calculate the coefficient $s_i$.
+		\begin{equation}
+			s_i = \dfrac{\left|\delta\vec{x}_i(T), \delta\vec{p}_i(T)\right|}{\left|\delta_i\vec{x}(0)\right|}
+		\end{equation}
+	\end{enumerate} 
+	

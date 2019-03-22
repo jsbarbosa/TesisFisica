@@ -8,7 +8,7 @@ include $(SRC_DIR)/Makefile.defs
 rebound.so : $(FILE_NAME) $(SRC_DIR)/librebound.so headers.h
 	rm -f librebound.so
 	ln -s $(SRC_DIR)/librebound.so .
-	$(CC) -I $(SRC_DIR) -I . -Wl,-rpath,./ $(OPT) $(PREDEF) $(FILE_NAME) -L. -lrebound $(LIB) -fPIC -shared -o rebound.so
+	$(CC) -I $(SRC_DIR) -I . -Wl,-rpath,./ $(OPT) $(PREDEF) -Wno-maybe-uninitialized $(FILE_NAME) -L. -lrebound $(LIB) -fPIC -shared -o rebound.so
 
 $(SRC_DIR)/librebound.so : $(SCR_DIR)/*
 	$(MAKE) -C $(SRC_DIR)
