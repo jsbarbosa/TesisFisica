@@ -96,12 +96,17 @@
 	
 	where $|\delta\vec{x}(t), \delta\vec{p}(t)|$ is the Euclidean norm of the 6 dimensional phase space. The numerical calculation of $\mathcal{L}$ requires special care, as a computation up to infinity must be done. In 1980 a technique by Benetti solved this problem, as The Maximum Lyapunov Exponent can be calculated as follows:
 	\begin{enumerate}
-		\item Define an arbitrary initial distance in the phase space $\delta\vec{x}(0)$, $\delta\vec{p}(0) \equiv 0$.
+		\item Define an arbitrary initial distance in the phase space $\delta\vec{x}(0) = (\delta x_0, \delta y_0, \delta z_0)$, $\delta\vec{p}(0) \equiv 0$.
 		\item Simulate both $\mathcal{O}^\text{ref}$ and $\mathcal{O}^\text{var}$ until a predefined time $T$.
 		\item Calculate the distance in phase space at time $T$ between the reference orbit and the variational one (equations \ref{eq: deltax} and \ref{eq: deltap}).
 		\item Calculate the coefficient $s_i$.
 		\begin{equation}
-			s_i = \dfrac{\left|\delta\vec{x}_i(T), \delta\vec{p}_i(T)\right|}{\left|\delta_i\vec{x}(0)\right|}
+			s_i = \dfrac{\left|\delta\vec{x}_i(iT), \delta\vec{p}_i(iT)\right|}{\left|\delta_i\vec{x}(0)\right|}
+		\end{equation}
+		\item For the new iteration, $\delta_{i + 1}\vec{x}(0) = \delta_i\vec{x}(0) / s_i$.
+		\item Repeat $l$ times, to obtain:
+		\begin{equation}
+			\mathcal{L} = \dfrac{\sum_{i = 1}^l \ln(s_i)}{lT}
 		\end{equation}
 	\end{enumerate} 
 	
