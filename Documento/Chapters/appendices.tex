@@ -73,7 +73,7 @@
 	The relation on \autoref{eq: critical_density} is found by considering the case where the geometry of the universe is flat, as a consequence it is said that the critical density is the minimum density required to stop the expansion of the universe \cite{binney2011galactic}.
 	
 \chapter{Lyapunov exponents}
-	In chaotic behavior, infinitesimally close initial conditions lead to evolutions that diverge exponentially fast. The Maximum Lyapunov Exponent $\mathcal{L}$, is an indicative of the rate of such divergence.
+	In chaotic behavior, infinitesimally close initial conditions lead to evolutions that diverge exponentially fast. The Maximum Lyapunov Exponent $\mathcal{L}$, is an indicative of the rate of such divergence \cite{morbidelli2002modern}.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width = 0.7\linewidth]{"../Files/Week 9/lyapunov_explain"}
@@ -89,12 +89,12 @@
 		\delta\vec{p}(t) = \vec{p}^\text{ ref}(t) - \vec{p}^\text{ var}(t) = \left(p_x^\text{ref}(t) - p_x^\text{var}(t), p_y^\text{ref}(t) - p_y^\text{var}(t), p_z^\text{ref}(t) - p_z^\text{var}(t)\right)
 	\end{equation}
 	
-	the Maximum Lyapunov Exponent can be written as:
+	the Maximum Lyapunov Exponent can be written as \cite{morbidelli2002modern, munoz2015chaotic}:
 	\begin{equation}
 		\mathcal{L} = \lim_{t\rightarrow\infty}\dfrac{1}{t}\ln\dfrac{\left|\delta\vec{x}(t), \delta\vec{p}(t)\right|}{\left|\delta\vec{x}(0), \delta\vec{p}(0)\right|}
 	\end{equation}
 	
-	where $|\delta\vec{x}(t), \delta\vec{p}(t)|$ is the Euclidean norm of the 6 dimensional phase space. The numerical calculation of $\mathcal{L}$ requires special care, as a computation up to infinity must be done. In 1980 a technique by Benetti solved this problem, as The Maximum Lyapunov Exponent can be calculated as follows:
+	where $|\delta\vec{x}(t), \delta\vec{p}(t)|$ is the Euclidean norm of the 6 dimensional phase space. The numerical calculation of $\mathcal{L}$ requires special care, as a computation up to infinity must be done \cite{morbidelli2002modern}. In 1980 a technique by \citeauthor{benettin1980lyapunov} solved this problem, as The Maximum Lyapunov Exponent can be calculated as follows:
 	\begin{enumerate}
 		\item Define an arbitrary initial distance in the phase space $\delta\vec{x}(0) = (\delta x_0, \delta y_0, \delta z_0)$, $\delta\vec{p}(0) \equiv 0$.
 		\item Simulate both $\mathcal{O}^\text{ref}$ and $\mathcal{O}^\text{var}$ until a predefined time $T$.
