@@ -13,6 +13,8 @@
 #define G0 0.449849
 #define INT_STEPS 1e3
 
+#define RETURN_FRACTION 0.01
+
 #define Z_TIME_DEGREE 3
 #define Z_HUBBLE_DEGREE 2
 #define T0 0.18004611427373277

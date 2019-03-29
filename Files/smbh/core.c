@@ -33,6 +33,8 @@ volatile double SIM_DT;
 volatile double LAST_MAXIMA = -1;
 volatile double LAST_POSITIONS[2] = {-1, -1};
 
+volatile unsigned int IS_LEAVING = 1;
+
 volatile int STOP_SIMULATION = 0;
 
 double const Z_TIME_COEFFS[Z_TIME_DEGREE + 1] = {-2.22289277, 5.13671586, -4.92900515, 3.71708597};
@@ -40,10 +42,12 @@ double const Z_HUBBLE_COEFFS[Z_HUBBLE_DEGREE + 1] = {0.0039385, 0.11201693, -0.1
 
 volatile double TRIAXIAL_A_1 = 1;
 volatile double TRIAXIAL_A_2 = 0.5;
-volatile double TRIAXIAL_A_3 = 0.5;
+volatile double TRIAXIAL_A_3 = 0.25;
 
 volatile double LYAPUNOV_DISTANCE_X = 1e-5;
 volatile double LYAPUNOV_DISTANCE_P = 0;
+
+volatile double RETURN_PROPERTIES[3] = {0, 0, 0};
 
 const double ROOTS[GAUSS_DEGREE] = {-0.9988664 , -0.99403197, -0.98535408, -0.97286439, -0.95661096,
         -0.93665662, -0.91307856, -0.88596798, -0.85542977, -0.82158207,
@@ -150,7 +154,7 @@ double getNorm(double *vector)
 
 double getM(double x, double y, double z)
 {
-  return sqrt(x * x + pow(y / TRIAXIAL_A_2, 2) + pow(z / TRIAXIAL_A_3, 2));
+  return sqrt(x * x + pow(TRIAXIAL_A_1 * y / TRIAXIAL_A_2, 2) + pow(TRIAXIAL_A_1 * z / TRIAXIAL_A_3, 2));
 }
 
 double getMTau(double x, double y, double z, double tau)
@@ -421,27 +425,39 @@ double *triaxial_gravG(double x, double y, double z, double gamma)
   return grad;
 }
 
-void localMaxima(double r, double v, double sim_time)
+int localMaxima(double r, double sim_time)
 {
+  int value = 0;
+  // if((r <= RETURN_FRACTION * R_VIR) & (LAST_MAXIMA < 2 * RETURN_FRACTION * R_VIR) & (RETURN_PROPERTIES[0] < 0))
+  double diff = fabs(r / R_VIR - RETURN_FRACTION);
+  if(diff < 1e-4)
+  {
+    // printf("%f, %f, %f\n", r / R_VIR, RETURN_FRACTION, diff);
+    value = 1;
+  }
   if (LAST_POSITIONS[0] + LAST_POSITIONS[1] > 0)
   {
     if((LAST_POSITIONS[1] >= LAST_POSITIONS[0]) & (LAST_POSITIONS[1] >= r)) // is a local maxima
     {
       if(LAST_MAXIMA > 0)
       {
-        if ((r > LAST_MAXIMA) & (sim_time > 1e-3))
+        if ((r > 1.25 * LAST_MAXIMA) & (sim_time > 1e-3))
         {
           STOP_SIMULATION = 1;
-          return ;
+          return value;
         }
       }
       LAST_MAXIMA = r;
     }
-    if((LAST_MAXIMA < 1e-3 * R_VIR) & (LAST_MAXIMA > 0))
+    if(LAST_MAXIMA > 0)
     {
-      STOP_SIMULATION = 1;
-      return ;
+      if(LAST_MAXIMA < 1e-3 * R_VIR)
+      {
+        STOP_SIMULATION = 1;
+        return value;
+      }
     }
+
     LAST_POSITIONS[0] = LAST_POSITIONS[1];
     LAST_POSITIONS[1] = r;
   }
@@ -453,6 +469,8 @@ void localMaxima(double r, double v, double sim_time)
   {
     LAST_POSITIONS[1] = r;
   }
+
+  return value;
 }
 
 void setR_vir(double r)
@@ -467,7 +485,7 @@ void setR_vir(double r)
   setGasDensity();
 }
 
-void setTriaxalCoeffs(double x, double y, double z)
+void setTriaxialCoeffs(double x, double y, double z)
 {
   TRIAXIAL_A_1 = x;
   TRIAXIAL_A_2 = y;
@@ -533,6 +551,7 @@ void sphericalCase(struct reb_simulation* sim)
 
     double m_change = SMBHAccretion(r, v);
     SMBH_MASS += m_change * SIM_DT;
+    particle->m = SMBH_MASS;
 
     double accretion = - v * m_change / SMBH_MASS;
 
@@ -544,9 +563,13 @@ void sphericalCase(struct reb_simulation* sim)
     particle->ay = ay;
     particle->az = az;
 
-    sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
+    // sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
 
-    localMaxima(r, v, sim->t);
+    if(localMaxima(r, sim->t))
+    {
+      RETURN_PROPERTIES[0] = sim->t;
+      RETURN_PROPERTIES[1] = particle->m;
+    }
 }
 
 void triaxialCase(struct reb_simulation* sim)
@@ -558,7 +581,8 @@ void triaxialCase(struct reb_simulation* sim)
     double speed[3] = {particle->vx, particle->vy, particle->vz};
 
     double ax, ay, az;
-    double m = getM(pos[0], pos[1], pos[2]);
+    double r = getNorm(pos);
+    double m = getSoftenedLength(getM(pos[0], pos[1], pos[2]));
     double v = getSoftenedSpeed(getNorm(speed));
     double dir_v[3] = {speed[0] / v, speed[1] / v, speed[2] / v};
 
@@ -596,7 +620,11 @@ void triaxialCase(struct reb_simulation* sim)
 
     // sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
 
-    localMaxima(m, v, sim->t);
+    if(localMaxima(r, sim->t))
+    {
+      RETURN_PROPERTIES[0] = sim->t;
+      RETURN_PROPERTIES[1] = particle->m;
+    }
 }
 
 void printConstants(void)
@@ -645,12 +673,12 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
 
     // fprintf(file, "INTEGRATOR = %f\n", GAS_POWER);
 
-    fprintf(file, "time\tz\tx\ty\tz\tvx\tvy\tvz\tmass\tlyapunov\n");
+    fprintf(file, "time\tz\tx\ty\tz\tvx\tvy\tvz\tmass\n");
     fclose(file);
   }
 
   file = fopen(filename, "a");
-  double t, x, y, z, vx, vy, vz, ly;
+  double t, x, y, z, vx, vy, vz;
   struct reb_particle  particle = sim -> particles[0];
   t = sim -> t;
   x = particle.x;
@@ -659,8 +687,7 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
   vx = particle.vx;
   vy = particle.vy;
   vz = particle.vz;
-  ly = reb_tools_calculate_lyapunov(sim);
-  fprintf(file, "%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\n", t, x, y, z, vx, vy, vz, SMBH_MASS, ly);
+  fprintf(file, "%e\t%e\t%e\t%e\t%e\t%e\t%e\t%e\n", t, x, y, z, vx, vy, vz, SMBH_MASS);
   fclose(file);
 }
 
@@ -702,7 +729,7 @@ struct reb_simulation* setupSimulation(double mass, double *position, double *sp
 
   SMBH_MASS = mass;
 
-  reb_tools_megno_init(sim);
+  // reb_tools_megno_init(sim);
   sim->exact_finish_time = 0;
 
   switch(integrator)
@@ -730,6 +757,34 @@ struct reb_simulation* setupSimulation(double mass, double *position, double *sp
   return sim;
 }
 
+void reWriteFile(const char *filename)
+{
+  int length = 250;
+  char new_name[length];
+  strcpy(new_name, filename);
+
+  new_name[strlen(new_name)] = 't';
+
+  FILE *file_in = fopen(filename, "r");
+  FILE *file_out = fopen(new_name, "w");
+  char line_buffer[length]; // prepares a list of length chars to store a single line of the document
+  char *line;
+
+  fprintf(file_out, "RETURN_TIME = %e\nRETURN_MASS = %e\n", RETURN_PROPERTIES[0],
+            RETURN_PROPERTIES[1]);
+
+  while(fgets(line_buffer, length, file_in) != NULL) // reads up to length characters of the dataFile and stores them at the line_buffer
+  {
+    line = strtok(line_buffer, "\n");
+    fprintf(file_out, "%s\n", line);
+  }
+
+  fclose(file_in);
+  fclose(file_out);
+
+  rename(new_name, filename);
+  }
+
 void runSimulation(struct reb_simulation* sim, int save_every, const char *filename)
 {
   int i = 0;
@@ -739,8 +794,11 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   LAST_MAXIMA = -1;
   LAST_POSITIONS[0] = -1;
   LAST_POSITIONS[1] = -1;
+  RETURN_PROPERTIES[0] = -1;
+  RETURN_PROPERTIES[1] = -1;
 
-  while((!STOP_SIMULATION) & (sim->t + T0 < 13.78))
+  // while(!STOP_SIMULATION)
+  while((!STOP_SIMULATION) & (sim->t + T0 < 13.799))
   {
     if(i % save_every == 0)
     {
@@ -749,8 +807,9 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
     reb_integrate(sim, sim->t + sim->dt);
     i += 1;
   }
-
   reb_free_simulation(sim);
+
+  reWriteFile(filename);
 }
 
 void run(double *positions, double *speeds, double smbh_mass, double dt, int triaxial, int integrator, int save_every, const char *filename)
@@ -1061,4 +1120,9 @@ void testLoad(const char *file_name)
 {
   struct Results results = loadResults(file_name);
   printResults(results);
+}
+
+double getReturnFraction(void)
+{
+  return RETURN_FRACTION;
 }

@@ -79,11 +79,12 @@ func_info = [('getG', c_double, None),
             ('setGasPower', None, c_double),
             ('darkMatterDensityTriaxial', c_double, (c_double, c_double, c_double)),
             ('getM', c_double, (c_double, c_double, c_double)),
-            ('setTriaxalCoeffs', None, 3 * [c_double]),
+            ('setTriaxialCoeffs', None, 3 * [c_double]),
             ('triaxial_gravDM', POINTER(c_double), 4 * [c_double]),
             ('triaxial_gravS', POINTER(c_double), 4 * [c_double]),
             ('triaxial_gravG', POINTER(c_double), 4 * [c_double]),
             ('testLoad', None, c_char_p),
+            ('getReturnFraction', c_double, None),
             ('lyapunov', c_double, 4 * [POINTER(c_double)] + 3 * [c_double] + [c_int, c_int])]
 
 for func in func_info:
@@ -101,7 +102,9 @@ def pointerReturn(pointer):
     lib.free(pointer)
     return np.array(values)
 
-def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True, integrator = INT_LEAPFROG, save_every = 10, filename = None, read = True):
+def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True,
+        integrator = INT_LEAPFROG, save_every = 10, filename = None, read = True,
+        header_only = False):
     global lib
     delete_file = False
     pos = (1e-3 / (3**0.5)) * np.ones(3)
@@ -112,7 +115,7 @@ def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True, integrator = INT_LEAP
         delete_file = True
     lib.run(pos, speeds, smbh_mass, dt, triaxial, integrator, int(save_every), filename.encode())
 
-    if read: data = Results(filename)
+    if read: data = Results(filename, header_only)
     else: data = None
     if delete_file: os.remove(filename)
 

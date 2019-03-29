@@ -46,7 +46,7 @@ def findLocalMinima(array):
     return argrelextrema(array, np.less)[0]
 
 class Results(object):
-    def __init__(self, filename):
+    def __init__(self, filename, header_only = False):
         with open(filename, "r") as file:
             for (i, line) in enumerate(file):
                 line = line.replace("\n", "").replace(" ", "")
@@ -54,19 +54,27 @@ class Results(object):
                     conf, val = line.split("=")
                     setattr(self, conf, float(val))
                 except ValueError:
+                    if "mass\t" in line:
+                        i = line.find("mass\t")
+                        line = line[i + 5:]
+                    else:
+                        line = file.readline()
+                    vars = line.split('\t')
+                    self.t0, self.x0, self.y0, self.z0, self.vx0, self.vy0, self.vz0, self.mass0 = [float(var) for var in vars]
                     break
 
-        data = np.genfromtxt(filename, skip_header = i + 1)
-        self.times = data[:, 0]
-        self.positions = data[:, 1:4]
-        self.speeds = data[:, 4:7]
-        self.masses = data[:, -2]
-        self.lyapunov = data[:, -1]
+        if not header_only:
+            data = np.genfromtxt(filename, skip_header = i + 1)
+            self.times = data[:, 0]
+            self.positions = data[:, 1:4]
+            self.speeds = data[:, 4:7]
+            self.masses = data[:, 7]
+            # self.lyapunov = data[:, -1]
 
-        self.speed = magnitude(self.speeds)
-        self.setDistance()
+            self.speed = magnitude(self.speeds)
+            self.setDistance()
 
-        self.return_index = -1
+            self.return_index = -1
 
     def setDistance(self, a_1 = 1, a_2 = 1, a_3 = 1):
         x, y, z = self.positions.T
@@ -86,3 +94,8 @@ class Results(object):
         if self.return_index < 0:
             getReturnTime(threshold)
         return self.masses[self.return_index]
+
+    def getInitialSpeed(self):
+        s0 = [self.vx0, self.vy0, self.vz0]
+        s = sum([v ** 2 for v in s0])
+        return s ** 0.5

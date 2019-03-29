@@ -9,6 +9,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.collections import LineCollection
 from matplotlib.colors import LinearSegmentedColormap
 
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+
 from smbh.lib import *
 from smbh.useful import magnitude
 
@@ -18,6 +21,10 @@ mpl.rcParams['grid.linewidth'] = 0.5
 
 def getColors(n_points):
     return cm.jet(np.linspace(0, 1, n_points))
+
+def rgbToHex(color):
+    c = tuple((255 * color[:3]).astype(int))
+    return '#%02x%02x%02x' % c
 
 def slicePlot(data, axes = None):
     if axes == None:
