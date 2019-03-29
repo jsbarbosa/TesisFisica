@@ -11,7 +11,7 @@ results = smbh.Results("tOrbit.dat")
 x, y, z = results.positions.T
 
 fig, ax = smbh.make3dPlot(results.positions)
-
+fig.savefig('3dorbit.png', dpi = 300)
 
 t = results.times * 1000
 r = results.distance / results.R_VIR
@@ -28,5 +28,7 @@ ax.set_xlabel('Time (Myr)')
 ax.set_ylabel('Distance / $R_{vir}$')
 ax.legend()
 ax.grid()
+
+fig.savefig('3dorbit_distances.png', dpi = 300)
 
 plt.show()
