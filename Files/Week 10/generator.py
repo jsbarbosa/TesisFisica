@@ -20,8 +20,9 @@ def do(speed, i, j):
     smbh.setStellarRatio(ratios[j])
     smbh.setTriaxialCoeffs(1, 1, 1)
     print('Process %d, %d started' % (i, j))
+    t0 = time()
     smbh.run([speed, 0, 0], save_every = 50, filename = file%(i, j), read = False, triaxial = True)
-    print('Process %d, %d ended' % (i, j))
+    print('Process %d, %d ended (%d s)' % (i, j, time() - t0))
 
 def startProcess(args):
     proc = Process(target = do, args = args, daemon = True)

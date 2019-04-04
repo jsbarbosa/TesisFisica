@@ -114,10 +114,6 @@ void setStellarTotalMass(void)
 
 void setGasDensity(void)
 {
-  // double m = 3 + GAS_POWER;
-  // double f1 = (pow(R_VIR, m) - pow(GAS_CORE, m)) / (m * pow(GAS_CORE, GAS_POWER));
-  // f1 = 4 * M_PI * (f1 + pow(GAS_CORE, 3) / 3);
-  // GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / f1;
   GAS_DENSITY = 1;
   GAS_DENSITY = (1 - STELLAR_FRACTION) * FB * HALO_MASS / gasMass(R_VIR);
 }
@@ -1027,83 +1023,106 @@ void printTriplet(double *array)
   printf("\n");
 }
 
-double lyapunov(double *positions, double *speeds, double *d_q0, double *d_p0,
+double *lyapunov(double *positions, double *speeds, double d_q0,
         double smbh_mass, double T, double dt, int l, int triaxial)
 {
-  int i, j;
-  struct reb_simulation* sim;
+  int i, j, k;
+  struct reb_simulation* ref_sim;
   struct reb_particle* particle;
 
-  double ln = 0, s;
+  double s;
   double *q = malloc(3 * sizeof(double));
   double *p = malloc(3 * sizeof(double));
   double *ref_p = malloc(3 * sizeof(double));
   double *ref_q = malloc(3 * sizeof(double));
 
-  for(i = 0; i < l + 1; i++)
+  if(triaxial == 1) ref_sim = setupSimulation(smbh_mass, positions, speeds, INT_LEAPFROG, triaxialCase);
+  else ref_sim = setupSimulation(smbh_mass, positions, speeds, INT_LEAPFROG, sphericalCase);
+  ref_sim->dt = dt;
+
+  struct reb_simulation *simulations[6];
+  double qs[6][3], d_q0s[6][3];
+  double lyas[6] = {0, 0, 0, 0, 0, 0};
+
+  double d_p0[3] = {0, 0, 0};
+  int coeffs[6][3] = {{1, 0, 0},
+                      {-1, 0, 0},
+                      {0, 1, 0},
+                      {0, -1, 0},
+                      {0, 0, 1},
+                      {0, 0, -1}};
+
+  int stop = 1;
+
+  for(i = 0; i < 6; i++)
   {
-    if(i == 0)
+    for(j = 0; j < 3; j++)
     {
-      if(triaxial == 1) sim = setupSimulation(smbh_mass, positions, speeds, INT_LEAPFROG, triaxialCase);
-      else sim = setupSimulation(smbh_mass, positions, speeds, INT_LEAPFROG, sphericalCase);
+      d_q0s[i][j] = -coeffs[i][j] * d_q0;
+      qs[i][j] = positions[j] - d_q0s[i][j];
     }
-    else
+  }
+
+  for(i = 0; (i < l + 1) & (stop); i++)
+  {
+    for(j = 0; j < 6; j++)
     {
-      for(j = 0; j < 3; j++)
+      if(triaxial == 1)
       {
-        q[j] = positions[j] + d_q0[j];
-        // p[j] = speeds[j] + d_p0[j] / smbh_mass;
+        simulations[j] = setupSimulation(smbh_mass, qs[j], speeds, INT_LEAPFROG, triaxialCase);
       }
-
-      if(triaxial == 1) sim = setupSimulation(smbh_mass, q, speeds, INT_LEAPFROG, triaxialCase);
-      else sim = setupSimulation(smbh_mass, q, speeds, INT_LEAPFROG, sphericalCase);
+      else
+      {
+        simulations[j] = setupSimulation(smbh_mass, qs[j], speeds, INT_LEAPFROG, sphericalCase);
+      }
+      (simulations[j])->dt = dt;
     }
 
-    sim->dt = dt;
-    reb_integrate(sim, T);
+    reb_integrate(ref_sim, (i + 1) * T);
 
-    particle = &(sim->particles[0]);
-    q[0] = particle->x;
-    q[1] = particle->y;
-    q[2] = particle->z;
-    p[0] = particle->vx * particle->m;
-    p[1] = particle->vy * particle->m;
-    p[2] = particle->vz * particle->m;
+    particle = &(ref_sim->particles[0]);
+    ref_q[0] = particle->x;
+    ref_q[1] = particle->y;
+    ref_q[2] = particle->z;
+    speeds[0] = particle->vx;
+    speeds[1] = particle->vy;
+    speeds[2] = particle->vz;
     smbh_mass = particle->m;
-
-    reb_free_simulation(sim);
-
-    if(i == 0)
+    for(j = 0; j < 3; j++)
     {
-      for(j = 0; j < 3; j++)
-      {
-        ref_q[j] = q[j];
-        ref_p[j] = p[j];
-      }
-      // printTriplet(q);
-      // printTriplet(p);
+      ref_p[j] = speeds[j] * smbh_mass;
     }
 
-    else
+    for(j = 0; j < 1; j++)
     {
-      // printTriplet(q);
-      // printTriplet(p);
+      reb_integrate(simulations[j], T);
+
+      particle = &((simulations[j])->particles[0]);
+      q[0] = particle->x;
+      q[1] = particle->y;
+      q[2] = particle->z;
+      p[0] = particle->vx * particle->m;
+      p[1] = particle->vy * particle->m;
+      p[2] = particle->vz * particle->m;
+
+      reb_free_simulation(simulations[j]);
+
       getDelta(&q, ref_q);
       getDelta(&p, ref_p);
 
-      s = getS(q, p, d_q0, d_p0);
-
-      // printTriplet(q);
-      // printTriplet(p);
-      // printTriplet(d_q0);
-      // printTriplet(d_p0);
-      // printf("%d %f %f\n", i, s, log(s));
-      ln += log(s);
-
-      for(j = 0; j < 3; j++)
+      printTriplet(d_q0s[j]);
+      s = getS(q, p, d_q0s[j], d_p0);
+      if(!isnormal(s))
       {
-        d_q0[j] = q[j] / s;
-        // d_p0[j] = p[j] / s;
+
+        stop = 0;
+        break;
+      }
+      lyas[j] += log(s);
+      for(k = 0; k < 3; k++)
+      {
+        d_q0s[j][k] = q[k] / s;
+        qs[j][k] = ref_q[k] + d_q0s[j][k];
       }
     }
   }
@@ -1113,7 +1132,16 @@ double lyapunov(double *positions, double *speeds, double *d_q0, double *d_p0,
   free(ref_p);
   free(ref_q);
 
-  return ln / (l * T);
+  reb_free_simulation(ref_sim);
+
+  double *ans = malloc(sizeof(double) * 6);
+
+  for(j = 0; j < 6; j++)
+  {
+    ans[j] = lyas[j] / (i * T);
+  }
+
+  return ans;
 }
 
 void testLoad(const char *file_name)

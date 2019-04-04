@@ -1,6 +1,9 @@
 Referencias/*
 References/*
 
+Files/smbh/src/*
+Files/smbh/__pycache__/*
+Files/smbh/*.so
 
 *.dat
 *.zip

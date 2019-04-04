@@ -386,14 +386,17 @@ def plotPhaseSpaces(results, max_points = 200, linewidth = 1, figsize = (8, 4.5)
     axes[0].set_ylim(1.1 * mins[3:].min(), 1.1 * maxs[3:].max())
     return fig, axes
 
+def make3dPlot(positions, fig_axes = None, color = None, alpha = 1, lw = 1):
+    if fig_axes == None:
+        fig = plt.figure()
+        ax = Axes3D(fig)
+    else:
+        fig, ax = fig_axes
 
+    points = positions.reshape(-1, 1, 3)
+    segments = np.concatenate([points[:-1], points[1:]], axis = 1)
 
-
-def make3dPlot(positions):
-    fig = plt.figure()
-    ax = Axes3D(fig)
-
-    ax.plot(positions[:, 0], positions[:, 1], positions[:, 2])
+    ax.plot(positions[:, 0], positions[:, 1], positions[:, 2], color = color, alpha = alpha, lw = lw)
     ax.set_xlabel("$x$ (kpc)")
     ax.set_ylabel("$y$ (kpc)")
     ax.set_zlabel("$z$ (kpc)")
