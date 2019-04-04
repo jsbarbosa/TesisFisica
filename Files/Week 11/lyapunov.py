@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 pos = 1e-3 * np.ones(3) / 3 ** 0.5
 dq = np.ones(3) * 1e-3
 
-v = 60
+v = 25
 theta = np.pi / 4
 phi = np.pi / 4
 
@@ -21,7 +21,7 @@ ls = np.linspace(1e1, 0.5e3).astype(int)
 lya_s = np.zeros(len(ls))
 lya_t = np.zeros(len(ls))
 
-T = 1e-3
+T = 1e-5
 
 # file_s = open('lyapunov_s.dat', 'w')
 # file_t = open('lyapunov_t.dat', 'w')
@@ -55,5 +55,8 @@ T = 1e-3
 #
 # plt.show()
 
-a = smbh.lyapunov(pos, speeds, T = T, triaxial = False)
-print(a)
+dq = 1e-4
+
+# for l in ls:
+#     a = smbh.lyapunov(pos, speeds, d_q0 = dq, T = 1e-5, l = l, triaxial = False)
+    # print(l, a)

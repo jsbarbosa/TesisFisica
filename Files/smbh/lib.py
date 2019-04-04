@@ -102,12 +102,11 @@ def pointerReturn(pointer):
     lib.free(pointer)
     return np.array(values)
 
-def run(speeds, smbh_mass = 1, dt = 1e-6, triaxial = True,
+def run(speeds, pos = [1e-3 / (3**0.5)] * 3, smbh_mass = 1, dt = 1e-6, triaxial = True, \
         integrator = INT_LEAPFROG, save_every = 10, filename = None, read = True,
         header_only = False):
     global lib
     delete_file = False
-    pos = (1e-3 / (3**0.5)) * np.ones(3)
     pos = (c_double * 3)(*pos)
     speeds = (c_double * len(speeds))(*speeds)
     if filename == None:

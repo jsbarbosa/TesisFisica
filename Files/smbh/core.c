@@ -1000,14 +1000,14 @@ void getDelta(double **vals, double *refs)
   }
 }
 
-double getS(double *q, double *p, double *q_0, double *p_0)
+double getS(double *q, double *p, double *q_0)
 {
   int i;
   double num = 0, dem = 0;
   for(i = 0; i < 3; i++)
   {
     num += pow(q[i], 2) + pow(p[i], 2);
-    dem += pow(p_0[i], 2) + pow(q_0[i], 2);
+    dem += pow(q_0[i], 2);
   }
 
   return sqrt(num / dem);
@@ -1027,10 +1027,10 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
         double smbh_mass, double T, double dt, int l, int triaxial)
 {
   int i, j, k;
+  double s = 0;
   struct reb_simulation* ref_sim;
   struct reb_particle* particle;
 
-  double s;
   double *q = malloc(3 * sizeof(double));
   double *p = malloc(3 * sizeof(double));
   double *ref_p = malloc(3 * sizeof(double));
@@ -1044,7 +1044,6 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
   double qs[6][3], d_q0s[6][3];
   double lyas[6] = {0, 0, 0, 0, 0, 0};
 
-  double d_p0[3] = {0, 0, 0};
   int coeffs[6][3] = {{1, 0, 0},
                       {-1, 0, 0},
                       {0, 1, 0},
@@ -1053,6 +1052,11 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
                       {0, 0, -1}};
 
   int stop = 1;
+
+  for(i = 0; i < 3; i++)
+  {
+    ref_q[i] = positions[i];
+  }
 
   for(i = 0; i < 6; i++)
   {
@@ -1065,8 +1069,12 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
 
   for(i = 0; (i < l + 1) & (stop); i++)
   {
-    for(j = 0; j < 6; j++)
+    for(j = 0; j < 1; j++)
     {
+      // printf("Starting %d %d %f\n", i, j, smbh_mass);
+      // // printTriplet(ref_q);
+      // // printTriplet(qs[j]);
+      // // printTriplet(speeds);
       if(triaxial == 1)
       {
         simulations[j] = setupSimulation(smbh_mass, qs[j], speeds, INT_LEAPFROG, triaxialCase);
@@ -1076,9 +1084,11 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
         simulations[j] = setupSimulation(smbh_mass, qs[j], speeds, INT_LEAPFROG, sphericalCase);
       }
       (simulations[j])->dt = dt;
+      reb_integrate(simulations[j], T);
     }
 
-    reb_integrate(ref_sim, (i + 1) * T);
+    ref_sim->t = 0;
+    reb_integrate(ref_sim, T);
 
     particle = &(ref_sim->particles[0]);
     ref_q[0] = particle->x;
@@ -1095,8 +1105,6 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
 
     for(j = 0; j < 1; j++)
     {
-      reb_integrate(simulations[j], T);
-
       particle = &((simulations[j])->particles[0]);
       q[0] = particle->x;
       q[1] = particle->y;
@@ -1105,16 +1113,14 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
       p[1] = particle->vy * particle->m;
       p[2] = particle->vz * particle->m;
 
-      reb_free_simulation(simulations[j]);
-
       getDelta(&q, ref_q);
       getDelta(&p, ref_p);
+      // printTriplet(q);
 
-      printTriplet(d_q0s[j]);
-      s = getS(q, p, d_q0s[j], d_p0);
+      s = getS(q, p, d_q0s[j]);
+      printf("%f\n", s);
       if(!isnormal(s))
       {
-
         stop = 0;
         break;
       }
@@ -1124,6 +1130,9 @@ double *lyapunov(double *positions, double *speeds, double d_q0,
         d_q0s[j][k] = q[k] / s;
         qs[j][k] = ref_q[k] + d_q0s[j][k];
       }
+
+
+      reb_free_simulation(simulations[j]);
     }
   }
 
