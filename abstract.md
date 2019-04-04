@@ -1,3 +1,14 @@
 # LARIM abstract
 
-One of the mechanisms for super massive black holes formation is the merger of two lighter black holes. Nowadays, thanks to General Relativity, it is known that for systems with non symmetric mass, as the binary system decreases its distance, gravitational waves are emitted. For such cases, conservation of momentum dictates that the merged system must move away from its initial position. Due to this process, generated speeds might be as high as 3000 km/s, depending on the mass ratio and spin alignment of the bodies, with such speeds it is possible for the black hole to escape the host galaxy. The behavior of return times is important as it yields information about the spacial distribution of black holes in the universe. On the other hand, mass accretion rates for black holes are highly dependent on the local environment, which is very different inside and outside a galaxy. Because of this, the return times for simulated black holes were studied using different triaxial and symmetric potentials, as well as the effect of the stellar fraction. The trajectory of the simulated black holes, are obtained by integrating a three part motion equation; the first part takes into account gravitational acceleration, the second dynamical friction, and the last momentum conservation due to mass accretion. Since some of the generated host galaxies have asymmetric components, chaotic orbits were observed, and their behavior was characterized using Lyapunov exponents.
+Chaotic trajectories in kicked black holes
+
+Observations have confirmed that black hole mergers can emit gravitational waves.
+For such cases, conservation of momentum dictates that the merged system must move away from its initial position, producing what is  known as a black hole kick.
+The black hole can be kicked with velocities up to 3000 km/s, depending on the mass ratio and spin alignment of the bodies.
+The behaviour of the kicked black hole depends on the gravitational potential provided by the stars, gas and dark matter of the host galaxy.
+In this work we used triaxial galactic potentials to follow the fate of such black holes. 
+Our model takes into account the effects of dynamical friction and accretion.
+We will show how the settling times (the time it takes to go back at the potential minimum after the kick) depend
+on the stellar mass density and what is the influence of the potential triaxiallity to induce stochasticity on the orbits.
+We finalize by commenting how these results can impact abundance estimates of active galactic nuclei across cosmic times.
+
