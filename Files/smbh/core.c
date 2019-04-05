@@ -37,6 +37,8 @@ volatile unsigned int IS_LEAVING = 1;
 
 volatile int STOP_SIMULATION = 0;
 
+volatile double STOP_TIME = 13.799;
+
 double const Z_TIME_COEFFS[Z_TIME_DEGREE + 1] = {-2.22289277, 5.13671586, -4.92900515, 3.71708597};
 double const Z_HUBBLE_COEFFS[Z_HUBBLE_DEGREE + 1] = {0.0039385, 0.11201693, -0.11131262};
 
@@ -165,7 +167,7 @@ double darkMatterDensity(double r)
 {
   double factor = r / DARK_MATTER_SCALE_RADIUS;
   factor = DARK_MATTER_DENSITY_0 / (factor * pow(1 + factor, 2));
-  if(factor > MAX_DENSITY_DM) return MAX_DENSITY_DM;
+  // if(factor > MAX_DENSITY_DM) return MAX_DENSITY_DM;
   return factor;
 }
 
@@ -181,10 +183,37 @@ double darkMatterMass(double r)
   return 4 * M_PI * DARK_MATTER_DENSITY_0 * factor * pow(DARK_MATTER_SCALE_RADIUS, 3);
 }
 
+double darkMatterPotential(double r)
+{
+  return - 4 * M_PI * G0 * DARK_MATTER_DENSITY_0 / r * pow(DARK_MATTER_SCALE_RADIUS, 3) * log(1 + r / DARK_MATTER_SCALE_RADIUS);
+}
+
+double stellarPotential(double r)
+{
+  return - G0 * STELLAR_TOTAL_MASS / (r + STELLAR_SCALE_LENGTH);
+}
+
+double gasPotential(double r)
+{
+  double n = GAS_POWER;
+  // double u = r / GAS_CORE;
+  // double factor = - 4 * M_PI * G0 * GAS_DENSITY * pow(GAS_CORE, 2) * pow(u + 1, -n) /
+  //                 ((n - 3) * (n - 2) * (n - 1) * u);
+
+  // return factor * (n * pow(u, 3) + 2 * n * pow(u, 2) + n * u - pow(u, 3) + 3 * u - 2 * pow(u + 1, n) + 2);
+
+  double factor = -4 * M_PI * G0 * GAS_DENSITY * pow(r + GAS_CORE, -n);
+  factor = factor / (r * pow(GAS_CORE, 3) * (n - 3) * (n - 2) * (n - 1));
+
+  factor *= (2 * n * r * r * pow(GAS_CORE, n + 4) + pow(r, 3) * pow(GAS_CORE, n + 3) * (n - 1)
+          +  r * pow(GAS_CORE, n + 5) * (n + 3) - 2 * pow(GAS_CORE, 6) * pow(r + GAS_CORE, n) + 2 * pow(GAS_CORE, n + 6));
+  return -factor;
+}
+
 double stellarDensityHernquist(double r)
 {
   double factor = STELLAR_TOTAL_MASS * STELLAR_SCALE_LENGTH / (2 * M_PI * r * pow(r + STELLAR_SCALE_LENGTH, 3));
-  if(factor > MAX_DENSITY_STARS) return MAX_DENSITY_STARS;
+  // if(factor > MAX_DENSITY_STARS) return MAX_DENSITY_STARS;
   return factor;
 }
 
@@ -523,8 +552,6 @@ double calculateR_vir(double G, double H)
 
 void sphericalCase(struct reb_simulation* sim)
 {
-    Z = getRedshift(sim->t + T0);
-
     struct reb_particle* particle = &(sim->particles[0]);
     double pos[3] = {particle->x, particle->y, particle->z};
     double speed[3] = {particle->vx, particle->vy, particle->vz};
@@ -570,8 +597,6 @@ void sphericalCase(struct reb_simulation* sim)
 
 void triaxialCase(struct reb_simulation* sim)
 {
-    Z = getRedshift(sim->t + T0);
-
     struct reb_particle* particle = &(sim->particles[0]);
     double pos[3] = {particle->x, particle->y, particle->z};
     double speed[3] = {particle->vx, particle->vy, particle->vz};
@@ -621,6 +646,39 @@ void triaxialCase(struct reb_simulation* sim)
       RETURN_PROPERTIES[0] = sim->t;
       RETURN_PROPERTIES[1] = particle->m;
     }
+}
+
+void conservativeSphericalCase(struct reb_simulation* sim)
+{
+  struct reb_particle* particle = &(sim->particles[0]);
+  double pos[3] = {particle->x, particle->y, particle->z};
+  double r = getSoftenedLength(getNorm(pos));
+  double grav = gravitationalForce(r);
+
+  particle->ax = grav * pos[0] / r;
+  particle->ay = grav * pos[1] / r;
+  particle->az = grav * pos[2] / r;
+}
+
+void conservativeTriaxialCase(struct reb_simulation* sim)
+{
+    struct reb_particle* particle = &(sim->particles[0]);
+    double pos[3] = {particle->x, particle->y, particle->z};
+
+    double *p_dm = triaxial_gravDM(pos[0], pos[1], pos[2], 0.2);
+    double *p_stars = triaxial_gravS(pos[0], pos[1], pos[2], 0.2);
+    double *p_gas = triaxial_gravG(pos[0], pos[1], pos[2], 0.2);
+
+    int i;
+    for(i = 0; i < 3; i++) p_dm[i] += p_stars[i] + p_gas[i];
+
+    particle->ax = -p_dm[0];
+    particle->ay = -p_dm[1];
+    particle->az = -p_dm[2];
+
+    free(p_dm);
+    free(p_stars);
+    free(p_gas);
 }
 
 void printConstants(void)
@@ -781,7 +839,7 @@ void reWriteFile(const char *filename)
   rename(new_name, filename);
   }
 
-void runSimulation(struct reb_simulation* sim, int save_every, const char *filename)
+void runSimulation(struct reb_simulation* sim, int save_every, const char *filename, double stop_time)
 {
   int i = 0;
 
@@ -793,8 +851,10 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   RETURN_PROPERTIES[0] = -1;
   RETURN_PROPERTIES[1] = -1;
 
+  if (stop_time == 0) stop_time = STOP_TIME - T0;
+  else if (stop_time < 0) stop_time = 1e3;
   // while(!STOP_SIMULATION)
-  while((!STOP_SIMULATION) & (sim->t + T0 < 13.799))
+  while((!STOP_SIMULATION) & (sim->t < stop_time))
   {
     if(i % save_every == 0)
     {
@@ -808,14 +868,35 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   reWriteFile(filename);
 }
 
-void run(double *positions, double *speeds, double smbh_mass, double dt, int triaxial, int integrator, int save_every, const char *filename)
+void run(double *positions, double *speeds, double smbh_mass, double dt, double stop_time, int type, int integrator, int save_every, const char *filename)
 {
   SIM_DT = dt;
   struct reb_simulation* sim;
-  if(triaxial == 1) sim = setupSimulation(smbh_mass, positions, speeds, integrator, triaxialCase);
-  else sim = setupSimulation(smbh_mass, positions, speeds, integrator, sphericalCase);
 
-  runSimulation(sim, save_every, filename);
+  void (*additional_force)(struct reb_simulation * );
+
+  switch (type)
+  {
+    case SYMMETRIC:
+      additional_force = sphericalCase;
+      break;
+    case TRIAXIAL:
+      additional_force = triaxialCase;
+      break;
+    case C_SYMMETRIC:
+      additional_force = conservativeSphericalCase;
+      break;
+    case C_TRIAXIAL:
+      additional_force = conservativeTriaxialCase;
+      break;
+    default:
+      additional_force = sphericalCase;
+      break;
+  }
+
+  sim = setupSimulation(smbh_mass, positions, speeds, integrator, additional_force);
+
+  runSimulation(sim, save_every, filename, stop_time);
 }
 
 void printResults(struct Results results)

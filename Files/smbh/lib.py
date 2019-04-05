@@ -19,6 +19,11 @@ INT_SEI = 3
 INT_JANUS = 4
 INT_MERCURIUS = 5
 
+SYMMETRIC = 0
+TRIAXIAL = 1
+C_SYMMETRIC = 2
+C_TRIAXIAL = 3
+
 dir = os.path.dirname(__file__)
 os.environ['PATH'] = dir + ';' + os.environ['PATH']
 path = os.path.abspath(os.path.join(dir, "rebound.so"))
@@ -67,7 +72,12 @@ func_info = [('getG', c_double, None),
             ('SMBHAccretion', c_double, (c_double, c_double)),
             ('dynamicalFrictionDM', c_double, (c_double, c_double)),
             ('dynamicalFrictionGas', c_double, (c_double, c_double)),
-            ('run', None, (POINTER(c_double), POINTER(c_double), c_double, c_double, c_int, c_int, c_int, c_char_p)),
+
+            ('darkMatterPotential', c_double, c_double),
+            ('stellarPotential', c_double, c_double),
+            ('gasPotential', c_double, c_double),
+
+            ('run', None, (2 * [POINTER(c_double)] + 3 * [c_double] + 3 * [c_int] + [c_char_p])),
             ('getRedshift', c_double, c_double),
             ('getHubbleParameter', c_double, c_double),
             ('calculateR_vir', c_double, (c_double, c_double)),
@@ -102,7 +112,7 @@ def pointerReturn(pointer):
     lib.free(pointer)
     return np.array(values)
 
-def run(speeds, pos = [1e-3 / (3**0.5)] * 3, smbh_mass = 1, dt = 1e-6, triaxial = True, \
+def run(speeds, pos = [1e-3 / (3**0.5)] * 3, smbh_mass = 1, dt = 1e-6, end_time = 0, pot_type = TRIAXIAL, \
         integrator = INT_LEAPFROG, save_every = 10, filename = None, read = True,
         header_only = False):
     global lib
@@ -112,7 +122,7 @@ def run(speeds, pos = [1e-3 / (3**0.5)] * 3, smbh_mass = 1, dt = 1e-6, triaxial 
     if filename == None:
         filename = "temp.dat"
         delete_file = True
-    lib.run(pos, speeds, smbh_mass, dt, triaxial, integrator, int(save_every), filename.encode())
+    lib.run(pos, speeds, smbh_mass, dt, end_time, pot_type, integrator, int(save_every), filename.encode())
 
     if read: data = Results(filename, header_only)
     else: data = None

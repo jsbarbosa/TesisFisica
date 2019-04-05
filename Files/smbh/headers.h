@@ -26,6 +26,12 @@
 #define INT_JANUS 4
 #define INT_MERCURIUS 5
 
+
+#define SYMMETRIC 0
+#define TRIAXIAL 1
+#define C_SYMMETRIC 2
+#define C_TRIAXIAL 3
+
 #define GAUSS_DEGREE 50
 
 double getR_vir(void);
@@ -53,8 +59,8 @@ void printStatus(struct reb_simulation *sim, const char *filename, int header);
 struct reb_simulation* setupSimulation(double mass, double *position, double *speed,
                             int integrator,
                             void (*additional_force)(struct reb_simulation*));
-void runSimulation(struct reb_simulation *sim, int save_every, const char *filename);
-void run(double *positions, double *speeds, double smbh_mass, double dt, int triaxial, int integrator, int save_every, const char *filename);
+void runSimulation(struct reb_simulation *sim, int save_every, const char *filename, double end_time);
+void run(double *positions, double *speeds, double smbh_mass, double dt, double end_time, int triaxial, int integrator, int save_every, const char *filename);
 
 // void integrate(struct reb_simulation* sim);
 // double *baseCase(double *position, double *speed);
