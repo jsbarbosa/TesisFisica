@@ -30,7 +30,7 @@ coeffs = [[1, 0, 0],
 
 coeffs = np.array(coeffs)
 
-results_0 = smbh.run(speeds, pos, triaxial = True)
+results_0 = smbh.run(speeds, pos, pot_type = 1)
 results_0.setDistance(1, 0.5, 0.25)
 
 rvir = results_0.R_VIR
@@ -43,7 +43,7 @@ labels = ["$x_+$", "$x_-$",
             "$z_+$", "$z_-$",]
 
 for (i, d) in enumerate(coeffs):
-    results_1 = smbh.run(speeds, pos + d * dq, triaxial = True)
+    results_1 = smbh.run(speeds, pos + d * dq, pot_type = 1)
     results_1.setDistance(1, 0.5, 0.25)
     ax.plot(results_1.times * 1000, results_1.distance / rvir, label = labels[i])
 
@@ -53,5 +53,5 @@ ax.grid()
 ax.set_xlabel('Time (Myr)')
 ax.set_ylabel('$R / R_{vir}$')
 
-ax.savefig('lyapunovTrayectories.png', dpi = 300)
+fig.savefig('lyapunovTrayectories.png', dpi = 300)
 plt.show()

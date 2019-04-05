@@ -40,8 +40,8 @@ files = ['s_energy.dat', 't_energy.dat']
 #
 #     with open(files[i], 'w') as file: file.write(text)
 
-fig1, axes = plt.subplots(1, 2, sharey = True, figsize = (8, 4.5))
-fig2, ax = plt.subplots(figsize = (8, 4.5))
+# fig1, axes = plt.subplots(1, 2, sharey = True, figsize = (8, 4.5))
+# fig2, ax = plt.subplots(figsize = (8, 4.5))
 
 labels = ['Symmetric', 'Triaxial ($a_1 = a_2 = a_3 = 1$)']
 
@@ -49,29 +49,35 @@ for i in range(2):
     data = np.genfromtxt(files[i], skip_header = 1)
     t, k, p, e = data.T
 
-    axes[i].plot(t, k, label = 'K')
-    axes[i].plot(t, p, label = 'V')
-    axes[i].plot(t, e, label = 'K + V')
+    max_ = e.max()
+    min_ = e.min()
+    mean = e.mean()
 
-    ax.plot(t, e, label = labels[i])
+    print("Max: %.2f, Min: %.2f, Fluctuacion: %.3f %%" % (max_, min_, 100 * abs((max_ - min_) / mean)))
 
-    axes[i].set_xlabel('Time (Gyr)')
-    axes[i].legend()
-    axes[i].grid()
-
-axes[0].set_ylabel('Energy ($10^5M_\odot$ kpc$^2$Gry$^{-2}$)')
-
-ax.set_xlabel('Time(Gyr)')
-ax.set_ylabel('Energy ($10^5M_\odot$ kpc$^2$Gry$^{-2}$)')
-
-ax.legend()
-ax.grid()
-
-fig1.tight_layout()
-fig2.tight_layout()
-
-fig1.subplots_adjust(wspace = 0.05)
-
-fig1.savefig('Energies.png', dpi = 300)
-fig2.savefig('Comparison.png', dpi = 300)
+#     axes[i].plot(t, k, label = 'K')
+#     axes[i].plot(t, p, label = 'V')
+#     axes[i].plot(t, e, label = 'K + V')
+#
+#     ax.plot(t, e, label = labels[i])
+#
+#     axes[i].set_xlabel('Time (Gyr)')
+#     axes[i].legend()
+#     axes[i].grid()
+#
+# axes[0].set_ylabel('Energy ($10^5M_\odot$ kpc$^2$Gry$^{-2}$)')
+#
+# ax.set_xlabel('Time(Gyr)')
+# ax.set_ylabel('Energy ($10^5M_\odot$ kpc$^2$Gry$^{-2}$)')
+#
+# ax.legend()
+# ax.grid()
+#
+# fig1.tight_layout()
+# fig2.tight_layout()
+#
+# fig1.subplots_adjust(wspace = 0.05)
+#
+# fig1.savefig('Energies.png', dpi = 300)
+# fig2.savefig('Comparison.png', dpi = 300)
 # plt.show()
