@@ -602,7 +602,7 @@ void triaxialCase(struct reb_simulation* sim)
     double speed[3] = {particle->vx, particle->vy, particle->vz};
 
     double ax, ay, az;
-    double r = getNorm(pos);
+    // double r = getNorm(pos);
     double m = getSoftenedLength(getM(pos[0], pos[1], pos[2]));
     double v = getSoftenedSpeed(getNorm(speed));
     double dir_v[3] = {speed[0] / v, speed[1] / v, speed[2] / v};
@@ -641,7 +641,7 @@ void triaxialCase(struct reb_simulation* sim)
 
     // sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
 
-    if(localMaxima(r, sim->t))
+    if(localMaxima(m, sim->t))
     {
       RETURN_PROPERTIES[0] = sim->t;
       RETURN_PROPERTIES[1] = particle->m;
@@ -709,7 +709,7 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
 
   if (header == 0)
   {
-    file = fopen(filename, "w");
+    file = fopen(filename, "a");
 
     fprintf(file, "R_VIR = %f\n", R_VIR);
     fprintf(file, "FB = %f\n", FB);
@@ -724,6 +724,10 @@ void printStatus(struct reb_simulation* sim, const char *filename, int header)
     fprintf(file, "DARK_MATTER_DENSITY_0 = %f\n", DARK_MATTER_DENSITY_0);
     fprintf(file, "GAS_DENSITY = %f\n", GAS_DENSITY);
     fprintf(file, "GAS_POWER = %f\n", GAS_POWER);
+
+    fprintf(file, "A_1 = %f\n", TRIAXIAL_A_1);
+    fprintf(file, "A_2 = %f\n", TRIAXIAL_A_2);
+    fprintf(file, "A_3 = %f\n", TRIAXIAL_A_3);
 
     // fprintf(file, "INTEGRATOR = %f\n", GAS_POWER);
 
@@ -875,6 +879,8 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, double 
 
   void (*additional_force)(struct reb_simulation * );
 
+  FILE *file = fopen(filename, "w");
+
   switch (type)
   {
     case SYMMETRIC:
@@ -893,6 +899,9 @@ void run(double *positions, double *speeds, double smbh_mass, double dt, double 
       additional_force = sphericalCase;
       break;
   }
+
+  fprintf(file, "TYPE = %d\n", type);
+  fclose(file);
 
   sim = setupSimulation(smbh_mass, positions, speeds, integrator, additional_force);
 
@@ -1133,8 +1142,11 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
 
   ref_positions[0] = malloc(3 * sizeof(double));
   ref_speeds[0] = malloc(3 * sizeof(double));
-
   ref_masses[0] = smbh_mass;
+
+  double pos[3];
+  double vs[3];
+
   for(i = 0; i < 3; i++)
   {
     ref_positions[0][i] = positions[i];
@@ -1159,12 +1171,15 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
     reb_integrate(sim, i * T);
   }
 
-  for(i = 0; i < 6; i++)
+  for(i = 0; i < 1; i++)
   {
+    s = 0;
+    lyas[i] = 0;
     for(k = 0; k < 3; k++)
     {
       dq0[k] = coeffs[i][k] * phase_distance;
       dp0[k] = 0;
+      // dp0[k] = coeffs[i][k] * phase_distance;
       // printf("%f ", dq0[k]);
     }
     // printf("\n");
@@ -1173,7 +1188,7 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
       for(k = 0; k < 3; k++)
       {
         q[k] = ref_positions[j][k] - dq0[k];
-        v[k] = ref_speeds[j][k] - dp0[k] / particle.m;
+        v[k] = ref_speeds[j][k] - dp0[k] / ref_masses[j];
       }
 
       if (triaxial == 1) sim = setupSimulation(ref_masses[j], q, v, INT_LEAPFROG, triaxialCase);
@@ -1183,30 +1198,40 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
       reb_integrate(sim, T);
 
       particle = sim->particles[0];
-      dqf[0] = ref_positions[j + 1][0] - particle.x;
-      dqf[1] = ref_positions[j + 1][1] - particle.y;
-      dqf[2] = ref_positions[j + 1][2] - particle.z;
+      pos[0] = particle.x;
+      pos[1] = particle.y;
+      pos[2] = particle.z;
 
-      dpf[0] = ref_speeds[j + 1][0] * ref_masses[j + 1] - particle.vx * particle.m;
-      dpf[1] = ref_speeds[j + 1][1] * ref_masses[j + 1] - particle.vy * particle.m;
-      dpf[2] = ref_speeds[j + 1][2] * ref_masses[j + 1] - particle.vz * particle.m;
+      vs[0] = particle.vx;
+      vs[1] = particle.vy;
+      vs[2] = particle.vz;
+
+      // dqf[0] = ref_positions[j + 1][0] - particle.x;
+      // dqf[1] = ref_positions[j + 1][1] - particle.y;
+      // dqf[2] = ref_positions[j + 1][2] - particle.z;
+      //
+      // dpf[0] = ref_speeds[j + 1][0] * ref_masses[j + 1] - particle.vx * particle.m;
+      // dpf[1] = ref_speeds[j + 1][1] * ref_masses[j + 1] - particle.vy * particle.m;
+      // dpf[2] = ref_speeds[j + 1][2] * ref_masses[j + 1] - particle.vz * particle.m;
 
       num = 0;
       denom = 0;
       for(k = 0; k < 3; k++)
       {
-        num += dqf[k] * dqf[k] + dpf[k] * dpf[k];
-        denom += dq0[k] * dq0[k] + dp0[k] * dp0[k];
+        // num += dqf[k] * dqf[k] + dpf[k] * dpf[k];
+        // denom += dq0[k] * dq0[k] + dp0[k] * dp0[k];
+        num += pow(pos[k] - ref_positions[j + 1][k], 2) + pow(vs[k] - ref_speeds[j + 1][k], 2);
+        denom += pow(pos[k] - ref_positions[j][k], 2) + pow(vs[k] - ref_speeds[j][k], 2);
       }
 
+      if(s == sqrt(num / denom)) printf("%d %d %f\n", i, j, s);;
       s = sqrt(num / denom);
-      if(!isnormal(s))
+      // printf("%d %f\n", j, log(s));
+      if(j > -1)
       {
-        printf("%d %f\n", j, s);
-        lyas[i] = log(s);
-        break;
+        lyas[i] += log(s);
+        // printf("%f %f\n", log(s), lyas[i]);
       }
-      lyas[i] += log(s);
       for(k = 0; k < 3; k++)
       {
         dq0[k] = dqf[k] / s;
@@ -1229,134 +1254,11 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
   double *ans = malloc(sizeof(double) * 6);
   for(j = 0; j < 6; j++)
   {
-    // free(q[j]);
-    // free(p[j]);
     ans[j] = lyas[j] / (l * T);
   }
 
   return ans;
 }
-
-// double *lyapunov(double *positions, double *speeds, double d_q0,
-//         double smbh_mass, double T, double dt, int l, int triaxial)
-// {
-//   int i, j, k;
-//   double s = 0;
-//   struct reb_simulation* ref_sim;
-//   struct reb_particle particle;
-//   struct reb_simulation *simulations[6];
-//
-//   double **q = malloc(6 * sizeof(double *));
-//   double **p = malloc(6 * sizeof(double *));
-//   double *ref_p = malloc(3 * sizeof(double));
-//   double *ref_q = malloc(3 * sizeof(double));
-//
-//   double qs[6][3], d_q0s[6][3];
-//   double lyas[6] = {0, 0, 0, 0, 0, 0};
-//
-//   int stop = 1;
-//   int coeffs[6][3] = {{1, 0, 0},
-//                       {-1, 0, 0},
-//                       {0, 1, 0},
-//                       {0, -1, 0},
-//                       {0, 0, 1},
-//                       {0, 0, -1}};
-//
-//   for(i = 0; i < 3; i++)
-//   {
-//     ref_q[i] = positions[i];
-//   }
-//
-//   for(i = 0; i < 6; i++)
-//   {
-//     for(j = 0; j < 3; j++)
-//     {
-//       d_q0s[i][j] = -coeffs[i][j] * d_q0;
-//       qs[i][j] = positions[j] - d_q0s[i][j];
-//     }
-//     q[i] = malloc(3 * sizeof(double));
-//     p[i] = malloc(3 * sizeof(double));
-//   }
-//
-//   for(i = 0; (i < l + 1) & (stop); i++)
-//   {
-//     printTriplet(speeds);
-//     if(triaxial == 1) ref_sim = setupSimulation(smbh_mass, ref_q, speeds, INT_LEAPFROG, triaxialCase);
-//     else ref_sim = setupSimulation(smbh_mass, ref_q, speeds, INT_LEAPFROG, sphericalCase);
-//     ref_sim -> dt = dt;
-//     for(j = 0; j < 1; j++)
-//     {
-//       if(triaxial == 1) simulations[j] = setupSimulation(smbh_mass, qs[j], speeds, INT_LEAPFROG, triaxialCase);
-//       else simulations[j] = setupSimulation(smbh_mass, qs[j], speeds, INT_LEAPFROG, sphericalCase);
-//       (simulations[j])->dt = dt;
-//       reb_integrate(simulations[j], T);
-//
-//       particle = (simulations[j])->particles[0];
-//       q[j][0] = particle.x;
-//       q[j][1] = particle.y;
-//       q[j][2] = particle.z;
-//       p[j][0] = particle.vx * particle.m;
-//       p[j][1] = particle.vy * particle.m;
-//       p[j][2] = particle.vz * particle.m;
-//     }
-//
-//     reb_integrate(ref_sim, T);
-//     particle = ref_sim->particles[0];
-//     ref_q[0] = particle.x;
-//     ref_q[1] = particle.y;
-//     ref_q[2] = particle.z;
-//     speeds[0] = particle.vx;
-//     speeds[1] = particle.vy;
-//     speeds[2] = particle.vz;
-//     smbh_mass = particle.m;
-//     for(j = 0; j < 3; j++)
-//     {
-//       ref_p[j] = speeds[j] * smbh_mass;
-//     }
-//
-//     for(j = 0; j < 1; j++)
-//     {
-//       getDelta(&(q[j]), ref_q);
-//       getDelta(&(p[j]), ref_p);
-//       printTriplet(q[j]);
-//       printTriplet(p[j]);
-//
-//       s = getS(q[j], p[j], d_q0s[j]);
-//       printf("%f\n", s);
-//       if(!isnormal(s))
-//       {
-//         printf("Not normal\n");
-//         stop = 0;
-//         break;
-//       }
-//       lyas[j] += log(s);
-//       for(k = 0; k < 3; k++)
-//       {
-//         d_q0s[j][k] = q[j][k] / s;
-//         qs[j][k] = ref_q[k] + d_q0s[j][k];
-//       }
-//       reb_free_simulation(simulations[j]);
-//     }
-//     reb_free_simulation(ref_sim);
-//   }
-//
-//   free(ref_p);
-//   free(ref_q);
-//
-//   double *ans = malloc(sizeof(double) * 6);
-//
-//   for(j = 0; j < 6; j++)
-//   {
-//     free(q[j]);
-//     free(p[j]);
-//     ans[j] = lyas[j] / (i * T);
-//   }
-//
-//   free(p);
-//   free(q);
-//
-//   return ans;
-// }
 
 void testLoad(const char *file_name)
 {

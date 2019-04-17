@@ -30,9 +30,9 @@ def calculateR_vir(G, H):
     return ((G * 1e3) / (100 * H**2)) ** (1/3.)
 
 def sphericalToCartesian(r, theta, phi):
-    x = r * math.sin(theta) * math.cos(phi)
-    y = r * math.sin(theta) * math.sin(phi)
-    z = r * math.cos(theta)
+    x = r * np.sin(theta) * np.cos(phi)
+    y = r * np.sin(theta) * np.sin(phi)
+    z = r * np.cos(theta)
 
     return x, y, z
 

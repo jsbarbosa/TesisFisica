@@ -139,6 +139,15 @@ def lyapunov(positions, speeds, d_q0 = 1e-4, smbh_mass = 1, T = 1e-5, dt = 1e-6,
     lib.free(pointer)
     return np.array(values)
 
+def triaxial_gravDM(x, y, z, gamma = 0.2):
+    return pointerReturn(lib.triaxial_gravDM(x, y, z, gamma)
+
+def triaxial_gravS(x, y, z, gamma = 0.2):
+    return pointerReturn(lib.triaxial_gravS(x, y, z, gamma)
+
+def triaxial_gravG(x, y, z, gamma = 0.2):
+    return pointerReturn(lib.triaxial_gravG(x, y, z, gamma)
+
 G = getG()
 setR_vir(R_VIR_z20)
 setGasPower(2.2)
