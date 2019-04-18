@@ -23,7 +23,7 @@ def getEscapeSpeed():
     e_v = [smbh.getEscapeSpeed_triaxial(pos) for pos in poss]
     return np.array(e_v)
 
-def randomInitialConditions(n_random = 1):
+def randomInitialConditions(n_random = 200):
     v_min = 0.45
     v_max = 0.87
 
@@ -34,7 +34,7 @@ def randomInitialConditions(n_random = 1):
     xs = smbh.sphericalToCartesian(vs, thetas, phis)
     return np.array(xs)
 
-def randomSemiaxis(n_random = 5):
+def randomSemiaxis(n_random = 100):
     a_2 = np.random.random(n_random)
     a_3 = a_2 * np.random.random(n_random)
 

@@ -26,8 +26,8 @@ dq = 1e-8
 with open('lyapunov_s.dat', 'w') as file_s: pass
 with open('lyapunov_t.dat', 'w') as file_t: pass
 for (i, l) in enumerate(ls):
-    lya_s[i] = l, *smbh.lyapunov(pos, speeds, dq, T = T, l = l, triaxial = False)
-    lya_t[i] = l, *smbh.lyapunov(pos, speeds, dq, T = T, l = l, triaxial = True)
+    lya_s[i] = l, *smbh.lyapunov(speeds, l = l, triaxial = False)
+    lya_t[i] = l, *smbh.lyapunov(speeds, l = l, triaxial = True)
 
     with open('lyapunov_s.dat', 'a') as file_s:
         txt = "%d %f %f %f %f %f %f\n" % tuple(lya_s[i])
