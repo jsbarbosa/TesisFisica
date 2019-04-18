@@ -1217,8 +1217,8 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
   ref_speeds[0] = malloc(3 * sizeof(double));
   ref_masses[0] = smbh_mass;
 
-  double pos[3];
-  double vs[3];
+  // double pos[3];
+  // double vs[3];
 
   for(i = 0; i < 3; i++)
   {
@@ -1271,39 +1271,28 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
       reb_integrate(sim, T);
 
       particle = sim->particles[0];
-      pos[0] = particle.x;
-      pos[1] = particle.y;
-      pos[2] = particle.z;
 
-      vs[0] = particle.vx;
-      vs[1] = particle.vy;
-      vs[2] = particle.vz;
+      dqf[0] = ref_positions[j + 1][0] - particle.x;
+      dqf[1] = ref_positions[j + 1][1] - particle.y;
+      dqf[2] = ref_positions[j + 1][2] - particle.z;
 
-      // dqf[0] = ref_positions[j + 1][0] - particle.x;
-      // dqf[1] = ref_positions[j + 1][1] - particle.y;
-      // dqf[2] = ref_positions[j + 1][2] - particle.z;
-      //
-      // dpf[0] = ref_speeds[j + 1][0] * ref_masses[j + 1] - particle.vx * particle.m;
-      // dpf[1] = ref_speeds[j + 1][1] * ref_masses[j + 1] - particle.vy * particle.m;
-      // dpf[2] = ref_speeds[j + 1][2] * ref_masses[j + 1] - particle.vz * particle.m;
+      dpf[0] = ref_speeds[j + 1][0] * ref_masses[j + 1] - particle.vx * particle.m;
+      dpf[1] = ref_speeds[j + 1][1] * ref_masses[j + 1] - particle.vy * particle.m;
+      dpf[2] = ref_speeds[j + 1][2] * ref_masses[j + 1] - particle.vz * particle.m;
 
       num = 0;
       denom = 0;
       for(k = 0; k < 3; k++)
       {
-        // num += dqf[k] * dqf[k] + dpf[k] * dpf[k];
-        // denom += dq0[k] * dq0[k] + dp0[k] * dp0[k];
-        num += pow(pos[k] - ref_positions[j + 1][k], 2) + pow(vs[k] - ref_speeds[j + 1][k], 2);
-        denom += pow(pos[k] - ref_positions[j][k], 2) + pow(vs[k] - ref_speeds[j][k], 2);
+        num += dqf[k] * dqf[k] + dpf[k] * dpf[k];
+        denom += dq0[k] * dq0[k] + dp0[k] * dp0[k];
       }
 
       if(s == sqrt(num / denom)) printf("%d %d %f\n", i, j, s);;
       s = sqrt(num / denom);
-      // printf("%d %f\n", j, log(s));
-      if(j > -1)
+      if(j > 0)
       {
         lyas[i] += log(s);
-        // printf("%f %f\n", log(s), lyas[i]);
       }
       for(k = 0; k < 3; k++)
       {

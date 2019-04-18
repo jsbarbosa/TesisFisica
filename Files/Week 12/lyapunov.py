@@ -5,9 +5,9 @@ import smbh
 import numpy as np
 import matplotlib.pyplot as plt
 
-pos = 1e-0 * np.ones(3) / 3 ** 0.5
+pos = 1e-3 * np.ones(3) / 3 ** 0.5
 
-v = 30
+v = 60
 theta = np.pi / 4
 phi = np.pi / 4
 
@@ -26,18 +26,14 @@ dq = 1e-8
 with open('lyapunov_s.dat', 'w') as file_s: pass
 with open('lyapunov_t.dat', 'w') as file_t: pass
 for (i, l) in enumerate(ls):
-    print(l)
     lya_s[i] = l, *smbh.lyapunov(pos, speeds, dq, T = T, l = l, triaxial = False)
-    print('')
     lya_t[i] = l, *smbh.lyapunov(pos, speeds, dq, T = T, l = l, triaxial = True)
 
     with open('lyapunov_s.dat', 'a') as file_s:
         txt = "%d %f %f %f %f %f %f\n" % tuple(lya_s[i])
-        # print(txt)
         file_s.write(txt)
     with open('lyapunov_t.dat', 'a') as file_t:
         txt = "%d %f %f %f %f %f %f\n" % tuple(lya_t[i])
-        # print(txt)
         file_t.write(txt)
 
 # lya_s = np.genfromtxt('lyapunov_s.dat')

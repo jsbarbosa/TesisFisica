@@ -136,7 +136,7 @@ def run(speeds, pos = [1e-3 / (3**0.5)] * 3, smbh_mass = 1, dt = 1e-6, end_time 
 
     return data
 
-def lyapunov(positions, speeds, d_q0 = 1e-4, smbh_mass = 1, T = 1e-5, dt = 1e-6, l = 100, triaxial = True):
+def lyapunov(speeds, positions = [1e-3 / (3**0.5)] * 3, d_q0 = 1e-8, smbh_mass = 1, T = 1e-5, dt = 1e-6, l = 100, triaxial = True):
     pos = (c_double * 3)(*positions)
     speeds = (c_double * 3)(*speeds)
 
@@ -147,6 +147,24 @@ def lyapunov(positions, speeds, d_q0 = 1e-4, smbh_mass = 1, T = 1e-5, dt = 1e-6,
 
 def getTriaxialCoeffs():
     return pointerReturn(lib.getTriaxialCoeffs())
+
+def getPotential(r):
+    return darkMatterPotential(r) + stellarPotential(r) + gasPotential(r)
+
+def getPotential_triaxial(x, y, z):
+    return darkMatterPotential_triaxial(x, y, z) + \
+            stellarPotential_triaxial(x, y, z) + \
+            gasPotential_triaxial(x, y, z)
+
+def getEscapeSpeed(r = R_VIR_z20, r0 = 1e-3):
+    pot_1 = getPotential(r)
+    pot_0 = getPotential(r0)
+    return abs(2 * (pot_1 - pot_0)) ** 0.5
+
+def getEscapeSpeed_triaxial(r, r0 = [1e-3 / 3**0.5] * 3):
+    pot_1 = getPotential_triaxial(*r)
+    pot_0 = getPotential_triaxial(*r0)
+    return abs(2 * (pot_1 - pot_0)) ** 0.5
 # def triaxial_gravDM(x, y, z, gamma = 0.2):
 #     return pointerReturn(lib.triaxial_gravDM(x, y, z, gamma))
 #
