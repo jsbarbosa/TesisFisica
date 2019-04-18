@@ -22,7 +22,7 @@ volatile double STELLAR_TOTAL_MASS = 0;
 volatile double STELLAR_SCALE_LENGTH = 0;
 
 volatile double SOFTENING_SPEED = 0;//1e-8;
-volatile double SOFTENING_RADIUS = 1e-7;
+volatile double SOFTENING_RADIUS = 0;//1e-7;
 
 volatile double DARK_MATTER_SCALE_RADIUS = 0; // fixed at main
 volatile double DARK_MATTER_DENSITY_0 = 0; // fixed at main
@@ -328,7 +328,7 @@ double *triaxial_gravitationalDarkMatter(double x, double y, double z, double ta
 {
   int i;
   double *phi = phiVector(x, y, z, tau);
-  double m = getMTau(x, y, z, tau);
+  double m = getSoftenedLength(getMTau(x, y, z, tau));
 
   double factor = m * pow(DARK_MATTER_SCALE_RADIUS + m, 2);
   for(i = 0; i < 3; i++) phi[i] *= 1.0 / factor;
@@ -339,7 +339,7 @@ double *triaxial_gravitationalStellar(double x, double y, double z, double tau)
 {
   int i;
   double *phi = phiVector(x, y, z, tau);
-  double m = getMTau(x, y, z, tau);
+  double m = getSoftenedLength(getMTau(x, y, z, tau));
 
   double factor = m * pow(STELLAR_SCALE_LENGTH + m, 3);
   for(i = 0; i < 3; i++) phi[i] *= 1.0 / factor;
@@ -350,7 +350,7 @@ double *triaxial_gravitationalGas(double x, double y, double z, double tau)
 {
   int i;
   double *phi = phiVector(x, y, z, tau);
-  double m = getMTau(x, y, z, tau);
+  double m = getSoftenedLength(getMTau(x, y, z, tau));
   for(i = 0; i < 3; i++)
   {
     phi[i] *= pow(GAS_CORE / (m + GAS_CORE), GAS_POWER);
@@ -450,6 +450,70 @@ double *triaxial_gravG(double x, double y, double z, double gamma)
   return grad;
 }
 
+double *darkMatterPotential_psi(double x, double y, double z, double tau)
+{
+  double m = getSoftenedLength(getMTau(x, y, z, tau));
+  double psi = 2 * pow(DARK_MATTER_SCALE_RADIUS, 3) * DARK_MATTER_DENSITY_0 /
+          (DARK_MATTER_SCALE_RADIUS + m);
+  double *temp = calloc(3, sizeof(double));
+  temp[0] = psi / sqrt((tau + pow(TRIAXIAL_A_1, 2)) *
+        (tau + pow(TRIAXIAL_A_2, 2)) *
+        (tau + pow(TRIAXIAL_A_3, 2)));
+  return temp;
+}
+
+double *stellarPotential_psi(double x, double y, double z, double tau)
+{
+  double m = getSoftenedLength(getMTau(x, y, z, tau));
+  double psi = STELLAR_TOTAL_MASS * STELLAR_SCALE_LENGTH /
+        (2 * M_PI * pow(STELLAR_SCALE_LENGTH + m, 2));
+  double *temp = calloc(3, sizeof(double));
+  temp[0] = psi / sqrt((tau + pow(TRIAXIAL_A_1, 2)) *
+        (tau + pow(TRIAXIAL_A_2, 2)) *
+        (tau + pow(TRIAXIAL_A_3, 2)));
+  return temp;
+}
+
+double *gasPotential_psi(double x, double y, double z, double tau)
+{
+  double m = getSoftenedLength(getMTau(x, y, z, tau));
+  double psi = 2 * GAS_DENSITY * pow((m + GAS_CORE) / GAS_CORE, -GAS_POWER) *
+        (m + GAS_CORE) * (m * (GAS_POWER - 1) + GAS_CORE) /
+        ((GAS_POWER - 2) * (GAS_POWER - 1));
+  double *temp = calloc(3, sizeof(double));
+  temp[0] = psi / sqrt((tau + pow(TRIAXIAL_A_1, 2)) *
+        (tau + pow(TRIAXIAL_A_2, 2)) *
+        (tau + pow(TRIAXIAL_A_3, 2)));
+  return temp;
+}
+
+double darkMatterPotential_triaxial(double x, double y, double z)
+{
+  double factor = -M_PI * G0 * TRIAXIAL_A_2 * TRIAXIAL_A_3 / TRIAXIAL_A_1;
+  double *temp = gaussLegendre(darkMatterPotential_psi, x, y, z, 0.2);
+  factor *= temp[0];
+  free(temp);
+  return factor;
+}
+
+double stellarPotential_triaxial(double x, double y, double z)
+{
+  double factor = -M_PI * G0 * TRIAXIAL_A_2 * TRIAXIAL_A_3 / TRIAXIAL_A_1;
+  double *temp = gaussLegendre(stellarPotential_psi, x, y, z, 0.2);
+  factor *= temp[0];
+  free(temp);
+  return factor;
+}
+
+double gasPotential_triaxial(double x, double y, double z)
+{
+  double factor = -M_PI * G0 * TRIAXIAL_A_2 * TRIAXIAL_A_3 / TRIAXIAL_A_1;
+  double *temp = gaussLegendre(gasPotential_psi, x, y, z, 0.2);
+  factor *= temp[0];
+  free(temp);
+  return factor;
+}
+
 int localMaxima(double r, double sim_time)
 {
   int value = 0;
@@ -543,6 +607,15 @@ double getHubbleParameter(double z)
     h += Z_HUBBLE_COEFFS[i] * pow(z, Z_HUBBLE_DEGREE - i);
   }
   return h;
+}
+
+double *getTriaxialCoeffs(void)
+{
+  double *temp = malloc(3 * sizeof(3));
+  temp[0] = TRIAXIAL_A_1;
+  temp[1] = TRIAXIAL_A_2;
+  temp[2] = TRIAXIAL_A_3;
+  return temp;
 }
 
 double calculateR_vir(double G, double H)

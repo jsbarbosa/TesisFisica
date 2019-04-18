@@ -95,7 +95,13 @@ func_info = [('getG', c_double, None),
             ('triaxial_gravG', POINTER(c_double), 4 * [c_double]),
             ('testLoad', None, c_char_p),
             ('getReturnFraction', c_double, None),
-            ('lyapunov', POINTER(c_double), 2 * [POINTER(c_double)] + 4 * [c_double] + [c_int, c_int])]
+            ('lyapunov', POINTER(c_double), 2 * [POINTER(c_double)] + 4 * [c_double] + [c_int, c_int]),
+
+            ('darkMatterPotential_triaxial', c_double, 3 * [c_double]),
+            ('stellarPotential_triaxial', c_double, 3 * [c_double]),
+            ('gasPotential_triaxial', c_double, 3 * [c_double]),
+            ('getTriaxialCoeffs', POINTER(c_double), None)
+            ]
 
 for func in func_info:
     name = func[0]
@@ -139,14 +145,16 @@ def lyapunov(positions, speeds, d_q0 = 1e-4, smbh_mass = 1, T = 1e-5, dt = 1e-6,
     lib.free(pointer)
     return np.array(values)
 
-def triaxial_gravDM(x, y, z, gamma = 0.2):
-    return pointerReturn(lib.triaxial_gravDM(x, y, z, gamma)
-
-def triaxial_gravS(x, y, z, gamma = 0.2):
-    return pointerReturn(lib.triaxial_gravS(x, y, z, gamma)
-
-def triaxial_gravG(x, y, z, gamma = 0.2):
-    return pointerReturn(lib.triaxial_gravG(x, y, z, gamma)
+def getTriaxialCoeffs():
+    return pointerReturn(lib.getTriaxialCoeffs())
+# def triaxial_gravDM(x, y, z, gamma = 0.2):
+#     return pointerReturn(lib.triaxial_gravDM(x, y, z, gamma))
+#
+# def triaxial_gravS(x, y, z, gamma = 0.2):
+#     return pointerReturn(lib.triaxial_gravS(x, y, z, gamma))
+#
+# def triaxial_gravG(x, y, z, gamma = 0.2):
+#     return pointerReturn(lib.triaxial_gravG(x, y, z, gamma))
 
 G = getG()
 setR_vir(R_VIR_z20)
