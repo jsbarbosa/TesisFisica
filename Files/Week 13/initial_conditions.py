@@ -9,21 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 files_name = "Results/%d_%d.dat"
 
-def getEscapeSpeed():
-    a1, a2, a3 = smbh.getTriaxialCoeffs()
-
-    x_vir = smbh.R_VIR_z20
-    y_vir = (a2 / a1) * smbh.R_VIR_z20
-    z_vir = (a3 / a1) * smbh.R_VIR_z20
-
-    poss = [[x_vir, 0, 0],
-            [0, y_vir, 0],
-            [0, 0, z_vir]]
-
-    e_v = [smbh.getEscapeSpeed_triaxial(pos) for pos in poss]
-    return np.array(e_v)
-
-def randomInitialConditions(n_random = 200):
+def randomInitialConditions(n_random = 500):
     v_min = 0.45
     v_max = 0.87
 
@@ -34,7 +20,7 @@ def randomInitialConditions(n_random = 200):
     xs = smbh.sphericalToCartesian(vs, thetas, phis)
     return np.array(xs)
 
-def randomSemiaxis(n_random = 100):
+def randomSemiaxis(n_random = 500):
     a_2 = np.random.random(n_random)
     a_3 = a_2 * np.random.random(n_random)
 
@@ -45,7 +31,7 @@ def randomSemiaxis(n_random = 100):
 
 def do(i, j, axis, speeds):
     smbh.setTriaxialCoeffs(*axis)
-    e_v = getEscapeSpeed()
+    e_v = smbh.getEscapeSpeedOrthogonalTriaxial()
     speeds = e_v * speeds
     t_a = ", ".join(["%.2f" % axis[k] for k in range(3)])
     t_s = ", ".join(["%.2f" % speeds[k] for k in range(3)])
@@ -77,24 +63,4 @@ if __name__ == '__main__':
 
     with open("lyapunov.txt", "w") as file:
         file.write("i, j, lyapunov\n")
-    smbh.run_multiproccess(do, args, 2)
-# plt.scatter(a[:, 1], a[:, 2], alpha = 0.5, s = 5)
-# plt.show()
-# e_v = getEscapeSpeed()
-# x, y, z = randomInitialConditions(e_v)
-# # x, y, z = [xs[i] * escape_speeds[i] for i in range(3)]
-#
-# fig = plt.figure()
-# ax = fig.add_subplot(111, projection = '3d')
-#
-# ax.scatter(x, y, z, alpha = 0.5, s = 5)
-#
-# ax.set_xlim(0, 1)
-# ax.set_ylim(0, 1)
-# ax.set_zlim(0, 1)
-#
-# ax.set_xlabel("Initial / Escape speed ($x$)")
-# ax.set_ylabel("Initial / Escape speed ($y$)")
-# ax.set_zlabel("Initial / Escape speed ($z$)")
-#
-# plt.show()
+    smbh.run_multiproccess(do, args, 4)

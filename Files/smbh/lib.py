@@ -174,6 +174,20 @@ def getEscapeSpeed_triaxial(r, r0 = [1e-3 / 3**0.5] * 3):
 # def triaxial_gravG(x, y, z, gamma = 0.2):
 #     return pointerReturn(lib.triaxial_gravG(x, y, z, gamma))
 
+def getEscapeSpeedOrthogonalTriaxial():
+    a1, a2, a3 = getTriaxialCoeffs()
+
+    x_vir = R_VIR_z20
+    y_vir = (a2 / a1) * R_VIR_z20
+    z_vir = (a3 / a1) * R_VIR_z20
+
+    poss = [[x_vir, 0, 0],
+            [0, y_vir, 0],
+            [0, 0, z_vir]]
+
+    e_v = [getEscapeSpeed_triaxial(pos) for pos in poss]
+    return np.array(e_v)
+
 G = getG()
 setR_vir(R_VIR_z20)
 setGasPower(2.2)
