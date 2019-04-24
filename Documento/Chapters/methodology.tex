@@ -390,13 +390,13 @@
 		
 		\begin{figure}[h]
 			\centering
-			\begin{subfigure}[t]{0.49\textwidth}
+			\begin{subfigure}[t]{0.45\textwidth}
 				\includegraphics[width = \textwidth]{"../Files/Week 8/gamma_error"}
 				\caption{Error associated with the value of $\gamma$.}
 				\label{fig: gammaError}
 			\end{subfigure}
 			~ 
-			\begin{subfigure}[t]{0.49\textwidth}
+			\begin{subfigure}[t]{0.45\textwidth}
 				\includegraphics[width=\textwidth]{"../Files/Week 8/scheme_error"}
 				\caption{Comparison of the error due to Gauss-Legendre (segmented lines, $\gamma = 0.2$) and Gauss-Laguerre integration schemes.}
 				\label{fig: Gscheme_error}
@@ -405,15 +405,15 @@
 		\end{figure}
 	
 		Since $\gamma$ is a free parameter in the Gauss-Legendre scheme, it must be optimized, results on \autoref{fig: gammaError} show a stability region for all potentials close to $\gamma = 0.2$. On \autoref{fig: Gscheme_error}, a comparison of the error for both Gauss schemes is made, finding that Gauss-Legendre is better for all potentials when the degree of the polynomial used is bigger than 10, and that after $k \approx 50$ there is no variation on the error with Gauss-Legendre.
-		\begin{figure}[h]
+		\begin{figure}[!h]
 			\centering
-			\begin{subfigure}[t]{0.49\textwidth}
+			\begin{subfigure}[t]{0.4\textwidth}
 				\includegraphics[width = \textwidth]{"../Files/Week 8/error"}
 				\caption{Errors on potential}
 				\label{fig: potentialErrors}
 			\end{subfigure}
 			~ 
-			\begin{subfigure}[t]{0.49\textwidth}
+			\begin{subfigure}[t]{0.4\textwidth}
 				\includegraphics[width = \textwidth]{"../Files/Week 7/symmetric_triaxial"}
 				\caption{Cumulative errors on simulations}
 				\label{fig: simulationErrors}

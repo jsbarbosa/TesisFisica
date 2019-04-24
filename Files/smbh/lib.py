@@ -158,6 +158,7 @@ def getPotential_triaxial(x, y, z):
 
 def getEscapeSpeed(r = R_VIR_z20, r0 = 1e-3):
     pot_1 = getPotential(r)
+    # pot_0 = 0
     pot_0 = getPotential(r0)
     return abs(2 * (pot_1 - pot_0)) ** 0.5
 

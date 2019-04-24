@@ -1,3 +1,4 @@
+% !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 % Chapter 1
 
@@ -50,7 +51,7 @@
 			\rho(r) = \dfrac{\rho_0}{\left(\dfrac{r}{a}\right) ^ \alpha \left(1 + \dfrac{r}{a}\right) ^ {\beta - \alpha}}
 		\end{equation}
 		
-		From which, one obtains all of the densities profiles used, as NFW is a double power law with $(\alpha, \beta) = (1, 3)$, Hernquist $(1, 4)$ and for gasses, $(0, n)$, as seen in equations \ref{eq: dmdensity}, \ref{eq: sdensity} and \ref{eq: rdensity}. Double power laws have an advantage over piecewise-defined functions, as they are smooth for all distances. 
+		From which, one obtains all of the densities profiles used, as NFW is a double power law with $(\alpha, \beta) = (1, 3)$, Hernquist $(1, 4)$ and for gases, $(0, n)$, as seen in equations \ref{eq: dmdensity}, \ref{eq: sdensity} and \ref{eq: rdensity}. Double power laws have an advantage over piecewise-defined functions, as they are smooth for all distances. 		
 		\begin{figure}[h]
 			\centering
 			\begin{subfigure}[t]{0.49\textwidth}
@@ -68,22 +69,81 @@
 			\label{fig: powerLaw}
 		\end{figure}
 	
-		Since $n$ depends , simulations were made for a range of exponents in the power law. Results can be seen in \autoref{fig: powerLaw}, were a clear influence of the exponent can be seen
-	
+		Since $n$ is not fixed, simulations were made for a range of exponents in the power law. Results can be seen in \autoref{fig: powerLaw}, were a clear influence of the exponent can be seen. A confirmation that everything went the way it is supposed to, is that cumulative masses for all of the exponents have the same value at the virial radius (red line in \autoref{fig: powerLawDensities}). At this same distance, the behavior of the mass for each exponent changes, as smaller values of $n$ have a bigger cumulative masses from there on. At any other point, the density for bigger values of $n$ is greater, which means that both dynamical friction and accretion rates increase for the black hole as $n$ get bigger. Also, as $n$ becomes greater, cumulative masses increase, yielding a higher gravitational potential. Both of these effects, take part in the observed results in \autoref{fig: powerLawOrbits}, in which, higher values of $n$ increase return times.
+		
+		There are some spiral galaxies from which an exponent of 2.6 has been calculated as in NGC 253 \cite{sorai2000distribution}, others authors have made simulations for black hole escape velocities with $n = 2.2$ \cite{tanaka2009assembly, choksi2017recoiling}. It is from these references, from which the value of $n = 2.2$ for most simulations was selected.
+		
 	\subsection{Effect of the stellar fraction}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width = 0.7\textwidth]{"../Files/Week 10/returntimes_stellar_speed"}
-		\caption{Return times of the black hole for different initial speeds and stellar fractions.}
-		\label{fig: stellarfraction}
-	\end{figure}
+		As it was mentioned before, the mass of a galaxy at low distances from its center, is ruled by the amount of stars. Because of this, a study of the dependence of the return times with stellar fraction, and initial speed was carried on. For that, simulations with initial speeds from 55 to 90 kpc/Gry were lunched, for stellar fractions ranging from 1 \% to 10 \%. In order to normalize speeds, initial speeds are divided by the escape velocity. By considering the potential energy at the edge of the galaxy, and the initial energy of the black hole, the escape velocity is written as:
+		\begin{equation}
+			v_\text{escape} = \sqrt{2 \left(\Phi(R_\text{vir}) - \Phi(r_0)\right)}
+		\end{equation}
+		
+		Results from the simulations can be seen on \autoref{fig: stellarfraction}, where a linear behavior below the escape speed is common for all stellar fractions. As the initial velocities approximate 1.3, an exponential growth is seen, and return times become divergent.
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width = 0.7\textwidth]{"../Files/Week 10/returntimes_speed"}
+			\caption{Return times of the black hole for different initial speeds and stellar fractions.}
+			\label{fig: stellarfraction}
+		\end{figure}
+	
+		Return times are thus fitted to the following equation:
+		\begin{equation}\label{eq: fitTr}
+			\log_{10}(T_\text{return}) = [a(f_s) v + b(f_s)] + \dfrac{c(f_s)}{v - 1.3}
+		\end{equation}
+		
+		Where the first term accounts for the linear behavior and the last for the divergence at high velocities. Using the information in \autoref{fig: stellarfraction}, coefficients in \autoref{eq: fitTr} are calculated for each stellar fraction. Later, with the value of the coefficients, a second fit is made for $a(f_s), b(f_s), c(f_s)$.
+		
+		\begin{figure}[h]
+			\centering
+			\begin{subfigure}[t]{0.4\textwidth}
+				\includegraphics[width = \textwidth]{"../Files/Week 10/a"}
+				\caption{}
+%				\label{fig: symmetricDensity3d}
+			\end{subfigure}
+			~ 
+			\begin{subfigure}[t]{0.4\textwidth}
+				\includegraphics[width=\textwidth]{"../Files/Week 10/b"}
+				\caption{}
+%				\label{fig: triaxialDensity3d}
+			\end{subfigure}
+			\begin{subfigure}[t]{0.4\textwidth}
+				\includegraphics[width=\textwidth]{"../Files/Week 10/c"}
+				\caption{}
+			\end{subfigure}
+			\caption{Fits for the coefficients in \autoref{eq: fitTr}}
+			\label{fig: coeffsFits}
+		\end{figure}
+
+	Using \autoref{eq: fitTr} and the fits in \autoref{fig: coeffsFits}, the whole surface of return times is reconstructed, enabling the possibility of semianalytical calculations without the need of simulations, as the dependence of the coefficients with the stellar fraction is:
+	\begin{equation}
+		a(f_s) = 232f_s^2 + 25 f_s + 2.83
+	\end{equation} 
+	\begin{equation}
+		b(f_s) = -40.7 f_s - 0.75
+	\end{equation}
+	\begin{equation}
+		c(f_s) = 60 f_s^2 - 2.8 f_s - 0.080
+	\end{equation}
 
 	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.7\textwidth]{"../Files/Week 10/surface"}
+		\caption{Constructed surface of return times of the black hole for different initial speeds and stellar fractions.}
+		\label{fig: stellarfraction3d}
+	\end{figure}
+
+	Nevertheless, as the constructed surface in \autoref{fig: stellarfraction3d} shows, predicted return times for both, high stellar fractions and initial speeds, are smaller than expected.
+	
+	\begin{figure}[h!]
 		\centering
 		\includegraphics[width = 0.9\linewidth]{"../Files/Week 9/PhaseSpace_escape"}
 		\caption{Phase space generated with different stellar fractions, for an initial velocity $\vec{v} = 90\hat{i}$ kpc/Gyr.}
 		\label{fig: escapePhaseSpace}
 	\end{figure}
+
+	On the other hand, phase spaces for high and low initial speeds, show how the increase in stellar fraction make it harder for the black hole to get further in space. In both cases, initial velocity is only in the $x$ direction, thus, curves in $y$ and $z$ happen because the initial position is not exactly $\vec{0}$, but $(1, 1, 1)$ pc.
+	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width = 0.9\linewidth]{"../Files/Week 9/PhaseSpace_in"}
@@ -91,6 +151,8 @@
 		\label{fig: escapeInner}
 	\end{figure}
 
+	An interesting behavior in \autoref{fig: escapePhaseSpace} is that for the 3 smaller stellar fractions, the simulated black holes are still increasing their distance as of today, while the fourth curve shows a black hole in which gravity has already overcome the initial speed, and changed the direction of the speed.
+	
 	\section{Triaxial study}
 	\begin{figure}[h]
 		\centering
