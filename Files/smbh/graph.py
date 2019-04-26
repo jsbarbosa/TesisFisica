@@ -407,8 +407,8 @@ def makePolarPlot(r, theta, phi, colors = None, cmap = 'jet', alpha = 0.45):
     fig = plt.figure()
     ax1 = fig.add_subplot(121, polar = True)
     ax2 = fig.add_subplot(122, polar = True)
-    ax1.scatter(theta, r - 0.4, c = colors, cmap = 'jet', alpha = alpha)
-    ax2.scatter(phi, r - 0.4, c = colors, cmap = 'jet', alpha = alpha)
+    ax1.scatter(theta, r, c = colors, cmap = 'jet', alpha = alpha)
+    ax2.scatter(phi, r, c = colors, cmap = 'jet', alpha = alpha)
 
     ax1.set_theta_zero_location('N')
 
@@ -418,16 +418,16 @@ def makePolarPlot(r, theta, phi, colors = None, cmap = 'jet', alpha = 0.45):
     ax2.set_thetamin(0)
     ax2.set_thetamax(90)
 
-    ax1.set_rorigin(-0.4)
-    ax2.set_rorigin(-0.4)
+    # ax1.set_rorigin(-0.6)
+    # ax2.set_rorigin(-0.6)
 
     theta_labels = [(r'$\theta = %d^\circ$' + '\t') % i for i in np.arange(0, 90 + 1, 20)]
     phi_labels = ['\t' + r'$\phi = %d^\circ$' % i for i in np.arange(0, 90 + 1, 20)]
-    r_labels = ['%.1f' % i for i in np.arange(0.4, 0.9 + 1, 0.1)]
+    # r_labels = ['%.1f' % i for i in np.arange(0.4, 0.9 + 1, 0.1)]
 
     ax1.set_xticklabels(theta_labels)
     ax2.set_xticklabels(phi_labels)
-    ax2.set_yticklabels(r_labels, rotation = 90 )
+    ax2.set_yticklabels(r_labels, rotation = 90)
     ax2.set_rlabel_position(22.5)  # get radial labels away from plotted line
 
     ax1.set_yticklabels([])

@@ -31,6 +31,7 @@ volatile double GAS_DENSITY = 0; //fixed at main
 volatile double SIM_DT;
 
 volatile double LAST_MAXIMA = -1;
+volatile double LAST_MAXIMA_ENERGY = -1;
 volatile double LAST_POSITIONS[2] = {-1, -1};
 
 volatile unsigned int IS_LEAVING = 1;
@@ -49,7 +50,10 @@ volatile double TRIAXIAL_A_3 = 0.25;
 volatile double LYAPUNOV_DISTANCE_X = 1e-5;
 volatile double LYAPUNOV_DISTANCE_P = 0;
 
-volatile double RETURN_PROPERTIES[3] = {0, 0, 0};
+// volatile double RETURN_PROPERTIES[3] = {0, 0, 0};
+
+volatile double RETURN_TIME = 0;
+volatile double RETURN_MASS = 0;
 
 const double ROOTS[GAUSS_DEGREE] = {-0.9988664 , -0.99403197, -0.98535408, -0.97286439, -0.95661096,
         -0.93665662, -0.91307856, -0.88596798, -0.85542977, -0.82158207,
@@ -61,6 +65,7 @@ const double ROOTS[GAUSS_DEGREE] = {-0.9988664 , -0.99403197, -0.98535408, -0.97
          0.60770293,  0.65589647,  0.70155247,  0.7444943 ,  0.78455583,
          0.82158207,  0.85542977,  0.88596798,  0.91307856,  0.93665662,
          0.95661096,  0.97286439,  0.98535408,  0.99403197,  0.9988664 };
+
 const double WEIGHTS[GAUSS_DEGREE] = {0.00290862, 0.0067598 , 0.01059055, 0.01438082, 0.01811556,
         0.02178024, 0.02536067, 0.02884299, 0.03221373, 0.03545984,
         0.03856876, 0.04152846, 0.0443275 , 0.04695505, 0.04940094,
@@ -514,26 +519,27 @@ double gasPotential_triaxial(double x, double y, double z)
   return factor;
 }
 
-int localMaxima(double r, double sim_time)
+void localMaxima(double r, double sim_time)
 {
-  int value = 0;
+  // int value = 0;
   // if((r <= RETURN_FRACTION * R_VIR) & (LAST_MAXIMA < 2 * RETURN_FRACTION * R_VIR) & (RETURN_PROPERTIES[0] < 0))
-  double diff = fabs(r / R_VIR - RETURN_FRACTION);
-  if(diff < 1e-4)
-  {
-    // printf("%f, %f, %f\n", r / R_VIR, RETURN_FRACTION, diff);
-    value = 1;
-  }
+  // double diff = fabs(r / R_VIR - RETURN_FRACTION);
+  // if(diff < 1e-4)
+  // {
+  //   // printf("%f, %f, %f\n", r / R_VIR, RETURN_FRACTION, diff);
+  //   value = 1;
+  // }
   if (LAST_POSITIONS[0] + LAST_POSITIONS[1] > 0)
   {
     if((LAST_POSITIONS[1] >= LAST_POSITIONS[0]) & (LAST_POSITIONS[1] >= r)) // is a local maxima
     {
       if(LAST_MAXIMA > 0)
       {
-        if ((r > 1.25 * LAST_MAXIMA) & (sim_time > 1e-3))
+        if ((r > 1.5 * LAST_MAXIMA) & (sim_time > 1e-3))
         {
           STOP_SIMULATION = 1;
-          return value;
+          // return value;
+          return;
         }
       }
       LAST_MAXIMA = r;
@@ -543,7 +549,8 @@ int localMaxima(double r, double sim_time)
       if(LAST_MAXIMA < 1e-3 * R_VIR)
       {
         STOP_SIMULATION = 1;
-        return value;
+        return;
+        // return value;
       }
     }
 
@@ -559,7 +566,7 @@ int localMaxima(double r, double sim_time)
     LAST_POSITIONS[1] = r;
   }
 
-  return value;
+  // return value;
 }
 
 void setR_vir(double r)
@@ -661,11 +668,13 @@ void sphericalCase(struct reb_simulation* sim)
 
     // sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
 
-    if(localMaxima(r, sim->t))
-    {
-      RETURN_PROPERTIES[0] = sim->t;
-      RETURN_PROPERTIES[1] = particle->m;
-    }
+    localMaxima(r, sim->t);
+
+    // if(localMaxima(r, sim->t))
+    // {
+    //   RETURN_PROPERTIES[0] = sim->t;
+    //   RETURN_PROPERTIES[1] = particle->m;
+    // }
 }
 
 void triaxialCase(struct reb_simulation* sim)
@@ -675,7 +684,7 @@ void triaxialCase(struct reb_simulation* sim)
     double speed[3] = {particle->vx, particle->vy, particle->vz};
 
     double ax, ay, az;
-    // double r = getNorm(pos);
+    double r = getNorm(pos);
     double m = getSoftenedLength(getM(pos[0], pos[1], pos[2]));
     double v = getSoftenedSpeed(getNorm(speed));
     double dir_v[3] = {speed[0] / v, speed[1] / v, speed[2] / v};
@@ -714,11 +723,13 @@ void triaxialCase(struct reb_simulation* sim)
 
     // sim->ri_whfast.recalculate_coordinates_this_timestep = 1;
 
-    if(localMaxima(m, sim->t))
-    {
-      RETURN_PROPERTIES[0] = sim->t;
-      RETURN_PROPERTIES[1] = particle->m;
-    }
+
+    localMaxima(r, sim->t);
+    // if(localMaxima(m, sim->t))
+    // {
+    //   RETURN_PROPERTIES[0] = sim->t;
+    //   RETURN_PROPERTIES[1] = particle->m;
+    // }
 }
 
 void conservativeSphericalCase(struct reb_simulation* sim)
@@ -888,6 +899,100 @@ struct reb_simulation* setupSimulation(double mass, double *position, double *sp
   return sim;
 }
 
+double linearInterpolateX(double x1, double x2, double y, double y1, double y2)
+{
+  return (x2 - x1) * ((y - y1) / (y2 - y1)) + x1;
+}
+
+double linearInterpolateY(double x, double x1, double x2, double y1, double y2)
+{
+  return ((y2 - y1) / (x2 - x1)) * (x - x1) + y1;
+}
+
+void getReturnProperties(const char *filename)
+{
+  int i, j, k, size;
+  int max_line_size = 500;
+  char *temp;
+  char line[max_line_size];
+  char read_char_buffer[max_line_size];
+
+  double rtime, rm, m, x, y, z;
+  double rtime_last, rm_last, m_last;
+
+  FILE *file = fopen(filename, "r");
+  fseek(file, 0, SEEK_END);
+  size = ftell(file);
+
+  j = 0;
+  for (i = 0; i< size; i++)
+  {
+    fseek(file, size - (1 + i), SEEK_SET);
+    read_char_buffer[j] = fgetc(file);
+
+    if((read_char_buffer[j] == '\n') & (i != 0))
+    {
+      for(k = 0; k < max_line_size; k++)
+      {
+        if (k <= j)
+        {
+          line[k] = read_char_buffer[j - k];
+        }
+        else
+        {
+          line[k] = 0;
+        }
+      }
+
+      j = 0;
+      k = 0;
+      temp = strtok (line, "\t");
+      while (temp != NULL)
+      {
+        switch (k)
+        {
+          case 0:
+            rtime = atof(temp);
+            break;
+          case 1:
+            x = atof(temp);
+            break;
+          case 2:
+            y = atof(temp);
+            break;
+          case 3:
+            z = atof(temp);
+            break;
+          case 7:
+            rm = atof(temp);
+            break;
+        }
+        temp = strtok(NULL, "\t");
+        k += 1;
+      }
+
+      m = sqrt(pow(x, 2) + pow(TRIAXIAL_A_1 * y / TRIAXIAL_A_2, 2) + pow(TRIAXIAL_A_1 * z / TRIAXIAL_A_3, 2));
+
+      if(m / R_VIR > RETURN_FRACTION)
+      {
+        RETURN_TIME = linearInterpolateX(rtime, rtime_last, RETURN_FRACTION, m / R_VIR, m_last / R_VIR);
+        RETURN_MASS = linearInterpolateY(RETURN_TIME, rtime, rtime_last, rm, rm_last);
+        break;
+      }
+
+      m_last = m;
+      rm_last = rm;
+      rtime_last = rtime;
+
+      if(line[1] == 't') break;
+    }
+    else
+    {
+      j += 1;
+    }
+  }
+}
+
 void reWriteFile(const char *filename)
 {
   int length = 250;
@@ -901,8 +1006,8 @@ void reWriteFile(const char *filename)
   char line_buffer[length]; // prepares a list of length chars to store a single line of the document
   char *line;
 
-  fprintf(file_out, "RETURN_TIME = %e\nRETURN_MASS = %e\n", RETURN_PROPERTIES[0],
-            RETURN_PROPERTIES[1]);
+  fprintf(file_out, "RETURN_TIME = %e\nRETURN_MASS = %e\n", RETURN_TIME,
+            RETURN_MASS);
 
   while(fgets(line_buffer, length, file_in) != NULL) // reads up to length characters of the dataFile and stores them at the line_buffer
   {
@@ -914,7 +1019,7 @@ void reWriteFile(const char *filename)
   fclose(file_out);
 
   rename(new_name, filename);
-  }
+}
 
 void runSimulation(struct reb_simulation* sim, int save_every, const char *filename, double stop_time)
 {
@@ -925,8 +1030,11 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
   LAST_MAXIMA = -1;
   LAST_POSITIONS[0] = -1;
   LAST_POSITIONS[1] = -1;
-  RETURN_PROPERTIES[0] = -1;
-  RETURN_PROPERTIES[1] = -1;
+
+  RETURN_TIME = 0;
+  RETURN_MASS = 0;
+  // RETURN_PROPERTIES[0] = -1;
+  // RETURN_PROPERTIES[1] = -1;
 
   if (stop_time == 0) stop_time = STOP_TIME - T0;
   else if (stop_time < 0) stop_time = 1e3;
@@ -941,6 +1049,8 @@ void runSimulation(struct reb_simulation* sim, int save_every, const char *filen
     i += 1;
   }
   reb_free_simulation(sim);
+
+  getReturnProperties(filename);
 
   reWriteFile(filename);
 }
@@ -1290,7 +1400,7 @@ double *lyapunov(double *positions, double *speeds, double phase_distance,
 
       if(s == sqrt(num / denom)) printf("%d %d %f\n", i, j, s);;
       s = sqrt(num / denom);
-      if(j > 0)
+      if(j > -1)
       {
         lyas[i] += log(s);
       }

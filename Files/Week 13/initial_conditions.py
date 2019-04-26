@@ -9,9 +9,9 @@ from mpl_toolkits.mplot3d import Axes3D
 
 files_name = "Results/%d_%d.dat"
 
-def randomInitialConditions(n_random = 500):
-    v_min = 0.45
-    v_max = 0.87
+def randomInitialConditions(n_random = 1000):
+    v_min = 0.7
+    v_max = 1.2
 
     thetas = 0.5 * np.pi * np.random.random(n_random)
     phis = 0.5 * np.pi * np.random.random(n_random)
@@ -20,7 +20,7 @@ def randomInitialConditions(n_random = 500):
     xs = smbh.sphericalToCartesian(vs, thetas, phis)
     return np.array(xs)
 
-def randomSemiaxis(n_random = 500):
+def randomSemiaxis(n_random = 200):
     a_2 = np.random.random(n_random)
     a_3 = a_2 * np.random.random(n_random)
 

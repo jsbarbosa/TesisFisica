@@ -100,7 +100,9 @@ func_info = [('getG', c_double, None),
             ('darkMatterPotential_triaxial', c_double, 3 * [c_double]),
             ('stellarPotential_triaxial', c_double, 3 * [c_double]),
             ('gasPotential_triaxial', c_double, 3 * [c_double]),
-            ('getTriaxialCoeffs', POINTER(c_double), None)
+            ('getTriaxialCoeffs', POINTER(c_double), None),
+
+            ('getReturnProperties', None, c_char_p),
             ]
 
 for func in func_info:
