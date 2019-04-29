@@ -4,8 +4,6 @@ sys.path += ["../"]
 import smbh
 import numpy as np
 from time import time
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 files_name = "Results/%d_%d.dat"
 
@@ -20,7 +18,7 @@ def randomInitialConditions(n_random = 1000):
     xs = smbh.sphericalToCartesian(vs, thetas, phis)
     return np.array(xs)
 
-def randomSemiaxis(n_random = 200):
+def randomSemiaxis(n_random = 100):
     a_2 = np.random.random(n_random)
     a_3 = a_2 * np.random.random(n_random)
 
@@ -63,4 +61,4 @@ if __name__ == '__main__':
 
     with open("lyapunov.txt", "w") as file:
         file.write("i, j, lyapunov\n")
-    smbh.run_multiproccess(do, args, 4)
+    smbh.run_multiproccess(do, args, 16)

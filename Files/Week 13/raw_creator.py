@@ -4,8 +4,8 @@ sys.path += ["../"]
 import smbh
 import numpy as np
 
-n = 2
-m = 25
+n = 30
+m = 1000
 
 files = [["Results/%d_%d.dat" % (i, j) for j in range(m)] for i in range(n)]
 
