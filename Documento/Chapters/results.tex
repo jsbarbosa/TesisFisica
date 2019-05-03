@@ -12,7 +12,7 @@
 %\newcommand{\option}[1]{\texttt{\itshape#1}}
 
 %----------------------------------------------------------------------------------------
-\chapter{Results}
+\chapter{Results and discussion}
 	\section{Spherical study}
 	For a single simulation, the following data is saved: iteration time, current position, speed, and the black hole mass. With these information, accelerations and densities can be later reconstructed as on \autoref{fig: overallOutput}.
 	\begin{figure}[h]
@@ -154,6 +154,42 @@
 	An interesting behavior in \autoref{fig: escapePhaseSpace} is that for the 3 smaller stellar fractions, the simulated black holes are still increasing their distance as of today, while the fourth curve shows a black hole in which gravity has already overcome the initial speed, and changed the direction of the speed.
 	
 	\section{Triaxial study}
+	By using the information in \autoref{fig: stellarfraction} relative initial speeds for the simulated galaxies where generated randomly with magnitudes ranging from $|\vec{v_0}/v_{\text{escape}}| = 0.7$ to $|\vec{v_0}/v_{\text{escape}}| = 1.2$, with random directions of the speed within the positive defined eighth of a sphere, as in \autoref{fig: initialSpeedDistributions}.
+	
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/3d_initial_speeds"}
+			\caption{Cartesian}
+%			\label{fig: orthogonalLaunches}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/polar_initial_speeds"}
+			\caption{Polar}
+		\end{subfigure}
+		\caption{Distributions of initial speeds for the triaxial lunches. $\theta$ describes the polar angle and $\phi$ the azimuth.}
+		\label{fig: initialSpeedDistributions}
+	\end{figure}
+
+	A total of 30 different pairs of semiaxis $(a_2, a_3)$ were generated randomly using an uniform distribution. A condition was imposed for $a_3$ to be smaller or equal to $a_2$. The distribution of the semiaxis pair can be seen in \autoref{fig: semiaxisDist}. In order to describe how close a generated galaxy is to an spherical reference, to numbers are calculated. Eccentricity ($\mathcal{E}$) of the $y-z$ semiaxis is calculated as follows:
+	\begin{equation}
+		\mathcal{E} = \sqrt{1 - \left(\dfrac{a_3}{a_2}\right)^2}
+	\end{equation}
+	
+	\pagebreak
+	Nevertheless, two galaxies with the exact same $\mathcal{E}$ may look completely different as no information from the relative sizes of $a_2$ and $a_3$ with respect to $a_1$ is recorded, because of this, the sum of the inverse-semiaxis is also calculated and normalized to that of an sphere:
+	\begin{equation}
+		D = \dfrac{1 + (a_2/a_1)^2 + (a_3/a_1)^2}{3}
+	\end{equation}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.9\linewidth]{"../Files/Week 13/triaxial_axes"}
+		\caption{text}
+		\label{fig: semiaxisDist}
+	\end{figure}
+	
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[b]{0.49\textwidth}
@@ -256,4 +292,28 @@
 		\end{subfigure}
 		\caption{Distribution of the different properties for the galaxy with the minimum obtained value of $E$.}
 		\label{fig: smallerE}
+	\end{figure}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.9\linewidth]{"../Files/Week 13/all_return"}
+		\caption{text}
+%		\label{fig: semiaxisDist}
+	\end{figure}
+
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[t]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/dist_masses"}
+			\caption{Return times}
+%			\label{fig: smallerE_time}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[t]{0.49\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/dist_times"}
+			\caption{Return masses}
+%			\label{fig: smallerE_mass}
+		\end{subfigure}
+		\caption{Distribution of the different properties for the galaxy with the minimum obtained value of $E$.}
+%		\label{fig: smallerE}
 	\end{figure}
