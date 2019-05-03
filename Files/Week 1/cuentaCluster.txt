@@ -13,6 +13,8 @@ CPUs: 1
 Almacenamiento: 100 GB
 
 
+/hpcfs/shared/README/readme.txt
+
 js.barbosa10@magnus.uniandes.edu.co
 
 sbatch -> submit job

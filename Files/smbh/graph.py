@@ -23,8 +23,11 @@ def getColors(n_points):
     return cm.jet(np.linspace(0, 1, n_points))
 
 def rgbToHex(color):
-    c = tuple((255 * color[:3]).astype(int))
-    return '#%02x%02x%02x' % c
+    if len(color.shape) == 1:
+        c = tuple((255 * color[:3]).astype(int))
+        return '#%02x%02x%02x' % c
+    else:
+        return [rgbToHex(c) for c in color]
 
 def slicePlot(data, axes = None):
     if axes == None:
@@ -427,10 +430,12 @@ def makePolarPlot(r, theta, phi, colors = None, cmap = 'jet', alpha = 0.45):
 
     ax1.set_xticklabels(theta_labels)
     ax2.set_xticklabels(phi_labels)
-    ax2.set_yticklabels(r_labels, rotation = 90)
+    # ax2.set_yticklabels(r_labels, rotation = 90)
     ax2.set_rlabel_position(22.5)  # get radial labels away from plotted line
 
     ax1.set_yticklabels([])
+
+    fig.subplots_adjust(hspace = 0, wspace = 0.025)
 
     return fig, (ax1, ax2)
 
