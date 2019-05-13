@@ -23,7 +23,7 @@
 	\end{figure}
 	
 	\subsection{Effect of the baryonic fraction}
-	The cosmological model used has two main effects in the simulations. The virial radius depends in the value of the Hubble parameter, that is different for different red-shifts and cosmological models (\autoref{fig: hubbleTime}), and the amount of matter in the universe. The effect of the later can be seen on \autoref{fig: baryonicfraction}, where results for a galaxy made by dark matter only allow the black hole to get further away, and dissipate energy slower.
+	The cosmological model used has two main effects in the simulations. The virial radius depends in the value of the Hubble parameter, that changes for different red-shifts and cosmological models (\autoref{fig: hubbleTime}), and the amount of matter in the universe. The effect of the later can be seen on \autoref{fig: baryonicfraction}, where results for a galaxy made by dark matter only allow the black hole to get further away, and dissipate energy slower.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width = 0.7\textwidth]{"../Files/Week 5/baryonic_fraction_comparison"}
@@ -31,10 +31,10 @@
 		\label{fig: baryonicfraction}
 	\end{figure}
 
-	Three factors need to be taken into account to explain these results. First, dynamical friction due to collisional matter has an important impact on the trajectories followed by the black hole, as can be seen with the green line of \autoref{fig: overallOutput}. Second, as there is no baryonic mass to accrete, the black hole does not decrease its speed because of momentum conservation, thus there is no contribution to the black hole's acceleration of the third term in \autoref{eq: equationMotion}. Lastly, as seen in \autoref{fig: massprofiles} at short distances, the cumulative mass of the galaxy is governed by stars, from which it is expected for the black hole to reach further regions of space if there are no stars, because of the smaller potential.
+	Three factors need to be taken into account to explain these results. First, dynamical friction due to collisional matter has an important impact on the trajectories followed by the black hole, as can be seen with the green line of \autoref{fig: overallOutput} ($a_\text{DF}$). Second, as there is no baryonic mass to accrete, the black hole does not decrease its speed because of momentum conservation, thus there is no contribution to the black hole's acceleration of the third term in \autoref{eq: equationMotion}. Lastly, as seen in \autoref{fig: massprofiles} at short distances, the cumulative mass of the galaxy is governed by stars, from which it is expected for the black hole to reach further regions of space if there are no stars, because of the smaller potential.
 		
 	\subsection{Effect of the power law exponent}	
-		Many studied galaxies have luminosity profiles that follow a power law in distance. Nevertheless, power law density profiles have the exponent $n$ as free parameter, although it is expected to be approximate to 2, as rotation curves of galaxies at large radii, show that the rotation speed of stars becomes independent of their distance to the center \cite{binney2011galactic}. This can be easily shown by considering a system in which density drops with radius as a function of a $n$ power:
+		Many studied galaxies have luminosity profiles that follow a power law in distance. Nevertheless, power law density profiles have the exponent $n$ as free parameter, although it is expected to be approximate to 2, as rotation curves of galaxies at large radii, show that the rotation speed of stars becomes independent of their distance to the center \cite{binney2011galactic}. This can be shown by considering a system in which density drops with radius as a function of a $n$ power:
 		\begin{equation}
 			\rho(r) = \rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^n
 		\end{equation}
@@ -74,7 +74,7 @@
 		There are some spiral galaxies from which an exponent of 2.6 has been calculated as in NGC 253 \cite{sorai2000distribution}, others authors have made simulations for black hole escape velocities with $n = 2.2$ \cite{tanaka2009assembly, choksi2017recoiling}. It is from these references, from which the value of $n = 2.2$ for most simulations was selected.
 		
 	\subsection{Effect of the stellar fraction}
-		As it was mentioned before, the mass of a galaxy at low distances from its center, is ruled by the amount of stars. Because of this, a study of the dependence of the return times with stellar fraction, and initial speed was carried on. For that, simulations with initial speeds from 55 to 90 kpc/Gry were lunched, for stellar fractions ranging from 1 \% to 10 \%. In order to normalize speeds, initial speeds are divided by the escape velocity. By considering the potential energy at the edge of the galaxy, and the initial energy of the black hole, the escape velocity is written as:
+		As it was mentioned before, the mass of a galaxy at low distances from its center, is ruled by the amount of stars. Because of this, a study of the dependence of the return times with stellar fraction, and initial speed was carried on. For that, simulations with initial speeds from 55 to 90 kpc/Gyr were lunched, for stellar fractions ranging from 1 \% to 10 \%. In order to normalize speeds, initial speeds are divided by the escape velocity. By considering the potential energy at the edge of the galaxy, and the initial energy of the black hole, the escape velocity is written as:
 		\begin{equation}
 			v_\text{escape} = \sqrt{2 \left(\Phi(R_\text{vir}) - \Phi(r_0)\right)}
 		\end{equation}
@@ -142,7 +142,7 @@
 		\label{fig: escapePhaseSpace}
 	\end{figure}
 
-	On the other hand, phase spaces for high and low initial speeds, show how the increase in stellar fraction make it harder for the black hole to get further in space. In both cases, initial velocity is only in the $x$ direction, thus, curves in $y$ and $z$ happen because the initial position is not exactly $\vec{0}$, but $(1, 1, 1)$ pc.
+	On the other hand, phase spaces for high and low initial speeds, show how the increase in stellar fraction make it harder for the black hole to get further in space. In both cases, initial velocity is only in the $x$ direction, thus, curves in $y$ and $z$ happen because the initial position is not exactly $\vec{0}$, but $(1, 1, 1)$ pc, that also explains why the behavior in $y$ an $z$ is identical to one another.
 	
 	\begin{figure}[h]
 		\centering
@@ -151,10 +151,10 @@
 		\label{fig: escapeInner}
 	\end{figure}
 
-	An interesting behavior in \autoref{fig: escapePhaseSpace} is that for the 3 smaller stellar fractions, the simulated black holes are still increasing their distance as of today, while the fourth curve shows a black hole in which gravity has already overcome the initial speed, and changed the direction of the speed.
+	An interesting behavior in \autoref{fig: escapePhaseSpace} is that for the 3 smaller stellar fractions, the simulated black holes are still increasing their distance from their host galaxy as of today, while the fourth curve shows a black hole in which gravity has already overcome the initial speed, and changed the direction of the velocity.
 	
 	\section{Triaxial study}
-	By using the information in \autoref{fig: stellarfraction} relative initial speeds for the simulated galaxies where generated randomly with magnitudes ranging from $|\vec{v_0}/v_{\text{escape}}| = 0.7$ to $|\vec{v_0}/v_{\text{escape}}| = 1.2$, with random directions of the speed within the positive defined eighth of a sphere, as in \autoref{fig: initialSpeedDistributions}.
+	By using the information in \autoref{fig: stellarfraction} relative initial speeds for the simulated galaxies were generated randomly with magnitudes ranging from $|\vec{v_0}/v_{\text{escape}}| = 0.7$ to $|\vec{v_0}/v_{\text{escape}}| = 1.2$, with random directions of the speed within the positive defined eighth of a sphere, as in \autoref{fig: initialSpeedDistributions}.
 	
 	\begin{figure}[h]
 		\centering
@@ -172,12 +172,12 @@
 		\label{fig: initialSpeedDistributions}
 	\end{figure}
 
-	A total of 30 different pairs of semiaxis $(a_2, a_3)$ were generated randomly using an uniform distribution. A condition was imposed for $a_3$ to be smaller or equal to $a_2$. The distribution of the semiaxis pairs can be seen in \autoref{fig: semiaxisDist}. In order to describe how close a generated galaxy is to an spherical reference, the Triaxial parameter ($T$) is calculated.
+	A total of 28 different pairs of semiaxis $(a_2, a_3)$ were generated randomly using an uniform distribution. A condition was imposed for $a_3$ to be smaller or equal to $a_2$. The distribution of the semiaxis pairs can be seen in \autoref{fig: semiaxisDist}. In order to describe how close a generated galaxy is to an spherical reference, the Triaxial parameter ($T$) is calculated.
 	\begin{equation}\label{eq: triaxialParameter}
 		T(a_1, a_2, a_3) = \dfrac{1 - \left(\dfrac{a_2}{a_1}\right)^2}{1 - \left(\dfrac{a_3}{a_1}\right)^2}
 	\end{equation}
 	
-	Nevertheless, two galaxies with the exact same $T$ may look completely different as there are two degrees of freedom in \autoref{eq: triaxialParameter}. Since all values of $a_1 = 1$, the total degrees of freedom decreases to one, meaning that one pair of values of $(a_2, a_3)$ might yield the same triaxial parameter than another pair $(a_2', a_3')$.
+	Nevertheless, caution must be taken as two galaxies with the exact same $T$ may look completely different as there are two degrees of freedom in \autoref{eq: triaxialParameter}. Since all values of $a_1 = 1$, the total degrees of freedom decreases to one, meaning that one pair of values of $(a_2, a_3)$ might yield the same triaxial parameter than another pair $(a_2', a_3')$.
 	
 	\begin{figure}[h]
 		\centering
@@ -186,7 +186,7 @@
 		\label{fig: semiaxisDist}
 	\end{figure}
 
-	An important result is shown in \autoref{fig: massDist}, where the probability density for the return masses of all the 30,000 simulations is plotted. Since results come from 30 different galaxies geometries, with triaxial parameters in the range of $9.5\times10^{-3}$, and 1.0, the probability densities for the return properties are independent of the galactic shapes, in fact they are considered to be an interesting statistical measurement of the overall behavior expected in the universe.
+	An important result is shown in \autoref{fig: massDist}, where the probability density for the return masses of all the 28,000 simulations is plotted. Since results come from 28 different galaxies geometries, with triaxial parameters in the range of $9.5\times10^{-3}$, and 1.0, the probability densities for the return properties are independent of the galactic shapes, in fact they are considered to be an interesting statistical measurement of the overall behavior expected in the universe.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{"../Files/Week 14/dist_masses"}
@@ -196,7 +196,7 @@
 
 	\autoref{fig: massDist} shows that the mass at the return time follow a gaussian distribution given in \autoref{eq: gaussian}, where $\sigma^2$ is variance of the data, and $\mu$ the mean.
 	\begin{equation}\label{eq: gaussian}
-		\rho_\text{Gauss}(x, \mu, \sigma) = \dfrac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+		PDF_\text{Gauss}(x, \mu, \sigma) = \dfrac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
 	\end{equation}
 	
 	Both, the mean and the variance of the fitted gaussians for the distribution of return masses are shown in \autoref{tb: gaussians}, for comparison, the distribution of masses for a spherical galaxy with the same initial speeds are shown.
@@ -214,7 +214,7 @@
 		\label{tb: gaussians}
 	\end{table}
 
-	These results, are in accordance with previous studies, where black holes need to be at high density areas of the galaxy, such as its center, in order to eventually become quasars \cite{tanaka2009assembly}, \autoref{tb: gaussians} shows that on average, while a black hole experiences a kick, its mass increases only by a factor of 1.34.
+	These results, are in concordance with previous studies, where black holes need to be at high density areas of the galaxy, such as its center, in order to eventually become quasars \cite{tanaka2009assembly}, \autoref{tb: gaussians} shows that on average, while a black hole experiences a kick, its mass increases only by a factor of 1.34.
 
 	\begin{figure}[h]
 		\centering
@@ -225,7 +225,7 @@
 
 	Return times have a much wider distribution, as seen in \autoref{fig: timeDist} where the data follows a logarithmic distribution. Just as with the masses, fully triaxial galaxies have higher return times. As for the times it takes for the black hole to return to its host galaxy, the distribution is fitted to the superposition of two gaussians (\autoref{eq: timeDist}).
 	\begin{equation}\label{eq: timeDist}
-		\rho(t) = \alpha\rho_\text{Gauss}(\log_{10}t, \mu_1, \sigma_1) + \beta\rho_\text{Gauss}(\log_{10}t, \mu_2, \sigma_2)
+		PDF(t) = \alpha PDF_\text{Gauss}(\log_{10}t, \mu_1, \sigma_1) + \beta PDF_\text{Gauss}(\log_{10}t, \mu_2, \sigma_2)
 	\end{equation}
 	
 	By using \autoref{eq: timeDist}, the $\Lambda$-CDM cosmological model and Eddington accretion (\autoref{eq: eddington}), the probability to find a quasar like ULAS J1342+0928, the furthest known quasar, can be estimated. Solving the Eddington differential equation, the time required for a black hole to increase its mass from $M_\bullet(t_0)$ to $M_\bullet(t)$, is calculated as follows:
@@ -260,7 +260,7 @@
 		\label{fig: correlation}
 	\end{figure}
 	
-	The calculated value of the Pearson correlation is 0.63, which is in accordance with the behavior seen in both the \autoref{ch: galaxies} and \autoref{fig: correlation}, describing a positive correlation between the masses and return times for all the 30 simulated galaxies.
+	The calculated value for all the studied orbits, of the Pearson correlation is 0.63, which is in accordance with the behavior seen in both the \autoref{ch: galaxies} and \autoref{fig: correlation}, describing a positive correlation between the masses and return times for all the 28 simulated galaxies.
 	
 	An important consequence of triaxial galaxies is that the magnitude of the velocity can not longer predict a unique return time, since there is a complete probability distribution associated to one value of the speed, these can clearly be seen in \autoref{fig: timeSpeedDist}, where a graph analogous to \autoref{fig: stellarfraction} for the galaxies with lower and higher values of the triaxial parameter. These results are particularly important as for a single speed, depending on the direction, two very different (one order of magnitude) return times will be generated for the same triaxial galaxy.
 	

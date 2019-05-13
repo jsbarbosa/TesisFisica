@@ -21,15 +21,15 @@
 		\caption{NGC4414 galaxy as seen by the Hubble telescope.}
 	\end{figure}
 	
-	The dark matter halo used follows a NFW (Navarro–Frenk–White) profile, baryonic matter is divided in stars and gas, For the gas a power law profile with $r^{-2.2}$ is used, while for stars a Hernquist model is applied \cite{tanaka2009assembly, choksi2017recoiling}. The sum of all these components accounts for the total mass of the host ($M_h$), which remains constant through a simulation. The amount of baryonic matter is given by the baryonic fraction parameter ($f_b$), and the mass of stars by the stellar fraction parameter ($f_s$). Cumulative masses at the virial radius are defined as follows (Appendix A \autoref{sec: cd_vr}):
+	The dark matter halo used follows a NFW (Navarro–Frenk–White) profile, baryonic matter is divided in stars and gas. For the gas a power law profile with $r^{-2.2}$ is used, while for stars a Hernquist model is applied \cite{tanaka2009assembly, choksi2017recoiling}. The sum of all these components accounts for the total mass of the host ($M_\text{total}$), which remains constant through a simulation. The amount of baryonic matter is given by the baryonic fraction parameter ($f_b$), and the mass of stars by the stellar fraction parameter ($f_s$). Cumulative masses at the virial radius are defined as follows (Appendix A \autoref{sec: cd_vr}):
 	\begin{equation}
-		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_h
+		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_\text{total}
 	\end{equation}
 	\begin{equation}
-		M_\text{stars}(R_\text{vir}) = f_sf_bM_h
+		M_\text{stars}(R_\text{vir}) = f_sf_bM_\text{total}
 	\end{equation}
 	\begin{equation}
-		M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_h
+		M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_\text{total}
 	\end{equation}
 	
 	Some of the simulation parameters are dependent of the cosmological model used, unless otherwise specified, all data is acquired using the $\Lambda$-CDM model with a matter density parameter $\Omega_M = 0.309$, $\Omega_\Lambda = 0.6911$, and a baryonic fraction $f_b = 0.156$ \cite{choksi2017recoiling}. Also, as \citeauthor{binney2011galactic}, argue, about 1 \% of the stellar mass of galaxies, such as The Milky Way, are contained in the stellar halo, $f_s \equiv 0.01$, unless otherwise stated.
@@ -46,14 +46,14 @@
 				m^2(\vec{x}) \equiv a_1^2\left[\left(\dfrac{x_1}{a_1}\right)^2 + \left(\dfrac{x_2}{a_2}\right)^2 + \left(\dfrac{x_3}{a_3}\right)^2\right] = x_1^2 + \left(\dfrac{a_1}{a_2}\right)^2x_2^2 + \left(\dfrac{a_1}{a_3}\right)^2x_3^2
 			\end{equation}
 			
-			Considering a concentration parameter $c(M_h, z)$ of dark matter in the halo, the following relation holds for the viral radius $R_\text{vir}$ and the scale radius $R_s$:
+			Considering a concentration parameter $c(M_\text{total}, z)$ of dark matter in the halo, the following relation holds for the viral radius $R_\text{vir}$ and the scale radius $R_s$:
 			\begin{equation}\label{eq: virialConcentration}
-				R_\text{vir} = c(M_h, z)R_s
+				R_\text{vir} = c(M_\text{total}, z)R_s
 			\end{equation}
 			
-			Where the concentration parameter, dependence with the dark matter halo mass ($M_h$) and redshift is given by: 
+			Where the concentration parameter, dependence with the dark matter halo mass ($M_\text{total}$) and redshift is given by: 
 			\begin{equation}
-			c(M_h, z) = c_0(z)\left(\dfrac{M_h}{10^{13}M_\theta}\right)^{\alpha(z)}
+			c(M_\text{total}, z) = c_0(z)\left(\dfrac{M_\text{total}}{10^{13}M_\theta}\right)^{\alpha(z)}
 			\end{equation}
 			
 			where $\alpha(z)$ and $c_0(z)$ were fitted using simulation data to the following functions \cite{choksi2017recoiling}:
@@ -72,22 +72,22 @@
 				\label{fig: dmconcentration}
 			\end{figure}
 			
-			For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}, nevertheless for high redshifts concentration is approximately constant at $c \approx 3$ for all halos \cite{choksi2017recoiling}.
+			For a fixed halo mass, as time passes (smaller redshift), concentration of dark matter will increase, as can be shown on \autoref{fig: dmconcentration}, nevertheless for high redshifts concentration is approximately constant at $c \approx 3$ for all halos \cite{choksi2017recoiling}. Thus, the dark matter concentration parameter for all the simulations is fixed at this value.
 	
 		\subsection{Stellar density}
 			Stellar density is modeled as a Hernquist profile with half-mass radius $R_{1/2} = 0.01 R_\text{vir}$, as in \citeauthor{choksi2017recoiling}. Density for a Hernquist profile is given by \cite{hernquist1990analytical}:
 			\begin{equation}\label{eq: sdensity}
-				\rho_s(r) = \dfrac{f_sf_bM_h \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3} \qquad \text{$\mathcal{R}_s$ is known as scale length}
+				\rho_s(r) = \dfrac{f_sf_bM_\text{total} \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3} \qquad \text{$\mathcal{R}_s$ is known as scale length}
 			\end{equation}
 			
-			The half-mass radius, as the name implies, is the distance at which the cumulative mass is half the total mass \cite{hernquist1990analytical}.
+			The half-mass radius, as the name implies, is the distance at which the cumulative mass is half the total mass \cite{hernquist1990analytical}. By using the result in \autoref{eq: r_vir}:
 			\begin{equation}
-				R_{1/2} = \left(1 + \sqrt{2}\right)\mathcal{R}_s = 0.01\left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
+				R_{1/2} = \left(1 + \sqrt{2}\right)\mathcal{R}_s = 0.01\left({\dfrac{M_\text{total}G}{100 H(t)^2}}\right)^{1/3}
 			\end{equation}
 			
 			From which the scale length can be set as a function of the time when the kick occurs, and the mass of the host, as:
 			\begin{equation}
-				\mathcal{R}_s = \dfrac{0.01}{\left(1 + \sqrt{2}\right)}\left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3} \approx 6.835\times 10^{-4}\left({\dfrac{M_h}{H(t)^2}}\right)^{1/3}
+				\mathcal{R}_s = \dfrac{0.01}{\left(1 + \sqrt{2}\right)}\left({\dfrac{M_\text{total}G}{100 H(t)^2}}\right)^{1/3} \approx 6.835\times 10^{-4}\left({\dfrac{M_\text{total}}{H(t)^2}}\right)^{1/3}
 			\end{equation}
 		\subsection{Gas density}
 			For high redshift the baryonic profile resembles that of a gaseous galaxy, \citeauthor{choksi2017recoiling} use a constant density gas core of $r_0 = 1$ pc, followed by a power law of $r^{-n} = r^{-2.2}$. Density is described as follows: for $r \gg r_0$, $\rho_\text{gas}(r)\propto r^{-n}$ while for $r \ll r_0$, $\rho_\text{gas}(r) \approx \rho_0^\text{gas}$.
@@ -96,7 +96,7 @@
 			\end{equation}
 	
 	\section{Equation of motion}
-		Trajectories of the kicked black holes are obtained by numerically solving the equation of motion on \autoref{eq: equationMotion}, where the first term on the right side of the equation is acceleration due to gravity, the second accounts for the drag of dynamical friction, while the third one is the deaceleration due to mass accretion of the black hole \cite{tanaka2009assembly, choksi2017recoiling}.
+		Trajectories of the kicked black holes are obtained by numerically solving the equation of motion on \autoref{eq: equationMotion}, where the first term on the right side of the equation is acceleration due to gravity, the second accounts for the drag of dynamical friction, while the third is the deaceleration due to mass accretion of the black hole \cite{tanaka2009assembly, choksi2017recoiling}.
 		\begin{equation}\label{eq: equationMotion}
 			\ddot{\vec{x}}(\vec{x}, \dot{\vec{x}}) = a_\text{grav}(\vec{x})\hat{x} + \left(a_\text{DF}(\vec{x}, \dot{\vec{x}})-\dot{x}\dfrac{\dot{M_\bullet}(x, \dot{x})}{M_\bullet}\right)\dot{\hat{x}} \qquad \text{where $M_\bullet$ is the black hole mass}
 		\end{equation}
@@ -117,7 +117,7 @@
 			
 			where $c_s$ is the local sound speed, which depends on local temperature. It was found that temperature inside the halo varies less than a factor of 3, thus on the simulation it is assumed that the entire halo is isothermal at the virial temperature ($T_\text{vir}$) \cite{choksi2017recoiling}. The isothermal sound speed is \cite{barkana2001beginning}:
 			\begin{equation}\label{eq: soundSpeed}
-				c_s = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}T_\text{vir}} = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}\left(\dfrac{\mu m_p G M_h}{2k_BR_\text{vir}}\right)} = \sqrt{\dfrac{\gamma R\mu m_pG}{2\mathcal{M}_wk_B}} \sqrt{\dfrac{M_h}{R_\text{vir}}} \approx 0.614 \sqrt{\dfrac{M_h}{R_\text{vir}}}\text{ kpcGyr$^{-1}$}
+				c_s = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}T_\text{vir}} = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}\left(\dfrac{\mu m_p G M_\text{total}}{2k_BR_\text{vir}}\right)} = \sqrt{\dfrac{\gamma R\mu m_pG}{2\mathcal{M}_wk_B}} \sqrt{\dfrac{M_\text{total}}{R_\text{vir}}} \approx 0.614 \sqrt{\dfrac{M_\text{total}}{R_\text{vir}}}\text{ kpcGyr$^{-1}$}
 			\end{equation}
 			
 			where $\mu$ is the value of the mean molecular weight of the gas ($\mathcal{M}_w$), $m_p$ is the proton mass and $\gamma$ is the adiabatic index \cite{barkana2001beginning}. Approximating the gas to a monoatomic one $\gamma \approx 5/3$, yields the last expression on \autoref{eq: soundSpeed}. By knowing $\mathcal{M}$, the acceleration caused by gas can be written as \cite{tanaka2009assembly, choksi2017recoiling}:
@@ -162,12 +162,12 @@
 				\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_G(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
 			\end{equation}
 			
-			There is a limit of accretion for the black hole given by the Eddington luminosity:
+			But, there is a limit of accretion for the black hole given by the Eddington luminosity:
 			\begin{equation}\label{eq: eddington}
 				\dot{M}_\bullet^\text{Edd} = \dfrac{(1 - \epsilon)M_\bullet}{\epsilon t_\text{Edd}} \qquad \epsilon = 0.1, \quad t_\text{Edd} = 0.44 \text{ Gyr}
 			\end{equation}
 			
-			Final accretion rate is given by:
+			Thus, the final accretion rate is given by:
 			\begin{equation}
 				\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
 				\begin{array}{lc}
@@ -178,25 +178,28 @@
 			\end{equation}
 	
 	\subsection{Initial conditions and numerical integration}
-		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen densities profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, as it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (0, 0, 0)$ kpc.
+		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen densities profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, as it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (1, 1, 1)$ pc.
 		
-		Numerical integration is carried out using a leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years, the simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the age of the universe. 
+		Numerical integration is carried out using a Leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years, the simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the current age of the universe. 
 		
 	\section{Definitions}
-		\subsection{Escape velocity}
-			Minimum initial velocity required for the maximum distance of a single orbit of the black hole to stay outside $0.01R_\text{vir}$ by $z = 0$, $z = 6$ or 10 \% of the age of the universe at the moment of the kick \cite{tanaka2009assembly, choksi2017recoiling}.
+%		\subsection{Escape velocity}
+%			Minimum initial velocity required for the maximum distance of a single orbit of the black hole to stay outside $0.01R_\text{vir}$ by $z = 0$, $z = 6$ or 10 \% of the age of the universe at the moment of the kick \cite{tanaka2009assembly, choksi2017recoiling}.
 		
-		\subsection{Time of return}
-			Time required by the black hole to orbit with maximum distances of less than  $0.01R_\text{vir}$.
+		\subsection{Return time}
+			Time required by the black holes orbit to have a maximum distance of less than $0.01R_\text{vir}$.
+			
+		\subsection{Return mass}
+			Mass at the return time of the black hole.
 			
 	\section{Spherical setup}
 	\subsection{Virial radius}
 		Since all of the density profiles are spherically symmetrical, it follows from \autoref{eq: R_vir_def} that:  
 		\begin{equation}
-		\dfrac{M_h}{4/3\pi R_\text{vir}^3} = 75\dfrac{H(t)^2}{\pi G}
+		\dfrac{M_\text{total}}{4/3\pi R_\text{vir}^3} = 75\dfrac{H(t)^2}{\pi G}
 		\end{equation}
-		\begin{equation}
-		R_\text{vir} = \left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
+		\begin{equation}\label{eq: r_vir}
+		R_\text{vir} = \left({\dfrac{M_\text{total}G}{100 H(t)^2}}\right)^{1/3}
 		\end{equation}
 	
 	\subsection{Dark matter halo}
@@ -207,16 +210,16 @@
 		
 		By using \autoref{eq: virialConcentration} one can obtain the value of $\rho_0^\text{DM}$ by evaluating \autoref{eq: cumulativeDM} at $R_\text{vir}$.
 		\begin{equation}\label{eq: dmM_virial}
-		M_\text{DM}(R_\text{vir}) = 4\pi\rho_0^\text{DM}R_s^3 \left[\ln\left(\dfrac{R_s + c(M_h, z)R_s}{R_s}\right) - \dfrac{c(M_h, z)R_s}{R_s + c(M_h, z)R_s}\right] = (1 - f_b)M_h
+		M_\text{DM}(R_\text{vir}) = 4\pi\rho_0^\text{DM}R_s^3 \left[\ln\left(\dfrac{R_s + c(M_\text{total}, z)R_s}{R_s}\right) - \dfrac{c(M_\text{total}, z)R_s}{R_s + c(M_\text{total}, z)R_s}\right] = (1 - f_b)M_\text{total}
 		\end{equation}
 		\begin{equation}\label{eq: rho0dm}
-		\rho_0^\text{DM} = \dfrac{(1 - f_b)M_h}{4\pi \left(\dfrac{R_\text{vir}}{c(M_h, z)}\right)^3 \left[\ln\left(1 + c(M_h, z)\right) - \dfrac{c(M_h, z)}{1 + c(M_h, z)}\right]}
+		\rho_0^\text{DM} = \dfrac{(1 - f_b)M_\text{total}}{4\pi \left(\dfrac{R_\text{vir}}{c(M_\text{total}, z)}\right)^3 \left[\ln\left(1 + c(M_\text{total}, z)\right) - \dfrac{c(M_\text{total}, z)}{1 + c(M_\text{total}, z)}\right]}
 		\end{equation}
 	
 	\subsection{Stellar profile}		
 		Integrating \autoref{eq: sdensity} from $0$ to $r$ yields:
 		\begin{equation}
-			M_s(r) = \dfrac{f_sf_bM_h r^2}{(r + \mathcal{R}_s)^2}
+			M_s(r) = \dfrac{f_sf_bM_\text{total} r^2}{(r + \mathcal{R}_s)^2}
 		\end{equation}
 	
 	\subsection{Gas profile}		
@@ -233,7 +236,7 @@
 		
 		The value of the constant $\rho_0^\text{gas}$ is found using a similar process as in \autoref{eq: dmM_virial} and \ref{eq: rho0dm}.
 		\begin{equation}
-			\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_h}{(M_\text{gas}(R_\text{vir}) / \rho_0^\text{gas})}
+			\rho_0^\text{gas} = \dfrac{(1 - f_s) f_bM_\text{total}}{(M_\text{gas}(R_\text{vir}) / \rho_0^\text{gas})}
 		\end{equation}
 		
 		All of the profiles are shown on \autoref{fig: massprofiles}, where the effect of the stellar fraction can be seen.
@@ -329,7 +332,7 @@
 			\phi_i(x_i, \tau) = \dfrac{x_i}{\left(\tau + a_i^2\right)^{\frac{3}{2}} \prod\limits_{i \neq j}^3\sqrt{\tau + a_j^2}}, \qquad \vec{\phi}(\vec{x}, \tau) = (\phi_1(x_1, \tau), \phi_2(x_2, \tau), \phi_3(x_3, \tau))
 		\end{equation}
 		
-		Potentials for each of the components of the galaxy are found by finding $\psi(\infty) - \psi(m)$ and replacing on \autoref{eq: generalPotential}.
+		Potentials for each of the components of the galaxy are found by calculating $\psi(\infty) - \psi(m)$ and replacing on \autoref{eq: generalPotential}.
 		
 		
 	
@@ -386,7 +389,7 @@
 			\int\limits_{0}^{\infty}e^{-x}e^{x}f(x) = \int\limits_{0}^{\infty}e^{-x}g(x) = \sum_{i = 1}^{k}w_i g(x), \qquad \text{where g$(x) = e^xf(x)$}
 		\end{equation}
 		
-		To test the exactitude of the numerical approximation, integrals on \autoref{tb: gradients} are compared with the potential generated by the spherical analog in which $\nabla\Phi = GM(r)/r^2$ by making all semi-axis equal to 1.
+		To test the precision of the numerical approximation, integrals on \autoref{tb: gradients} are compared with the potential generated by the spherical analog in which $\nabla\Phi = GM(r)/r^2$ by making all semi-axis equal to 1.
 		
 		\begin{figure}[h]
 			\centering
@@ -398,7 +401,7 @@
 			~ 
 			\begin{subfigure}[t]{0.45\textwidth}
 				\includegraphics[width=\textwidth]{"../Files/Week 8/scheme_error"}
-				\caption{Comparison of the error due to Gauss-Legendre (segmented lines, $\gamma = 0.2$) and Gauss-Laguerre integration schemes.}
+				\caption{Comparison of the error due to Gauss-Legendre (dash lines, $\gamma = 0.2$) and Gauss-Laguerre integration schemes (continuous line).}
 				\label{fig: Gscheme_error}
 			\end{subfigure}
 			\caption{Error assessment of the numerical integrators, at $\vec{x} = (1, 0, 0)$ kpc.}

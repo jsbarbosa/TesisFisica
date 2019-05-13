@@ -97,7 +97,7 @@ headsepline, % Uncomment to get a line under the header
 \supervisor{Jaime \textsc{Forero}, Ph.D.} % Your supervisor's name, this is used in the title page, print it elsewhere with \supname
 \examiner{} % Your examiner's name, this is not currently used anywhere in the template, print it elsewhere with \examname
 \degree{Monograph} % Your degree name, this is used in the title page and abstract, print it elsewhere with \degreename
-\author{Juan \textsc{Barbosa}} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
+\author{Juan S. \textsc{Barbosa Coy}} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
 \addresses{} % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
 
 \subject{Physics} % Your subject area, this is not currently used anywhere in the template, print it elsewhere with \subjectname
@@ -202,19 +202,25 @@ Bogot\'a, Colombia
 %	ABSTRACT PAGE
 %----------------------------------------------------------------------------------------
 
-%\begin{abstract}
-%\addchaptertocentry{\abstractname} % Add the abstract to the table of contents
-%The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
-%\end{abstract}
+\begin{abstract}
+	\addchaptertocentry{\abstractname} % Add the abstract to the table of contents
+	The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
+\end{abstract}
+
+\begin{resumen}
+	\addchaptertocentry{Resumen} % Add the abstract to the table of contents
+	The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
+\end{resumen}
+
 
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
-%\begin{acknowledgements}
-%\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
-%The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
-%\end{acknowledgements}
+\begin{acknowledgements}
+\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+The acknowledgments and the people to thank go here, don't forget to include your project advisor\ldots
+\end{acknowledgements}
 
 %----------------------------------------------------------------------------------------
 %	LIST OF CONTENTS/FIGURES/TABLES PAGES
@@ -222,9 +228,11 @@ Bogot\'a, Colombia
 %
 \tableofcontents % Prints the main table of contents
 %
+\addchaptertocentry{List of Figures}
 \listoffigures % Prints the list of figures
 %
-%\listoftables % Prints the list of tables
+\addchaptertocentry{List of Tables}
+\listoftables % Prints the list of tables
 
 %----------------------------------------------------------------------------------------
 %	ABBREVIATIONS
@@ -292,7 +300,7 @@ Bogot\'a, Colombia
 \include{Chapters/Intro}
 \include{Chapters/methodology}
 \include{Chapters/results}
-%\include{Chapters/symmetric} 
+\include{Chapters/conclusions} 
 %\include{Chapters/triaxial}
 %\include{Chapters/Chapter4} 
 %\include{Chapters/Chapter5} 

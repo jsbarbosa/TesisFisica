@@ -540,5 +540,41 @@ breaklinks=true,
 
 %----------------------------------------------------------------------------------------
 
+\ifbool{consistentlayout}{
+	\DeclareDocumentEnvironment{resumen}{ O{} }{%
+		\addchap*{\abstractname}%
+		{\chapteralign\normalsize\abstractauthorfont \authorname \par}% Author name
+		\vspace{\baselineskip}
+		{\chapteralign\parbox{.7\linewidth}{\chapteralign\normalsize\itshape\abstracttitlefont\@title}\par}% Thesis title
+		\bigskip\noindent\ignorespaces
+	}%
+	{}%end alt-abstract
+}{%
+	\DeclareDocumentEnvironment{resumen}{ O{\null\vfill} }{
+		\checktoopen
+		\tttypeout{\abstractname}
+		#1%added to be able to have abstract more than one page long
+		\thispagestyle{plain}
+		\begin{center}
+			{\normalsize \MakeUppercase{\univname} \par}% University name in capitals
+			\bigskip
+			{\huge\textit{Resumen} \par}
+			\bigskip
+			{\normalsize \facname \par}% Faculty name
+			{\normalsize \deptname \par}% Department name
+			\bigskip
+			{\normalsize Monograf\'ia \par}% Degree name
+			\bigskip
+			{\normalsize\bfseries \'Orbitas de agujeros negros en potenciales triaxiales de galaxias \par}% Thesis title
+			\medskip
+			{\normalsize por \authorname \par}% Author name
+			\bigskip
+		\end{center}
+	}
+	{
+		\vfill\null
+	}
+}
+
 \endinput
 % lazyLizardTracer
