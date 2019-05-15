@@ -80,6 +80,16 @@ class Results(object):
         x, y, z = self.positions.T
         self.distance = (x ** 2 + (a_1 * y / a_2) ** 2 + (a_1 * z / a_3) ** 2) ** 0.5
 
+    def getMassAt(self, time):
+        if time > self.RETURN_TIME:
+            m, b = np.polyfit(self.times, np.log(self.masses), 1)
+            mass = np.exp(m * time + b)
+        else:
+            p0, p1 = abs(self.times - time).argsort()[:2]
+            m = (self.masses[p1] - self.masses[p0]) / (self.times[p1] - self.times[p0])
+            mass = self.masses[p0] + (time - self.times[p0]) * m
+        return mass
+
     def getReturnTime(self, threshold = R_VIR_THRESHOLD):
         try:
             return self.return_time
