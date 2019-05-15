@@ -186,20 +186,21 @@
 		\label{fig: semiaxisDist}
 	\end{figure}
 
-	An important result is shown in \autoref{fig: massDist}, where the probability density for the return masses of all the 28,000 simulations is plotted. Since results come from 28 different galaxies geometries, with triaxial parameters in the range of $9.5\times10^{-3}$, and 1.0, the probability densities for the return properties are independent of the galactic shapes, in fact they are considered to be an interesting statistical measurement of the overall behavior expected in the universe.
+	\subsection{Return distributions}
+	One of the results from the 28,000 simulations is shown in \autoref{fig: massDist}, where the probability density for the return masses is plotted. Since results come from 28 different galaxies geometries, with triaxial parameters in the range of $9.5\times10^{-3}$, and 1.0, the probability densities for the return properties are independent of the galactic shapes, in fact they are considered to be an interesting statistical measurement of the overall behavior expected in the universe.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.7\linewidth]{"../Files/Week 14/dist_masses"}
-		\caption{Mass distributions of the returned black hole, for the 30 triaxial lunches (blue) and for an spherical galaxy.}
+		\caption{Mass distributions of the returned black hole, for the 28 triaxial lunches (blue) and for an spherical galaxy.}
 		\label{fig: massDist}
 	\end{figure}
 
-	\autoref{fig: massDist} shows that the mass at the return time follow a gaussian distribution given in \autoref{eq: gaussian}, where $\sigma^2$ is variance of the data, and $\mu$ the mean.
+	\autoref{fig: massDist} shows that the mass at the return time follows a gaussian Probability Density Function (PDF) given by \autoref{eq: gaussian}, where $\sigma^2$ is variance of the data, and $\mu$ the mean.
 	\begin{equation}\label{eq: gaussian}
-		PDF_\text{Gauss}(x, \mu, \sigma) = \dfrac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
+		\text{PDF}_\text{Gauss}(x, \mu, \sigma) = \dfrac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
 	\end{equation}
 	
-	Both, the mean and the variance of the fitted gaussians for the distribution of return masses are shown in \autoref{tb: gaussians}, for comparison, the distribution of masses for a spherical galaxy with the same initial speeds are shown.
+	Both, the mean and the variance of the fitted gaussians for the distribution of return masses are shown in \autoref{tb: gaussians}, for comparison, the distribution of masses for a spherical galaxy with the same initial speeds is shown.
 	\begin{table}[h]
 		\centering
 		\caption{Parameters of the fitted gaussians in \autoref{fig: massDist}.}
@@ -214,8 +215,7 @@
 		\label{tb: gaussians}
 	\end{table}
 
-	These results, are in concordance with previous studies, where black holes need to be at high density areas of the galaxy, such as its center, in order to eventually become quasars \cite{tanaka2009assembly}, \autoref{tb: gaussians} shows that on average, while a black hole experiences a kick, its mass increases only by a factor of 1.34.
-
+	These results, are in concordance with previous studies, where authors argue that black holes need to be at high density areas of the galaxy, such as its center, in order to radically increase its mass by accreting material from the surroundings. One of the consequences from mass accretion is the possibility for the black hole to eventually become a quasar \cite{tanaka2009assembly}, \autoref{tb: gaussians} shows that on average, while a black hole experiences a kick, its mass increases only by a factor of 1.34. Quasars have masses of the order of $10^8$ \sm, thus it is highly difficult for a kicked black hole to become a quasar while experiencing the actual kick.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width = 0.8\linewidth]{"../Files/Week 14/dist_times"}
@@ -223,56 +223,111 @@
 		\label{fig: timeDist}
 	\end{figure}
 
-	Return times have a much wider distribution, as seen in \autoref{fig: timeDist} where the data follows a logarithmic distribution. Just as with the masses, fully triaxial galaxies have higher return times. As for the times it takes for the black hole to return to its host galaxy, the distribution is fitted to the superposition of two gaussians (\autoref{eq: timeDist}).
-	\begin{equation}\label{eq: timeDist}
-		PDF(t) = \alpha PDF_\text{Gauss}(\log_{10}t, \mu_1, \sigma_1) + \beta PDF_\text{Gauss}(\log_{10}t, \mu_2, \sigma_2)
-	\end{equation}
-	
-	By using \autoref{eq: timeDist}, the $\Lambda$-CDM cosmological model and Eddington accretion (\autoref{eq: eddington}), the probability to find a quasar like ULAS J1342+0928, the furthest known quasar, can be estimated. Solving the Eddington differential equation, the time required for a black hole to increase its mass from $M_\bullet(t_0)$ to $M_\bullet(t)$, is calculated as follows:
-	\begin{equation}
-		t - t_0 = \dfrac{\epsilon t_\text{Edd}}{1 - \epsilon}\ln\left(\dfrac{M_\bullet(t)}{M_\bullet(t_0)}\right)
-	\end{equation}
-	
-	Considering the mass of ULAS J1342+0928 $8\times10^8$, and an initial mass of $1\times10^5$ \sm \cite{banados2018800}. The estimated required time for the black to gain the mass of the ULAS quasar is 439 Myr. Furthermore, by considering the redshift of the quasar, and the kick, times can be calculated using the cosmology described in the \autoref{ch: methodology}, with this information the maximum time the black hole can spent outside its galaxy for it to become a quasar is:
-	\begin{equation}
-		t_\text{max} = t_{z = 7.54} - t_{z = 20.0} - 439\text{ Myr} \approx 74 Myr
-	\end{equation}
-	
-	The probability to find a quasar like ULAS J1342+0928 at redshifts higher than 7.54 is found by integrating \autoref{eq: timeDist} from $0$ to $t_\text{max}$ which yields 1.2 \%, as seen in the lower graph in \autoref{fig: timeDist}. Furthermore, by using the information in \citetitle{paris2018sloan} the overall distribution of quasars in the known universe can be compared with the generated by the probability density in \autoref{eq: timeDist}.
-	\begin{figure}[h]
+	\begin{table}[h]
 		\centering
-		\includegraphics[width = 0.8\linewidth]{"../Files/Week 14/redshift_dist"}
-		\caption{Comparison of the predicted distribution of quasars and the observational data.}
-		\label{fig: universeDist}
-	\end{figure}
+		\caption{Fitted values for the parameters in \autoref{eq: timeDist}, by using \autoref{fig: timeDist}.}
+		\begin{tabular}{r|cc}
+			\hline
+			& \textbf{Spherical} & \textbf{Triaxial} \\
+			\hline
+			$\mu_1$ $\log$(Myr) & 2.22 & 2.60\\
+			$\sigma_1$ $\log$(Myr) & 0.81 & 0.64\\
+			$\mu_2$ $\log$(Myr) & 1.36 & 1.81\\
+			$\sigma_1$ $\log$(Myr) & 0.27 & 0.23\\
+			$\alpha$ & $4.5\times10^{-4}$ & $3.5\times10^{-4}$\\
+			$\beta$ & $1.1\times10^{-4}$ & $1.2\times10^{-4}$\\
+			\hline
+		\end{tabular}
+	\end{table}
 
-	As seen in \autoref{fig: universeDist}, the model fails to reproduce the region at $Z = 2.5$, as well as the fast decay in the number of quasars after $Z = 2.8$. Nevertheless, the overall behavior of the observations can be reproduced, with a very simple model, since all of the information comes from 30 different simulated galaxies, all of which have the same $10^8$ \sm mass. Moreover, only black holes with initial masses of $10^5$ \sm were simulated, and all of the initial speeds were below 100 kpc/Gyr, although much higher speeds can be expected as \citeauthor{tanaka2009assembly} suggest (as in \autoref{fig: tanakaSpeeds}), and yet the overall behavior is reproduced.
+	As for return times, they have a much wider distribution, as seen in \autoref{fig: timeDist} where the data follows a logarithmic distribution. Just as with the masses, fully triaxial galaxies have higher return times when compared to an spherical galaxy. The distributions of return times are fitted to the superposition of two gaussians as described in \autoref{eq: timeDist}.
+	\begin{equation}\label{eq: timeDist}
+		\text{PDF}(t) = \alpha \text{PDF}_\text{Gauss}(\log_{10}t, \mu_1, \sigma_1) + \beta \text{PDF}_\text{Gauss}(\log_{10}t, \mu_2, \sigma_2)
+	\end{equation}
 	
-	The spatial distribution of the return times, masses and Lyapunov exponents can be seen in the \autoref{ch: galaxies}, by inspecting these results, a correlation between the return times and the masses can be seen, by considering the Pearson moment of correlation, this behavior can be quantified using \autoref{eq: pearson}.
+	Additionally, with the information from the simulations the probability of finding a quasar (like ULAS J1342+0928) generated from a kicked black hole can be estimated. ULAS J1342+0928 is the furthest known quasar, it has and approximate mass of $8\times10^8$ \sm, and it is found at redshift $Z = 7.54$ \cite{banados2018800, paris2018sloan}. By considering the $\Lambda$-CDM cosmological model with the parameters described in the \autoref{ch: methodology}, redshifts can be converted to time, for instance, redshift $Z = 7.54$ is about 692 Myr from the start of the universe, while $Z = 20$ (the redshift at which the studied black holes get a kick) is 180 Myr. This means that by evaluating the mass of all the 28,000 simulated black holes at $692 - 180 = 512$ Myr, the probability of finding a black hole with a mass of $8\times10^8$ \sm can be calculated from the distribution of the simulated black holes masses.
+	
+%	By using \autoref{eq: timeDist},  and Eddington accretion (\autoref{eq: eddington}), the probability to find a quasar like ULAS J1342+0928, the furthest known quasar, can be estimated. Solving the Eddington differential equation, the time required for a black hole to increase its mass from $M_\bullet(t_0)$ to $M_\bullet(t)$, is calculated as follows:
+%	\begin{equation}
+%		t - t_0 = \dfrac{\epsilon t_\text{Edd}}{1 - \epsilon}\ln\left(\dfrac{M_\bullet(t)}{M_\bullet(t_0)}\right)
+%	\end{equation}
+%	
+%	Considering the mass of ULAS J1342+0928 $8\times10^8$, and an initial mass of $1\times10^5$ \sm \cite{banados2018800}. The estimated required time for the black to gain the mass of the ULAS quasar is 439 Myr. Furthermore, by considering the redshift of the quasar, and the kick, times can be calculated using the cosmology described in the \autoref{ch: methodology}, with this information the maximum time the black hole can spent outside its galaxy for it to become a quasar is:
+%	\begin{equation}
+%		t_\text{max} = t_{z = 7.54} - t_{z = 20.0} - 439\text{ Myr} \approx 74 Myr
+%	\end{equation}
+%	
+%	The probability to find a quasar like ULAS J1342+0928 at redshifts higher than 7.54 is found by integrating \autoref{eq: timeDist} from $0$ to $t_\text{max}$ which yields 1.2 \%, as seen in the lower graph in \autoref{fig: timeDist}. Furthermore, by using the information in \citetitle{paris2018sloan} the overall distribution of quasars in the known universe can be compared with the generated by the probability density in \autoref{eq: timeDist}.
+%	\begin{figure}[h]
+%		\centering
+%		\includegraphics[width = 0.8\linewidth]{"../Files/Week 14/redshift_dist"}
+%		\caption{Comparison of the predicted distribution of quasars and the observational data.}
+%		\label{fig: universeDist}
+%	\end{figure}
+%
+%	As seen in \autoref{fig: universeDist}, the model fails to reproduce the region at $Z = 2.5$, as well as the fast decay in the number of quasars after $Z = 2.8$. Nevertheless, the overall behavior of the observations can be reproduced, with a very simple model, since all of the information comes from 30 different simulated galaxies, all of which have the same $10^8$ \sm mass. Moreover, only black holes with initial masses of $10^5$ \sm were simulated, and all of the initial speeds were below 100 kpc/Gyr, although much higher speeds can be expected as \citeauthor{tanaka2009assembly} suggest (as in \autoref{fig: tanakaSpeeds}), and yet the overall behavior is reproduced.
+	
+	\subsection{Correlation between mass and time}
+	The spatial distribution of the return times, masses and Lyapunov exponents for each galaxy can be seen in the \autoref{ch: Galaxies}, by inspecting these results, a correlation between the return times and masses can be seen. By considering the Pearson moment of correlation, this behavior can be quantified using \autoref{eq: pearson}.
 	\begin{equation}\label{eq: pearson}
 		r_{\log_{10}t, m} = \dfrac{\text{cov}(\log_{10}t, m)}{\sigma_{\log_{10}t}\sigma_m}
 	\end{equation}
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width = 0.8\linewidth]{"../Files/Week 13/correlation"}
-		\caption{Correlation between the return times and the return masses. Colors identify the triaxial parameter of each galaxy.}
-		\label{fig: correlation}
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/correlation_T"}
+			\caption{Colors identify the triaxial parameter of each galaxy.}
+			\label{fig: triaxial_correlation}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/correlation_speed"}
+			\caption{Colors identify the initial relative speed of a specific return time and mass.}
+		\end{subfigure}
+		\caption{Correlation between the return times and the return masses.}
+		\label{fig: speed_correlation}
 	\end{figure}
 	
-	The calculated value for all the studied orbits, of the Pearson correlation is 0.63, which is in accordance with the behavior seen in both the \autoref{ch: galaxies} and \autoref{fig: correlation}, describing a positive correlation between the masses and return times for all the 28 simulated galaxies.
+	The calculated value for all the studied orbits, of the Pearson correlation is 0.63, which is in accordance with the behavior seen in both the \autoref{ch: Galaxies} and \autoref{fig: correlation}, describing a positive correlation between the masses and return times, that is, that and increase in the return mass most of the times will mean that the return time also increases. Furthermore, the triaxial parameter seems to change the slope in \autoref{fig: triaxial_correlation}, smaller $T$ galaxies have a tendency to have higher slopes than galaxies with triaxial parameters close to the unity. Additionally, when the correlation is studied with respect to the initial speed of each black hole, horizontal zones are found, this means that the effect of the initial speed in the return mass is far less than the effect in the return time, allow the formation of colored zones in \autoref{fig: massSpeedDist}. 
 	
+	\subsection{Triaxial vs Spherical galaxies}
 	An important consequence of triaxial galaxies is that the magnitude of the velocity can not longer predict a unique return time, since there is a complete probability distribution associated to one value of the speed, these can clearly be seen in \autoref{fig: timeSpeedDist}, where a graph analogous to \autoref{fig: stellarfraction} for the galaxies with lower and higher values of the triaxial parameter. These results are particularly important as for a single speed, depending on the direction, two very different (one order of magnitude) return times will be generated for the same triaxial galaxy.
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width = 0.8\linewidth]{"../Files/Week 13/rt_speed"}
-		\caption{Distributions of the return times for two galaxies, as a function of the initial speed.}
-		\label{fig: timeSpeedDist}
+		\begin{subfigure}[t]{0.49\textwidth}
+			\includegraphics[width = \linewidth]{"../Files/Week 13/rt_speed"}
+			\caption{Return times.}
+			\label{fig: timeSpeedDist}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[t]{0.49\textwidth}
+			\includegraphics[width = \linewidth]{"../Files/Week 13/rt_mass"}
+			\caption{Return masses.}
+			\label{fig: massSpeedDist}
+		\end{subfigure}
+		\caption{Probability distributions for the galaxies with higher and lower (red and blue) triaxial parameters, for the return properties as a function of the initial speed.}
+		\label{fig: correlation}
 	\end{figure}
-
 	As for the Lyapunov exponents it has been found that there is a dependency with the magnitude of the velocity for more spherical galaxies, in oblate galaxies the behavior of the return properties is controlled by the $z$ component of the initial speed.
 	
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 14/relative_times"}
+			\caption{Relative return times.}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 14/relative_mass"}
+			\caption{Relative return masses.}
+		\end{subfigure}
+		\caption{Relative distribution of the return properties as a function of the initial speed.}
+		\label{fig: relatives}
+	\end{figure}
+	
+%	\subsection{Effect of the kick direction}
 %	\begin{figure}[h]
 %		\centering
 %		\begin{subfigure}[b]{0.49\textwidth}
@@ -312,10 +367,3 @@
 %		\caption{Distribution of the different properties for the galaxy with the minimum obtained value of $E$.}
 %%		\label{fig: smallerE}
 %	\end{figure}
-
-%	\begin{equation}
-%		\sqrt{\dfrac{(a - b)^2 + (b - c)^2 + (a - c)^2}{(a^2 + b^2 + c^2)}}
-%	\end{equation}
-%	\begin{equation}
-%		e_{a, b} / e_{a, c}
-%	\end{equation}

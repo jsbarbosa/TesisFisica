@@ -8,4 +8,5 @@ Files/smbh/*.so
 *.dat
 *.zip
 *.tar.xz
+*.tar.gz
 *.fits

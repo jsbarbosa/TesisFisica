@@ -73,7 +73,7 @@
 	The relation on \autoref{eq: critical_density} is found by considering the case where the geometry of the universe is flat, as a consequence it is said that the critical density is the minimum density required to stop the expansion of the universe \cite{binney2011galactic}.
 	
 \chapter{Time integration}
-	Although \autoref{eq: equationMotion} is a one body equation of motion, it is a second order differential equation with no analytical solution due to the complexity of gravitational and dynamical friction components. Thus, to evolve the position of the black hole in time, numerical integration of the equation is carried on using the Leapfrog method.
+	Although \autoref{eq: equationMotion} is a one body equation of motion, it is a second order differential equation with no analytical solution due to the complexity of the gravitational and dynamical friction components. Thus, to evolve the position of the black hole in time, numerical integration of the equation is carried on using the Leapfrog method.
 	
 	Graphically the differential equation is integrated in three steps, as seen on \autoref{fig: leapfrog}. First, from the acceleration at the current position $i$, a mid-point velocity is found ($\vec{v}_{i + 1/2}$). With this velocity, the position at the next time step is calculated. Finally, the velocity at $i + 1$ is found using the acceleration at this spot.	
 	\begin{figure}[h]
@@ -166,4 +166,29 @@
 			\mathcal{L} = \dfrac{\sum_{i = 1}^l \ln(s_i)}{lT}
 		\end{equation}
 	\end{enumerate} 
+
+%	Since $l$ and $T$ are arbitrary, they must be fixed by hand. To do so, the convergence of the Lyapunov exponent is studied in \autoref{fig: LyapunovConvergence}, where one can see that for greater values than $0.1lT$ stability is reached.
+%
+%	\begin{figure}[h]
+%		\centering
+%		\includegraphics[width = 0.7\linewidth]{"../Files/Week 11/lyapunov"}
+%		\caption{Convergence of the Lyapunov exponent as a function of the number of iterations and the time per iteration.}
+%		\label{fig: LyapunovConvergence}
+%	\end{figure}
+
+	To illustrate the concept of initial and final separation, in \autoref{fig: separation} the lunches of 7 simulations with initial conditions $(x \pm \delta, y, z)$, $(x, y \pm \delta, z)$, $(x, y, z \pm \delta)$ and $(x, y, z)$ are plotted.
 	
+	\begin{figure}[h]
+		\centering
+		\begin{subfigure}[b]{0.49\textwidth}
+			\includegraphics[width = \textwidth]{"../Files/Week 11/lyapunov_orbits"}
+			\caption{Generated orbits for the 7 lunches.}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.4\textwidth}
+			\includegraphics[width=\textwidth]{"../Files/Week 11/lyapunov_distances"}
+			\caption{Ellipsoidal distances from the center of the galaxy to the generated black holes in time.}
+		\end{subfigure}
+		\caption{Separation in time between orbits with initial distances of $\delta = 1\times10^{-4}$ kpc.}
+		\label{fig: separation}
+	\end{figure}
