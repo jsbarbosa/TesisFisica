@@ -14,14 +14,14 @@
 %----------------------------------------------------------------------------------------
 
 \chapter{Methodology}\label{ch: methodology}
-	The host galaxy of the black hole is modeled as two mass distributions that are superimposed, one for dark matter and the other one for all the luminous or baryonic matter.
+	The host galaxy of the black hole is modeled as two mass distributions that are superimposed, one for dark matter and the other one for all the luminous or baryonic matter, as follows.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.8\linewidth]{Figures/NGC4414_modified}
-		\caption{NGC4414 galaxy as seen by the Hubble telescope.}
+		\caption{NGC4414 galaxy as seen by the Hubble telescope. Dark matter halo is scaled.}
 	\end{figure}
 	
-	The dark matter halo used follows a NFW (Navarro–Frenk–White) profile, baryonic matter is divided in stars and gas. For the gas a power law profile with $r^{-2.2}$ is used, while for stars a Hernquist model is applied \cite{tanaka2009assembly, choksi2017recoiling}. The sum of all these components accounts for the total mass of the host ($M_\text{total}$), which remains constant through a simulation. The amount of baryonic matter is given by the baryonic fraction parameter ($f_b$), and the mass of stars by the stellar fraction parameter ($f_s$). Cumulative masses at the virial radius are defined as follows (Appendix A \autoref{sec: cd_vr}):
+	The dark matter halo used follows a NFW (Navarro–Frenk–White) profile, and baryonic matter is divided in stars and gas. For the gas, a power law profile with $r^{-2.2}$ is used, while for stars a Hernquist model is applied \cite{tanaka2009assembly, choksi2017recoiling}. The sum of all these components accounts for the total mass of the host ($M_\text{total}$), which remains constant through a simulation. The amount of baryonic matter is given by the baryonic fraction parameter ($f_b$), and the mass of stars by the stellar fraction parameter ($f_s$). Cumulative masses at the virial radius are defined as follows (Appendix A \autoref{sec: cd_vr}):
 	\begin{equation}
 		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_\text{total}
 	\end{equation}
@@ -102,7 +102,7 @@
 		\end{equation}
 		
 		\subsection{Dynamical friction}
-			As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on its source, collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{binney2011galactic, madau2004effect, tanaka2009assembly, choksi2017recoiling}.
+			As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on its source, where collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{binney2011galactic, madau2004effect, tanaka2009assembly, choksi2017recoiling}.
 			\begin{equation}\label{eq: df_cl}
 				a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2} M_\bullet\rho(\vec{x})\ln\Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)\text{, } \quad \rho(\vec{x}) = \rho_\text{DM}(\vec{x}) + \rho_\text{stars}(\vec{x})
 			\end{equation}
@@ -110,7 +110,7 @@
 				X \equiv \dfrac{|\dot{x}|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM} = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
 			\end{equation}
 			
-			$\sigma_\text{DM}$ is called the local velocity dispersion of the dark matter halo, and since varies little over the entire host, can be taken as constant \cite{tanaka2009assembly, choksi2017recoiling}. The Coulomb logarithm ($\ln\Lambda$) is not known but authors take it in the range of 2 - 4 \cite{choksi2017recoiling}. Gas on the other hand is collisional, special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by \citeauthor{tanaka2009assembly}, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
+			$\sigma_\text{DM}$ is called the local velocity dispersion of the dark matter halo, and since it varies little over the entire host, can be taken as constant \cite{tanaka2009assembly, choksi2017recoiling}. The Coulomb logarithm ($\ln\Lambda$) is not known but authors take it in the range of 2 - 4 \cite{choksi2017recoiling}. Gas on the other hand is collisional, so special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by \citeauthor{tanaka2009assembly}, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
 			\begin{equation}
 				\mathcal{M}(\dot{x}) \equiv \dfrac{|\dot{x}|}{c_s}
 			\end{equation}
@@ -168,7 +168,7 @@
 			\end{equation}
 			
 			Thus, the final accretion rate is given by:
-			\begin{equation}
+			\begin{equation}\label{eq: finalAccretion}
 				\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
 				\begin{array}{lc}
 				\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) & \text{if $\dot{M}_\bullet^\text{BHL} < \dot{M}_\bullet^\text{Edd}$} \\
@@ -178,9 +178,9 @@
 			\end{equation}
 	
 	\subsection{Initial conditions and numerical integration}
-		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen densities profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, as it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (1, 1, 1)$ pc.
+		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen densities profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, since it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (1, 1, 1)$ pc.
 		
-		Numerical integration is carried out using a Leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years, the simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the current age of the universe. 
+		Numerical integration is carried out using a Leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years. The simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the current age of the universe. 
 		
 	\section{Definitions}
 %		\subsection{Escape velocity}
@@ -203,7 +203,7 @@
 		\end{equation}
 	
 	\subsection{Dark matter halo}
-		For a dark matter halo following a NFW profile, the cumulative mass $M_\text{DM}(r)$ within some radius $r$ is given by the integral of the density over a volume. Since \autoref{eq: dmdensity} is spherically symmetrical, the only dependance of the integral is with distance. On \autoref{eq: cumulativeDM} the $r'^2$ comes from the Jacobian of spherical coordinates, and the $4\pi$ from the solid angle.
+		For a dark matter halo following a NFW profile, the cumulative mass $M_\text{DM}(r)$ within some radius $r$ is given by the integral of the density over a volume. Since \autoref{eq: dmdensity} is spherically symmetrical, the only dependance of the integral is on distance. On \autoref{eq: cumulativeDM} the $r'^2$ comes from the Jacobian of spherical coordinates, and the $4\pi$ from the solid angle.
 		\begin{equation}\label{eq: cumulativeDM}
 			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0^\text{DM}R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
 		\end{equation}
@@ -280,7 +280,7 @@
 			\label{fig: symmetricTriaxial}
 		\end{figure}
 	
-		The host galaxy is modeled as a dark matter halo, stars and gas, just as the spherical case. Much of the profiles for each of the components remains the same, the only difference is that a thin shell of uniform density will have the geometry of an ellipsoid, and not that of a sphere. This is achieved by defining an ellipsoid radius $m$, that can be replaced for the spherical radius $r$, on equations \ref{eq: dmdensity}, \ref{eq: sdensity} and \autoref{eq: rdensity}, as can be seen on \autoref{fig: symmetricTriaxial}. 
+		The host galaxy is modeled as a dark matter halo, stars and gas, just as the spherical case. Much of the profiles for each of the components remains the same, the only difference is that a thin shell of uniform density will have the geometry of an ellipsoid, and not that of a sphere. This is achieved by defining an ellipsoid radius $m$, that can be replaced for the spherical radius $r$, on equations \ref{eq: dmdensity}, \ref{eq: sdensity} and \autoref{eq: rdensity}, as seen on \autoref{fig: symmetricTriaxial}. 
 		
 		A thin shell, whose inner and outer skins are the surfaces $m$ and $m + \delta m$ is described by \autoref{eq: m2}, where $\tau \geq 0$ labels the surfaces \cite{binney2011galactic}.
 		\begin{equation}\label{eq: m2}
