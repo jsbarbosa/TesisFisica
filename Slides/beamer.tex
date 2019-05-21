@@ -12,11 +12,13 @@
 %\usepackage{tcolorbox}
 \usefonttheme{structuresmallcapsserif}
 \usetheme{Antibes}
+\usepackage{makecell}
 
 \usecolortheme{whale}
 \setbeamertemplate{footline}[frame number]
 
 \usepackage[backend = bibtex, style = verbose, sorting = none, autocite = footnote]{biblatex}
+\renewcommand*{\bibfont}{\scriptsize}
 \addbibresource{../Documento/bibliography.bib}
 
 %\usepackage[table, dvipsnames]{xcolor}
@@ -38,11 +40,17 @@
 	\insertshorttitle\hfill%
 	\insertframenumber\,/\,\inserttotalframenumber}
 
+\setbeamerfont{bibliography item}{size=\footnotesize}
+\setbeamerfont{bibliography entry author}{size=\footnotesize}
+\setbeamerfont{bibliography entry title}{size=\footnotesize}
+\setbeamerfont{bibliography entry location}{size=\footnotesize}
+\setbeamerfont{bibliography entry note}{size=\footnotesize}
+
 \begin{document}
 \begin{frame}
 	\centering
 %	\color{white}
-	\textsc{\LARGE Orbits of black holes in triaxial potentials}
+	\textsc{\LARGE Orbits of black holes in galactic triaxial potentials}
 	\\
 	\vspace{2.5cm}
 	Juan Barbosa\\
@@ -57,76 +65,73 @@
 	Universidad de los Andes
 \end{frame}
 
-%\begin{frame}{Overview}
-%	\tableofcontents
-%\end{frame}
+\begin{frame}{Overview}
+	\tableofcontents
+\end{frame}
 
-%\section{Introduction}
-%\begin{frame}{Introduction}
-%	\begin{columns}
-%		\begin{column}{0.5\textwidth}
-%			\begin{figure}[h]
-%				\centering
-%				\includegraphics[width=0.9\linewidth]{images/Albert_Einstein_Head}
-%			\end{figure}
-%		\end{column}
-%		\begin{column}{0.5\textwidth}
-%			\begin{itemize}
-%				\item Theory of General Relativity, 1916
-%				\item Although more than 100 years have passed since the publication of the theory, even today there are gaps in the understanding and implications of Einstein's equations
-%			\end{itemize}
-%		\end{column}
-%	\end{columns}
-%\end{frame}
+\begin{frame}
+	\centering
+	\Huge
+	\scshape
+	Introduction
+\end{frame}
 
-%\begin{frame}{Introduction}
-%	\begin{figure}
-%		\centering
-%		\includegraphics[width=0.4\linewidth]{images/example}
-%		\caption{\href{run:/home/juan/Documents/TesisFisica/Slides/images/super_kick.mp4}{Binary black hole explorer}}
-%	\end{figure}
-%	
-%	\fcite{varma2018binary}
-%\end{frame}
+\section{Introduction}
+\begin{frame}{Introduction}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=0.9\linewidth]{images/Albert_Einstein_Head}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{itemize}
+				\item Theory of General Relativity, 1916
+				\item More than 100 years have passed since the publication of the theory
+				\item Today there are gaps in the understanding and implications of Einstein's equations
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
 
-%\begin{frame}{Objectives}
-%	\small
-%	Study the effect of different triaxial potentials, and initial speeds \sout{and numerical integrators} on the times required by a supermassive black hole to return to its initial position, after experiencing a recoil, as well as to quantify how chaotic its trajectory is.
-%	
-%	\begin{itemize}
-%		\item Obtain probability distributions for the return times based on each of the free parameters of the triaxial potential, the magnitude and direction of the initial velocity
-%		\item Quantify how chaotic is the trajectory of the black hole in each simulation, using exponents of Lyapunov
-%		\item Evaluate the performance of the \sout{numerical integrators} LeapFrog scheme, using the information of the simulations
-%	\end{itemize}
-%\end{frame}
+\begin{frame}{Introduction}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.4\linewidth]{images/example}
+		\caption{\href{run:/home/juan/Documents/TesisFisica/Slides/images/super_kick.mp4}{Binary black hole merger simulation}}
+	\end{figure}
+	
+	\fcite{varma2018binary}
+\end{frame}
 
-%\section{Methodology}
-%\subsection{Galatic setup}
-%\begin{frame}{Galactic setup}
-%	\begin{figure}[h]
-%		\centering
-%		\includegraphics[width=0.8\linewidth]{../Documento/Figures/NGC4414_modified}
-%		\caption{NGC4414 galaxy as seen by the Hubble telescope.}
-%	\end{figure}
-%\end{frame}
-%
-%\begin{frame}
-%	\begin{enumerate}
-%		\item Gas density (Power law):
-%		\begin{equation}
-%			\rho_\text{gas}(r) = \left \{
-%			\begin{matrix}
-%			\rho_0^\text{gas} & \text{if $r < r_0$}\\
-%			\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{-n} & \text{if $r \geq r_0$}\\
-%			\end{matrix}
-%			\right.
-%		\end{equation}
-%		\item Gas density (Double power law)
-%		\begin{equation}\label{eq: rdensity}
-%		\rho_\text{gas}(r) = \dfrac{\rho_0^\text{gas}}{\left(1 + \dfrac{r}{r_0}\right)^n}
-%		\end{equation}
-%	\end{enumerate}
-%\end{frame}
+\begin{frame}{Objectives}
+	Study the effect of different triaxial potentials, and initial velocities, on the times required by black holes to return to their initial position, after experiencing a recoil, as well as to quantify how chaotic its trajectory is
+	
+	\begin{itemize}
+		\item Obtain probability distributions for the return properties of the black holes, based on the magnitude and direction of the initial velocity
+		\item Study the chaotic behavior of orbits using Lyapunov exponents
+%		\item Evaluate the performance of the LeapFrog scheme, used for the numerical integration
+	\end{itemize}
+\end{frame}
+
+\section{Methodology}
+\begin{frame}
+	\centering
+	\Huge
+	\scshape
+	Methodology
+\end{frame}
+
+\subsection{Galatic setup}
+\begin{frame}{Galactic setup}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.8\linewidth]{../Documento/Figures/NGC4414_modified}
+		\caption{NGC4414 galaxy as seen by the Hubble telescope.}
+	\end{figure}
+\end{frame}
+
 %
 %\begin{frame}
 %	\begin{enumerate}
@@ -150,58 +155,22 @@
 %	\end{enumerate}
 %\end{frame}
 
-%\begin{frame}
-%	\begin{enumerate}
-%		\item Dark matter (NWF):
-%		\begin{equation}\label{eq: dmdensity}
-%		\rho_\text{DM}(r) = \dfrac{\rho_0^\text{DM}}{\frac{r}{R_s}\left(1 + \frac{r}{R_s}\right)^2}
-%		\end{equation}
-%		\item Stellar density (Hernquist):
-%		\begin{equation}
-%		\rho_s(r) = \dfrac{f_sf_bM_h \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3}
-%		\end{equation}
-%		\item Gas density (Power law):
-%		\begin{equation}
-%		\rho_\text{gas}(r) = \left \{
-%		\begin{matrix}
-%		\rho_0^\text{gas} & \text{if $r < r_0$}\\
-%		\rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^{-n} & \text{if $r \geq r_0$}\\
-%		\end{matrix}
-%		\right.
-%		\end{equation}
-%	\end{enumerate}
-%\end{frame}
-
-%\begin{frame}
-%	Mass distributions of the host galaxy, are divergent. The end of the host is taken at the virial radius.
-%	\begin{equation}\label{eq: critical_density}
-%	\rho_\text{crit} = \dfrac{3H(t)^2}{8\pi G}
-%	\end{equation}
-%	
-%	\begin{equation}\label{eq: R_vir_def}
-%	\dfrac{M(R_\text{vir})}{V(R_\text{vir})} = \bar{\rho}(R_\text{vir}) =  200 \rho_\text{crit} = 75\dfrac{H(t)^2}{\pi G}
-%	\end{equation}
-%	
-%	where $M(R_\text{vir})$ is the cumulative mass, and $V(R_\text{vir})$: the volume
-%\end{frame}
-
-%\begin{frame}
-%	Mass distributions between components are given by:
-%	\begin{equation}
-%		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_h
-%	\end{equation}
-%	\begin{equation}
-%		M_\text{stars}(R_\text{vir}) = f_sf_bM_h
-%	\end{equation}
-%	\begin{equation}
-%		M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_h
-%	\end{equation}
-%	
-%	with $f_b = 0.156$ and $M_h = 10^8$ \sm
-%	\begin{equation}
-%		R_\text{vir} = \left({\dfrac{M_hG}{100 H(t)^2}}\right)^{1/3}
-%	\end{equation}
-%\end{frame}
+\begin{frame}{Mass distributions}
+	\begin{enumerate}
+		\item Dark matter (NWF):
+		\begin{equation}\label{eq: dmdensity}
+		\rho_\text{DM}(r) = \dfrac{\rho_0^\text{DM}}{\frac{r}{R_s}\left(1 + \frac{r}{R_s}\right)^2}
+		\end{equation}
+		\item Stellar density (Hernquist):
+		\begin{equation}
+		\rho_s(r) = \dfrac{f_sf_bM_T \mathcal{R}_s}{2\pi r(r + \mathcal{R}_s)^3}
+		\end{equation}
+		\item Gas density (Dobule power law):
+		\begin{equation}\label{eq: rdensity}
+		\rho_\text{gas}(r) = \dfrac{\rho_0^\text{gas}}{\left(1 + \dfrac{r}{r_0}\right)^n}
+		\end{equation}
+	\end{enumerate}
+\end{frame}
 
 %\subsection{Units}
 %\begin{frame}{}
@@ -232,126 +201,57 @@
 %\end{frame}
 
 
-%\subsection{Equation of motion}
-%\begin{frame}{Equation of motion}
-%	Trajectories of the kicked black holes are obtained by numerically solving the equation of motion.
-%	\begin{equation}\label{eq: equationMotion}
-%		\ddot{\vec{x}} = -a_\text{grav}(\vec{x})\hat{x} + \left(a_\text{DF}(\vec{x}, \dot{\vec{x}})-\dot{x}\dfrac{\dot{M_\bullet}(x, \dot{x})}{M_\bullet}\right)\dot{\hat{x}} 
-%	\end{equation}
-%	
-%	where $M_\bullet$ is the black hole mass
-%	
-%	\begin{itemize}
-%		\item Dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force.
-%		\item The black hole accretes matter from the surroundings.
-%	\end{itemize}
-%\end{frame}
-
-\section{Studies}
-\subsection{Symmetrical}
-
-\subsubsection{Results}
-%\begin{frame}{Effect of the stellar fraction}
-%	\begin{figure}[h]
-%		\centering
-%		\includegraphics[width=\linewidth]{"../Files/Week 9/PhaseSpace_escape"}
-%	\end{figure}
-%\end{frame}
-%
-%\begin{frame}{Effect of the stellar fraction}
-%	\begin{figure}[h]
-%		\centering
-%		\includegraphics[width=\linewidth]{"../Files/Week 9/PhaseSpace_in"}
-%		%		\caption{Return time for different stellar densities and speeds.}
-%	\end{figure}
-%\end{frame}
-
-%\begin{frame}{Results}
-%	\begin{columns}
-%		\begin{column}{0.3\linewidth}
-%			\begin{figure}[h]
-%				\centering
-%				\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s02v70"}
-%			\end{figure}
-%		\end{column}
-%		\begin{column}{0.7\linewidth}
-%			\begin{figure}[h]
-%				\centering
-%				\includegraphics[width = \linewidth]{"../Files/Week 6/properties_s02v70_1"}
-%				\caption{Distances and speeds.}
-%			\end{figure}
-%		\end{column}
-%	\end{columns}
-%\end{frame}
-%
-%\begin{frame}{Results}
-%	\begin{columns}
-%		\begin{column}{0.3\linewidth}
-%			\begin{figure}[h]
-%				\centering
-%				\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s02v70"}
-%			\end{figure}
-%		\end{column}
-%		\begin{column}{0.7\linewidth}
-%			\begin{figure}[h]
-%				\centering
-%				\includegraphics[width = \linewidth]{"../Files/Week 6/properties_s02v70_2"}
-%				\caption{Mass of the black hole.}
-%			\end{figure}
-%		\end{column}
-%	\end{columns}
-%\end{frame}
-%
-%\begin{frame}{Results}
-%	\begin{columns}
-%		\begin{column}{0.3\linewidth}
-%			\begin{figure}[h]
-%				\centering
-%				\includegraphics[height=0.7\textheight]{"../Files/Week 6/properties_s02v70"}
-%			\end{figure}
-%		\end{column}
-%		\begin{column}{0.7\linewidth}
-%			\begin{figure}[h]
-%				\centering
-%				\includegraphics[width = \linewidth]{"../Files/Week 6/properties_s02v70_3"}
-%				\caption{Multiple properties of a single simulation.}
-%			\end{figure}
-%		\end{column}
-%	\end{columns}
-%\end{frame}
-%
-%\begin{frame}{Effect of the baryonic fraction}
-%	\begin{figure}[h]
-%		\centering
-%		\includegraphics[height=0.7\textheight]{"../Files/Week 5/baryonic_fraction_comparison"}
-%		\caption{5 \% increase on baryonic fraction decreases return times.}
-%	\end{figure}
-%\end{frame}
-%
-%\begin{frame}{Effect of the power law exponent}
-%	\begin{figure}[h]
-%		\centering
-%		\begin{tabular}{cc}
-%			\includegraphics[width = 0.5\textwidth]{"../Files/Week 6/power_law"} & \includegraphics[width = 0.5\textwidth]{"../Files/Week 6/power_law_density"}
-%		\end{tabular}
-%		\caption{Smaller exponents increase the return time.}
-%	\end{figure}
-%\end{frame}
-
-\begin{frame}{Effect of the stellar fraction}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.9\linewidth]{"../Files/Week 10/returntimes_stellar_speed"}
-		\caption{Return time for different stellar densities.}
-	\end{figure}
+\subsection{Equation of motion}
+\begin{frame}{Equation of motion}
+	Trajectories of the kicked black holes are obtained by numerically solving the equation of motion.
+	\begin{equation}\label{eq: equationMotion}
+		\ddot{\vec{x}} = -a_\text{grav}(\vec{x})\hat{x} + \left(a_\text{DF}(\vec{x}, \dot{\vec{x}})-\dot{x}\dfrac{\dot{M_\bullet}(x, \dot{x})}{M_\bullet}\right)\dot{\hat{x}} 
+	\end{equation}
+	
+	where $M_\bullet$ is the black hole mass
+	
+	\begin{itemize}
+		\item Dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force
+		\item The black hole accretes matter from the surroundings
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{Effect of the stellar fraction}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=\linewidth]{"../Files/Week 10/returntimes_speed"}
-		\caption{Return time for different initial speeds.}
-	\end{figure}
+\section{Results}
+\begin{frame}
+	\centering
+	\Huge
+	\scshape
+	Results
+\end{frame}
+
+\subsection{Spherical potentials}
+\begin{frame}{Spherical potentials}
+	\begin{columns}
+		\begin{column}{0.4\textwidth}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=\linewidth]{"../Files/Week 5/baryonic_fraction_comparison"}
+%				\caption{5 \% increase on baryonic fraction decreases return times}
+			\end{figure}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width = \linewidth]{"../Files/Week 6/power_law"}
+%				\caption{Smaller exponents increase the return time}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.7\textwidth}
+			$\longleftarrow$ Baryonic fraction
+			
+			\hspace{1cm} $\bullet$ Stellar fraction
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=0.9\linewidth]{"../Files/Week 10/returntimes_speed"}
+				\caption{Return time for different initial speeds}
+			\end{figure}
+		
+			$\longleftarrow$ Power law exponent
+		\end{column}
+	\end{columns}	
 \end{frame}
 
 \begin{frame}{Effect of the stellar fraction}
@@ -383,11 +283,11 @@
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.8\linewidth]{"../Files/Week 10/surface"}
-		\caption{Return time for different stellar densities and speeds.}
+		\caption{Generated surface with the proposed fitting curve}
 	\end{figure}
 \end{frame}
 
-\subsection{Triaxial}
+\subsection{Triaxial potentials}
 \begin{frame}{Initial conditions}
 	\begin{figure}[h]
 		\centering
@@ -405,32 +305,82 @@
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Initial conditions}
+\begin{frame}{Triaxial: Initial conditions}
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width = 0.9\linewidth]{"../Files/Week 13/triaxial_axes"}
-		\caption{Distribution of the 30 pair of values for the $y$ and $z$ semiaxis.}
+		\caption{Distribution of the 28 pair of values for the $y$ and $z$ semiaxis.}
 		\label{fig: semiaxisDist}
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Results}
 	\begin{columns}
-		\begin{column}{0.4\textwidth}
+		\begin{column}{0.5\textwidth}
+			\begin{table}[h]
+				\centering
+				\caption{\small Parameters of the fitted gaussians}
+				\tiny
+				\begin{tabular}{r|cc}
+					\hline
+					& \textbf{Spherical} & \textbf{Triaxial} \\
+					\hline
+					$\mu$ ($10^5$ \sm) & 1.08 & 1.34 \\
+					$\sigma^2$ ($10^5$ \sm)$^2$ & $3.7\times10^{-4}$ & $1.7\times10^{-2}$\\
+					\hline
+				\end{tabular}
+				\label{tb: gaussians}
+			\end{table}
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=0.95\linewidth]{"../Files/Week 14/masses_at"}
+				\caption{\small Mass distributions at $t = 512$ Myr}
+				\label{fig: massDistAt}
+			\end{figure}
+			\vspace{2.5cm}
+			
+		\end{column}
+		\begin{column}{0.5\textwidth}
 			\begin{figure}[h]
 				\centering
 				\includegraphics[width=\linewidth]{"../Files/Week 14/dist_masses"}
-				\caption{Mass distributions of the returned black hole, for the 30 triaxial lunches (blue) and for an spherical galaxy.}
+				\caption{Mass distributions of the returned black holes}
 				\label{fig: massDist}
 			\end{figure}
+			\vspace{2.5cm}
+						
 		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Results}
+	\begin{columns}
 		\begin{column}{0.6\textwidth}
 			\begin{figure}[h]
 				\centering
-				\includegraphics[width = 0.8\linewidth]{"../Files/Week 14/dist_times"}
-				\caption{Return time distributions, for the 30 triaxial lunches (blue) and for an spherical galaxy. Below, the cumulative probability of the purple curve.}
+				\includegraphics[width = \linewidth]{"../Files/Week 14/dist_times"}
+				\caption{Return time distributions}
 				\label{fig: timeDist}
 			\end{figure}
+		\end{column}
+		\begin{column}{0.4\textwidth}
+			\begin{table}[h]
+				\centering
+				\caption{Fitted values}
+				\tiny
+				\begin{tabular}{r|cc}
+					\hline
+					& \textbf{Spherical} & \textbf{Triaxial} \\
+					\hline
+					$\mu_1$ $\log$(Myr) & 2.22 & 2.60\\
+					$\sigma_1$ $\log$(Myr) & 0.81 & 0.64\\
+					$\mu_2$ $\log$(Myr) & 1.36 & 1.81\\
+					$\sigma_1$ $\log$(Myr) & 0.27 & 0.23\\
+					$\alpha$ & $4.5\times10^{-4}$ & $3.5\times10^{-4}$\\
+					$\beta$ & $1.1\times10^{-4}$ & $1.2\times10^{-4}$\\
+					\hline
+				\end{tabular}
+			\end{table}
 		\end{column}
 	\end{columns}
 \end{frame}
@@ -438,13 +388,37 @@
 \begin{frame}{Results}
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width = 0.8\linewidth]{"../Files/Week 14/redshift_dist"}
-		\caption{Comparison of the predicted distribution of quasars and the observational data.}
-		\label{fig: universeDist}
+		\begin{subfigure}[b]{0.35\linewidth}
+			\includegraphics[width = \linewidth]{"../Files/Week 14/relative_times"}
+		\end{subfigure}
+		~ 
+		\begin{subfigure}[b]{0.35\linewidth}
+			\includegraphics[width = \linewidth]{"../Files/Week 14/relative_mass"}
+		\end{subfigure}
+		\caption{Distributions of the relative return properties.}
+		\label{fig: relatives}
 	\end{figure}
 \end{frame}
 
 \begin{frame}{Results}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.7\linewidth]{"../Files/Week 14/lyapunov_orbits"}
+		\caption{Orbits with a difference in the initial conditions of 1.9 \%.}
+		\label{fig: lyapunov17}
+	\end{figure}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Spherical galaxy}
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[t]{0.35\textwidth}
@@ -468,7 +442,7 @@
 	\end{figure}
 \end{frame}
 
-\begin{frame}{Results}
+\begin{frame}{Disc galaxy}
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[t]{0.35\textwidth}
@@ -492,30 +466,73 @@
 	\end{figure}
 \end{frame}
 
-
-\begin{frame}{Results}
+\begin{frame}{Bar galaxy}
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width = \textwidth]{"../Files/Week 13/images/24_time"}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/images/22_time"}
 			\caption{Return times}
 		\end{subfigure}
 		~ 
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/24_mass"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/22_mass"}
 			\caption{Return masses}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/24_lyapunov"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/22_lyapunov"}
 			\caption{Lyapunov exponent}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/24_ellipsoid"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/22_ellipsoid"}
 			\caption{Geometry}
 		\end{subfigure}
 		\caption{Distribution of the different properties for the galaxy with $a_1 = 1$, $a_2 = 6.6\times10^{-2}$, $a_3 = 6.1\times10^{-2}$.}
 	\end{figure}
 \end{frame}
+
+\section{Conclusions}
+\begin{frame}
+	\centering
+	\Huge
+	\scshape
+	Conclusions
+\end{frame}
+
+\begin{frame}{Conclusions}
+	\begin{itemize}
+		\item Including triaxiality in galaxies can shift the predictions from previous spherical studies
+		\begin{itemize}
+			\item On average, return times for triaxial studies are 2.6 times longer than those	expected in spherical galaxies
+			\item Masses, on the other hand, show an average increase of 24 \%
+		\end{itemize}
+		\item Correlation of the return properties (time and mass) has been quantified at 0.63
+		\item The probability of finding a black hole such as the ULAS J1342+0928 quasar in the simulations is 0.34 \%
+		\item The baryonic fraction of the galaxy, the power law
+		exponent of the gas profile, and the amount of stars drastically alter the return properties of a black hole
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusions}
+	\begin{itemize}
+		\item Lyapunov exponents show that there is a dependency
+		with the magnitude of the initial velocity
+		\item More chaotic orbits are related with the highest potential axis (major semiaxis)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\centering
+	\Huge
+	\scshape
+	Thank you
+\end{frame}
+
+\section{References}
+\begin{frame}{References}
+	\nocite{*}
+	\printbibliography
+\end{frame}
+
 %\begin{frame}{Triaxial setup}
 %	Density shells for each profile are ellipsoids
 %	\begin{equation}
