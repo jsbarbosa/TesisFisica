@@ -1,6 +1,6 @@
 % !TeX spellcheck = en_US
-\documentclass{beamer}
-%\documentclass[handout]{beamer}
+%\documentclass{beamer}
+\documentclass[handout]{beamer}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
@@ -230,22 +230,22 @@
 		\begin{column}{0.4\textwidth}
 			\begin{figure}[h]
 				\centering
-				\includegraphics[width=\linewidth]{"../Files/Week 5/baryonic_fraction_comparison"}
+				\includegraphics[width=\linewidth]{"../Files/Week 5/baryonic_fraction_comparison_slides"}
 %				\caption{5 \% increase on baryonic fraction decreases return times}
 			\end{figure}
 			\begin{figure}[h]
 				\centering
-				\includegraphics[width = \linewidth]{"../Files/Week 6/power_law"}
+				\includegraphics[width = 0.9\linewidth]{"../Files/Week 6/power_law_slides"}
 %				\caption{Smaller exponents increase the return time}
 			\end{figure}
 		\end{column}
 		\begin{column}{0.7\textwidth}
 			$\longleftarrow$ Baryonic fraction
 			
-			\hspace{1cm} $\bullet$ Stellar fraction
+			\hspace{2cm} $\bullet$ Stellar fraction
 			\begin{figure}[h]
 				\centering
-				\includegraphics[width=0.9\linewidth]{"../Files/Week 10/returntimes_speed"}
+				\includegraphics[width=0.9\linewidth]{"../Files/Week 10/returntimes_speed_slides"}
 				\caption{Return time for different initial speeds}
 			\end{figure}
 		
@@ -261,10 +261,10 @@
 	\end{equation}
 	\begin{table}[h]
 		\centering
-		\begin{tabular}{ccc}
-			\includegraphics[width = 0.33\textwidth]{"../Files/Week 10/a"} & 
-			\includegraphics[width = 0.33\textwidth]{"../Files/Week 10/b"} & 
-			\includegraphics[width = 0.33\textwidth]{"../Files/Week 10/c"}
+		\begin{tabular}{lcc}
+			\includegraphics[width = 0.3\textwidth]{"../Files/Week 10/a_slides"} & 
+			\includegraphics[width = 0.33\textwidth]{"../Files/Week 10/b_slides"} & 
+			\includegraphics[width = 0.33\textwidth]{"../Files/Week 10/c_slides"}
 		\end{tabular}
 	\end{table}
 	\small
@@ -297,7 +297,7 @@
 		\end{subfigure}
 		~ 
 		\begin{subfigure}[b]{0.475\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/polar_initial_speeds"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/polar_initial_speeds_slides"}
 			\caption{Polar}
 		\end{subfigure}
 		\caption{Distributions of initial speeds for the triaxial lunches. $\theta$ describes the polar angle and $\phi$ the azimuth.}
@@ -315,85 +315,67 @@
 \end{frame}
 
 \begin{frame}{Results}
-	\begin{columns}
-		\begin{column}{0.5\textwidth}
-			\begin{table}[h]
-				\centering
-				\caption{\small Parameters of the fitted gaussians}
-				\tiny
-				\begin{tabular}{r|cc}
-					\hline
-					& \textbf{Spherical} & \textbf{Triaxial} \\
-					\hline
-					$\mu$ ($10^5$ \sm) & 1.08 & 1.34 \\
-					$\sigma^2$ ($10^5$ \sm)$^2$ & $3.7\times10^{-4}$ & $1.7\times10^{-2}$\\
-					\hline
-				\end{tabular}
-				\label{tb: gaussians}
-			\end{table}
-			\begin{figure}[h]
-				\centering
-				\includegraphics[width=0.95\linewidth]{"../Files/Week 14/masses_at"}
-				\caption{\small Mass distributions at $t = 512$ Myr}
-				\label{fig: massDistAt}
-			\end{figure}
-			\vspace{2.5cm}
-			
-		\end{column}
-		\begin{column}{0.5\textwidth}
-			\begin{figure}[h]
-				\centering
-				\includegraphics[width=\linewidth]{"../Files/Week 14/dist_masses"}
-				\caption{Mass distributions of the returned black holes}
-				\label{fig: massDist}
-			\end{figure}
-			\vspace{2.5cm}
-						
-		\end{column}
-	\end{columns}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{"../Files/Week 14/dist_masses"}
+		\caption{Mass distributions of the returned black holes}
+		\label{fig: massDist}
+	\end{figure}
 \end{frame}
 
-\begin{frame}{Results}
+\begin{frame}{ULAS J1342+0928}
 	\begin{columns}
-		\begin{column}{0.6\textwidth}
+		\begin{column}{0.4\linewidth}
 			\begin{figure}[h]
 				\centering
-				\includegraphics[width = \linewidth]{"../Files/Week 14/dist_times"}
-				\caption{Return time distributions}
-				\label{fig: timeDist}
+				\includegraphics[width=0.8\linewidth]{"images/ULAS"}
+				\caption{ULAS J1342+0928 representation}			
+			\end{figure}
+			\begin{itemize}
+				\item Most distant and oldest known SMBH
+				\item $Z = 7.54$
+				\item $M = 8\times10^8$ $M_\odot$
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.6\linewidth}
+			\begin{equation*}\scriptsize
+				\begin{array}{ccc}
+					Z = 7.54 & \qquad & Z = 20.00 \\
+					\downarrow & \Lambda-\text{CDM} & \downarrow \\
+					692 \text{Myr} & - & 180 \text{Myr} \\
+					\hline
+					& 512 \text{Myr} &
+				\end{array}
+			\end{equation*}
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.95\linewidth]{"../Files/Week 14/masses_at_slides"}
+				\caption{Mass distribution at 512 Myr}
+				\label{fig: massDistAt}
 			\end{figure}
 		\end{column}
-		\begin{column}{0.4\textwidth}
-			\begin{table}[h]
-				\centering
-				\caption{Fitted values}
-				\tiny
-				\begin{tabular}{r|cc}
-					\hline
-					& \textbf{Spherical} & \textbf{Triaxial} \\
-					\hline
-					$\mu_1$ $\log$(Myr) & 2.22 & 2.60\\
-					$\sigma_1$ $\log$(Myr) & 0.81 & 0.64\\
-					$\mu_2$ $\log$(Myr) & 1.36 & 1.81\\
-					$\sigma_1$ $\log$(Myr) & 0.27 & 0.23\\
-					$\alpha$ & $4.5\times10^{-4}$ & $3.5\times10^{-4}$\\
-					$\beta$ & $1.1\times10^{-4}$ & $1.2\times10^{-4}$\\
-					\hline
-				\end{tabular}
-			\end{table}
-		\end{column}
 	\end{columns}
+	
+\end{frame}
+
+\begin{frame}{Return times}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width = 0.6\linewidth]{"../Files/Week 14/dist_times_slides"}
+		\caption{Return time distributions}
+		\label{fig: timeDist}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{Results}
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[b]{0.35\linewidth}
-			\includegraphics[width = \linewidth]{"../Files/Week 14/relative_times"}
+			\includegraphics[width = \linewidth]{"../Files/Week 14/relative_times_slides"}
 		\end{subfigure}
 		~ 
 		\begin{subfigure}[b]{0.35\linewidth}
-			\includegraphics[width = \linewidth]{"../Files/Week 14/relative_mass"}
+			\includegraphics[width = \linewidth]{"../Files/Week 14/relative_mass_slides"}
 		\end{subfigure}
 		\caption{Distributions of the relative return properties.}
 		\label{fig: relatives}
@@ -422,16 +404,16 @@
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width = \textwidth]{"../Files/Week 13/images/10_time"}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/images/10_slides_time"}
 			\caption{Return times}
 		\end{subfigure}
 		~ 
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/10_mass"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/10_slides_mass"}
 			\caption{Return masses}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/10_lyapunov"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/10_slides_lyapunov"}
 			\caption{Lyapunov exponent}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
@@ -446,16 +428,16 @@
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width = \textwidth]{"../Files/Week 13/images/3_time"}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/images/3_slides_time"}
 			\caption{Return times}
 		\end{subfigure}
 		~ 
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/3_mass"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/3_slides_mass"}
 			\caption{Return masses}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/3_lyapunov"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/3_slides_lyapunov"}
 			\caption{Lyapunov exponent}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
@@ -470,16 +452,16 @@
 	\begin{figure}[h]
 		\centering
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width = \textwidth]{"../Files/Week 13/images/22_time"}
+			\includegraphics[width = \textwidth]{"../Files/Week 13/images/22_slides_time"}
 			\caption{Return times}
 		\end{subfigure}
 		~ 
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/22_mass"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/22_slides_mass"}
 			\caption{Return masses}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
-			\includegraphics[width=\textwidth]{"../Files/Week 13/images/22_lyapunov"}
+			\includegraphics[width=\textwidth]{"../Files/Week 13/images/22_slides_lyapunov"}
 			\caption{Lyapunov exponent}
 		\end{subfigure}
 		\begin{subfigure}[t]{0.35\textwidth}
@@ -505,7 +487,7 @@
 			\item On average, return times for triaxial studies are 2.6 times longer than those	expected in spherical galaxies
 			\item Masses, on the other hand, show an average increase of 24 \%
 		\end{itemize}
-		\item Correlation of the return properties (time and mass) has been quantified at 0.63
+		\item Person correlation between the return properties (time and mass) has been quantified at 0.63
 		\item The probability of finding a black hole such as the ULAS J1342+0928 quasar in the simulations is 0.34 \%
 		\item The baryonic fraction of the galaxy, the power law
 		exponent of the gas profile, and the amount of stars drastically alter the return properties of a black hole
@@ -514,8 +496,7 @@
 
 \begin{frame}{Conclusions}
 	\begin{itemize}
-		\item Lyapunov exponents show that there is a dependency
-		with the magnitude of the initial velocity
+		\item Lyapunov exponents show that there is a proportional dependency with the magnitude of the initial velocity
 		\item More chaotic orbits are related with the highest potential axis (major semiaxis)
 	\end{itemize}
 \end{frame}
