@@ -14,14 +14,14 @@
 %----------------------------------------------------------------------------------------
 
 \chapter{Methodology}\label{ch: methodology}
-	The host galaxy of the black hole is modeled as two mass distributions that are superimposed, one for dark matter and the other one for all the luminous or baryonic matter.
+	The host galaxy of the black hole is modeled as two mass distributions that are superimposed, one for dark matter and the other one for all the luminous or baryonic matter, as follows.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.8\linewidth]{Figures/NGC4414_modified}
-		\caption{NGC4414 galaxy as seen by the Hubble telescope.}
+		\caption{NGC4414 galaxy as seen by the Hubble telescope. Dark matter halo is scaled.}
 	\end{figure}
 	
-	The dark matter halo used follows a NFW (Navarro–Frenk–White) profile, baryonic matter is divided in stars and gas. For the gas a power law profile with $r^{-2.2}$ is used, while for stars a Hernquist model is applied \cite{tanaka2009assembly, choksi2017recoiling}. The sum of all these components accounts for the total mass of the host ($M_\text{total}$), which remains constant through a simulation. The amount of baryonic matter is given by the baryonic fraction parameter ($f_b$), and the mass of stars by the stellar fraction parameter ($f_s$). Cumulative masses at the virial radius are defined as follows (Appendix A \autoref{sec: cd_vr}):
+	The dark matter halo used follows a NFW (Navarro–Frenk–White) profile, and baryonic matter is divided in stars and gas. For the gas, a power law profile with $r^{-2.2}$ is used, while for stars a Hernquist model is applied \cite{tanaka2009assembly, choksi2017recoiling}. The sum of all these components accounts for the total mass of the host ($M_\text{total}$), which remains constant through a simulation. The amount of baryonic matter is given by the baryonic fraction parameter ($f_b$), and the mass of stars by the stellar fraction parameter ($f_s$). Cumulative masses at the virial radius are defined as follows (Appendix A \autoref{sec: cd_vr}):
 	\begin{equation}
 		M_\text{DM}(R_\text{vir}) = (1 - f_b)M_\text{total}
 	\end{equation}
@@ -32,9 +32,9 @@
 		M_\text{gas}(R_\text{vir}) = (1 - f_s)f_bM_\text{total}
 	\end{equation}
 	
-	Some of the simulation parameters are dependent of the cosmological model used, unless otherwise specified, all data is acquired using the $\Lambda$-CDM model with a matter density parameter $\Omega_M = 0.309$, $\Omega_\Lambda = 0.6911$, and a baryonic fraction $f_b = 0.156$ \cite{choksi2017recoiling}. Also, as \citeauthor{binney2011galactic}, argue, about 1 \% of the stellar mass of galaxies, such as The Milky Way, are contained in the stellar halo, $f_s \equiv 0.01$, unless otherwise stated.
+	Some of the simulation parameters are dependent of the cosmological model used. Unless otherwise specified, all data is acquired using the $\Lambda$-CDM model with a matter density parameter $\Omega_M = 0.309$, $\Omega_\Lambda = 0.6911$, and a baryonic fraction $f_b = 0.156$ \cite{choksi2017recoiling}. Also, as \citeauthor{binney2011galactic}, argue, about 1 \% of the stellar mass of galaxies, such as The Milky Way, are contained in the stellar halo, $f_s \equiv 0.01$, unless otherwise stated.
 	
-	\section{Densities profiles}
+	\section{Density profiles}
 		\subsection{Dark matter halo}
 			For a dark matter halo following a NFW profile, the density at some distance $r$ is given by the formula:
 			\begin{equation}\label{eq: dmdensity}
@@ -102,7 +102,7 @@
 		\end{equation}
 		
 		\subsection{Dynamical friction}
-			As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on its source, collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{binney2011galactic, madau2004effect, tanaka2009assembly, choksi2017recoiling}.
+			As the black hole travels through the galaxy, dark matter, stars and gaseous materials from the medium interact with the black hole adding a drag force due to friction. Drag force is different in nature depending on its source, where collisionless components, such as dark matter and stars, apply a drag force to the black hole that follows the standard Chandrasekhar formula \cite{binney2011galactic, madau2004effect, tanaka2009assembly, choksi2017recoiling}.
 			\begin{equation}\label{eq: df_cl}
 				a_\text{DF}^\text{cl}(\vec{x}, \dot{\vec{x}}) = -\dfrac{4\pi G^2}{\dot{x}^2} M_\bullet\rho(\vec{x})\ln\Lambda\left(\erf{X} - \dfrac{2}{\sqrt{\pi}}Xe^{-X^2}\right)\text{, } \quad \rho(\vec{x}) = \rho_\text{DM}(\vec{x}) + \rho_\text{stars}(\vec{x})
 			\end{equation}
@@ -110,12 +110,12 @@
 				X \equiv \dfrac{|\dot{x}|}{\sqrt{2}\sigma_\text{DM}} \qquad \text{with } \sigma_\text{DM} = \sqrt{\dfrac{GM_\text{DM}}{2R_\text{vir}}}
 			\end{equation}
 			
-			$\sigma_\text{DM}$ is called the local velocity dispersion of the dark matter halo, and since varies little over the entire host, can be taken as constant \cite{tanaka2009assembly, choksi2017recoiling}. The Coulomb logarithm ($\ln\Lambda$) is not known but authors take it in the range of 2 - 4 \cite{choksi2017recoiling}. Gas on the other hand is collisional, special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by \citeauthor{tanaka2009assembly}, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
+			$\sigma_\text{DM}$ is called the local velocity dispersion of the dark matter halo, and since it varies little over the entire host, can be taken as constant \cite{tanaka2009assembly, choksi2017recoiling}. The Coulomb logarithm ($\ln\Lambda$) is not known but authors take it in the range of 2 - 4 \cite{choksi2017recoiling}. Gas on the other hand is collisional, so special care must be taken since gas can cool behind a passing object, such as a black hole \cite{choksi2017recoiling}. A hybrid model for the drag force was proposed by \citeauthor{tanaka2009assembly}, in which both subsonic and supersonic velocities are possible. To do so, a mach number was defined as:
 			\begin{equation}
 				\mathcal{M}(\dot{x}) \equiv \dfrac{|\dot{x}|}{c_s}
 			\end{equation}
 			
-			where $c_s$ is the local sound speed, which depends on local temperature. It was found that temperature inside the halo varies less than a factor of 3, thus on the simulation it is assumed that the entire halo is isothermal at the virial temperature ($T_\text{vir}$) \cite{choksi2017recoiling}. The isothermal sound speed is \cite{barkana2001beginning}:
+			where $c_s$ is the local sound speed, which depends on local temperature. \citeauthor{tanaka2009assembly} found that temperature inside the halo varies less than a factor of 3, thus on the simulation presented here, it is assumed that the entire halo is isothermal at the virial temperature ($T_\text{vir}$) \cite{choksi2017recoiling}. The isothermal sound speed is \cite{barkana2001beginning}:
 			\begin{equation}\label{eq: soundSpeed}
 				c_s = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}T_\text{vir}} = \sqrt{\dfrac{\gamma R}{\mathcal{M}_w}\left(\dfrac{\mu m_p G M_\text{total}}{2k_BR_\text{vir}}\right)} = \sqrt{\dfrac{\gamma R\mu m_pG}{2\mathcal{M}_wk_B}} \sqrt{\dfrac{M_\text{total}}{R_\text{vir}}} \approx 0.614 \sqrt{\dfrac{M_\text{total}}{R_\text{vir}}}\text{ kpcGyr$^{-1}$}
 			\end{equation}
@@ -159,7 +159,7 @@
 			
 			Two schemes describe the speed at which the black hole gains mass, on the first one the black hole undergoes Bondi-Hoyle-Littleton accretion \cite{tanaka2009assembly, choksi2017recoiling}:
 			\begin{equation}
-				\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_G(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
+				\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) = \dfrac{4\pi G^2 \rho_B(\vec{x})M^2_\bullet}{\left(c_s^2 + \dot{x}^2\right)^{3/2}} \qquad \text{with } \rho_B(\vec{x}) = \rho_\text{stars}(\vec{x}) + \rho_\text{gas}(\vec{x})
 			\end{equation}
 			
 			But, there is a limit of accretion for the black hole given by the Eddington luminosity:
@@ -168,7 +168,7 @@
 			\end{equation}
 			
 			Thus, the final accretion rate is given by:
-			\begin{equation}
+			\begin{equation}\label{eq: finalAccretion}
 				\dot{M}_\bullet(\vec{x}, \dot{\vec{x}}) = \left\{
 				\begin{array}{lc}
 				\dot{M}_\bullet^\text{BHL}(\vec{x}, \dot{\vec{x}}) & \text{if $\dot{M}_\bullet^\text{BHL} < \dot{M}_\bullet^\text{Edd}$} \\
@@ -178,17 +178,14 @@
 			\end{equation}
 	
 	\subsection{Initial conditions and numerical integration}
-		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen densities profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, as it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (1, 1, 1)$ pc.
+		For all simulations the virial radius remains constant through the simulation. The virial radius is fixed at the start of every simulation depending on the redshift at which the kick occurs, the chosen density profiles and the mass of the host galaxy. Sound speed also remains constant for a simulation, as it depends on $R_\text{vir}$ and the mass of the host. Cosmological acceleration is ignored at all times as in \citeauthor{tanaka2009assembly}, since it has been found that it only marginally affects black hole orbits \cite{choksi2017recoiling}. The initial position of the black hole is always $\vec{x} = (1, 1, 1)$ pc.
 		
-		Numerical integration is carried out using a Leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years, the simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the current age of the universe. 
+		Numerical integration is carried out using a Leapfrog scheme on REBOUND with the C programming language \cite{larson2017modeling}, with time steps of a thousand years. The simulations are stopped when the system destabilizes and starts gaining energy, due to singularities at $x \rightarrow 0$ and $\dot{x} \rightarrow 0$, or if they simply last more than the current age of the universe. 
 		
 	\section{Definitions}
-%		\subsection{Escape velocity}
-%			Minimum initial velocity required for the maximum distance of a single orbit of the black hole to stay outside $0.01R_\text{vir}$ by $z = 0$, $z = 6$ or 10 \% of the age of the universe at the moment of the kick \cite{tanaka2009assembly, choksi2017recoiling}.
-		
 		\subsection{Return time}
-			Time required by the black holes orbit to have a maximum distance of less than $0.01R_\text{vir}$.
-			
+%			Time required by the black hole's orbit to have a maximum distance of less than $0.01R_\text{vir}$.
+			Time elapsed from the black hole's kick until the apocenter of its orbit remains inside $0.01R_\text{vir}$.
 		\subsection{Return mass}
 			Mass at the return time of the black hole.
 			
@@ -203,7 +200,7 @@
 		\end{equation}
 	
 	\subsection{Dark matter halo}
-		For a dark matter halo following a NFW profile, the cumulative mass $M_\text{DM}(r)$ within some radius $r$ is given by the integral of the density over a volume. Since \autoref{eq: dmdensity} is spherically symmetrical, the only dependance of the integral is with distance. On \autoref{eq: cumulativeDM} the $r'^2$ comes from the Jacobian of spherical coordinates, and the $4\pi$ from the solid angle.
+		For a dark matter halo following a NFW profile, the cumulative mass $M_\text{DM}(r)$ within some radius $r$ is given by the integral of the density over a volume. Since \autoref{eq: dmdensity} is spherically symmetrical, the only dependance of the integral is on distance. On \autoref{eq: cumulativeDM} the $r'^2$ comes from the Jacobian of spherical coordinates, and the $4\pi$ from the solid angle.
 		\begin{equation}\label{eq: cumulativeDM}
 			M_{DM}(r) = \int\limits_0^{r} 4\pi {r'}^2\rho_\text{DM}(r')dr' = 4\pi\rho_0^\text{DM}R_s^3\left[\ln\left(\dfrac{R_s + r}{R_s}\right) - \dfrac{r}{R_s + r}\right]
 		\end{equation}
@@ -280,14 +277,14 @@
 			\label{fig: symmetricTriaxial}
 		\end{figure}
 	
-		The host galaxy is modeled as a dark matter halo, stars and gas, just as the spherical case. Much of the profiles for each of the components remains the same, the only difference is that a thin shell of uniform density will have the geometry of an ellipsoid, and not that of a sphere. This is achieved by defining an ellipsoid radius $m$, that can be replaced for the spherical radius $r$, on equations \ref{eq: dmdensity}, \ref{eq: sdensity} and \autoref{eq: rdensity}, as can be seen on \autoref{fig: symmetricTriaxial}. 
+		The host galaxy is modeled as a dark matter halo, stars and gas, just as the spherical case. Much of the profiles for each of the components remains the same, the only difference is that a thin shell of uniform density will have the geometry of an ellipsoid, and not that of a sphere. This is achieved by defining an ellipsoid radius $m$, that can be replaced for the spherical radius $r$, on equations \ref{eq: dmdensity}, \ref{eq: sdensity} and \autoref{eq: rdensity}, as seen on \autoref{fig: symmetricTriaxial}. 
 		
 		A thin shell, whose inner and outer skins are the surfaces $m$ and $m + \delta m$ is described by \autoref{eq: m2}, where $\tau \geq 0$ labels the surfaces \cite{binney2011galactic}.
 		\begin{equation}\label{eq: m2}
 		m^2(\vec{x}, \tau) = a_1^2\left(\frac{x_1^{2}}{\tau + a_{1}^{2}} + \frac{x_2^{2}}{\tau + a_{2}^{2}} + \frac{x_3^{2}}{\tau + a_{3}^{2}}\right)
 		\end{equation}
 		
-		Densities are used for the calculation of the dynamical friction and accretion onto the black hole. Although one might think that by integrating the density over an elliptical volume, the acceleration due to gravity would be given by $a_\text{grav} = GM(m)/m^2$, the later is not true because two points $(x_1, x_2, x_3)$ and $(x_1', x_2', x_3')$ might have the same cumulative mass at $m$ (black line), but the effective gravitational mass acting at each point is completely different (blue and orange lines) as it is shown in \autoref{fig: triaxial_mass_issue}.
+		Densities are used for the calculation of the dynamical friction and accretion onto the black hole. Although one might think that by integrating the density over an elliptical volume, the acceleration due to gravity would be given by $a_\text{grav} = GM(m)/m^2$, the later is not true because two points $(x_1, x_2, x_3)$ and $(x_1', x_2', x_3')$ might have the same cumulative mass at $m$ (black line in \autoref{fig: triaxial_mass_issue}), but the effective gravitational mass acting at each point is completely different (blue and orange lines) as shown in \autoref{fig: triaxial_mass_issue}.
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width = 0.4\linewidth]{"../Files/Week 7/triaxial_mass_issue"}
@@ -295,7 +292,7 @@
 			\label{fig: triaxial_mass_issue}
 		\end{figure}
 	
-		Because of this, the potential due to a given triaxial density must be found. Calculating the gravitational potential for such configuration, challenged some great minds of the XVIII and XIX centuries \cite{binney2011galactic}. To do so, the contributions of all ellipsoidal shells that make up the profile are taken into account, following \citeauthor{binney2011galactic}:
+		Because of this, the potential due to a given triaxial density must be found. Calculating the gravitational potential for such configuration challenged some great minds of the XVIII and XIX centuries \cite{binney2011galactic}. To do so, the contributions of all ellipsoidal shells that make up the profile are taken into account, following \citeauthor{binney2011galactic}:
 		\begin{equation}
 			\psi(m) \equiv \int\limits_{0}^{m^2} \rho(m'^2)dm'^2 = \int\limits_{0}^{m} 2m'\rho(m')dm' 
 		\end{equation}
@@ -322,7 +319,7 @@
 			\end{tabular}
 		\end{table}
 		
-		Most of the triaxials potentials cannot be analytically integrated, nevertheless it can be done numerically. Since the gravitational acceleration is given by the gradient of the potential, to numerically calculate the gradient, a total of 6 numerical integrals must be done (two for each dimension, and then numerically differentiate). Another option is to take advantage of the fact that $\vec{x}$ and $\tau$ are independent variables, thus:
+		Most of the triaxial potentials cannot be analytically integrated, but it can be done numerically. Since the gravitational acceleration is given by the gradient of the potential, to numerically calculate the gradient a total of 6 numerical integrals must be done (two for each dimension, and then numerically differentiate). Another option is to take advantage of the fact that $\vec{x}$ and $\tau$ are independent variables, thus:
 		\begin{equation}
 			\nabla \int f(\vec{x}, \tau)d\tau = \int [\nabla f(\vec{x}, \tau)] d\tau
 		\end{equation}
@@ -384,7 +381,7 @@
 			\int\limits_{0}^{1}f(x)dx = \dfrac{1}{2}\int\limits_{-1}^{1}f\left(\dfrac{x + 1}{2}\right)dx \approx \dfrac{1}{2}\sum_{i = 1}^{k}w_if\left(\dfrac{x + 1}{2}\right)
 		\end{equation}
 		
-		In the case of Gauss-Laguerre a weighting function is required, since non of the integrals on \autoref{tb: gradients} has a term of the form $e^{-\tau}$, it is introduced by multiplying and dividing all expressions by $e^{\tau}$.
+		In the case of Gauss-Laguerre a weighting function is required since none of the integrals on \autoref{tb: gradients} has a term of the form $e^{-\tau}$, it is introduced by multiplying and dividing all expressions by $e^{\tau}$.
 		\begin{equation}
 			\int\limits_{0}^{\infty}e^{-x}e^{x}f(x) = \int\limits_{0}^{\infty}e^{-x}g(x) = \sum_{i = 1}^{k}w_i g(x), \qquad \text{where g$(x) = e^xf(x)$}
 		\end{equation}

@@ -219,13 +219,26 @@ def plotOrbits(results, figsize = (5, 4)):
     ax.grid()
     return fig, ax
 
-def coolLegend(ax, labels = None, loc = 'upper center', bbox_to_anchor = (0.5, 1.15), ncol = 4):
+def coolLegend(ax, labels = None, loc = 'upper center', bbox_to_anchor = (0.5, 1.15), ncol = 4, **kwargs):
     if labels == None:
         ax.legend(loc = loc, bbox_to_anchor = bbox_to_anchor,
-                  ncol = ncol, fancybox = True, shadow = True)
+                  ncol = ncol, fancybox = True, shadow = True, **kwargs)
     else:
         ax.legend(labels, loc = loc, bbox_to_anchor = bbox_to_anchor,
-                  ncol = ncol, fancybox = True, shadow = True)
+                  ncol = ncol, fancybox = True, shadow = True, **kwargs)
+
+def changeFontSize(ax, fs = 25, xbins = None, ybins = None):
+    ax.xaxis.label.set_fontsize(fs)
+    ax.yaxis.label.set_fontsize(fs)
+
+    [tick.label.set_fontsize(fs) for tick in ax.yaxis.get_major_ticks()]
+    [tick.label.set_fontsize(fs) for tick in ax.xaxis.get_major_ticks()]
+
+    if xbins != None:
+        ax.xaxis.set_major_locator(plt.MaxNLocator(xbins))
+
+    if ybins != None:
+        ax.yaxis.set_major_locator(plt.MaxNLocator(ybins))
 
 def evaluateMesh(function, array, symmetric):
     n = len(array)
