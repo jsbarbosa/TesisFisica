@@ -381,7 +381,7 @@
 			\int\limits_{0}^{1}f(x)dx = \dfrac{1}{2}\int\limits_{-1}^{1}f\left(\dfrac{x + 1}{2}\right)dx \approx \dfrac{1}{2}\sum_{i = 1}^{k}w_if\left(\dfrac{x + 1}{2}\right)
 		\end{equation}
 		
-		In the case of Gauss-Laguerre a weighting function is required since none of the integrals on \autoref{tb: gradients} has a term of the form $e^{-\tau}$, it is introduced by multiplying and dividing all expressions by $e^{\tau}$.
+		In the case of Gauss-Laguerre a weighting function is required. Since none of the integrals on \autoref{tb: gradients} has a term of the form $e^{-\tau}$, it is introduced by multiplying and dividing all expressions by $e^{\tau}$.
 		\begin{equation}
 			\int\limits_{0}^{\infty}e^{-x}e^{x}f(x) = \int\limits_{0}^{\infty}e^{-x}g(x) = \sum_{i = 1}^{k}w_i g(x), \qquad \text{where g$(x) = e^xf(x)$}
 		\end{equation}

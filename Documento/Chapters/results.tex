@@ -14,7 +14,7 @@
 %----------------------------------------------------------------------------------------
 \chapter{Results and discussion}
 	\section{Spherical study}
-	For a single simulation, the following data is saved: iteration time, current position, speed, and the black hole mass. With these information, accelerations and densities can be later reconstructed as on \autoref{fig: overallOutput}.
+	For a single simulation, the following data are saved: iteration time, current position, speed, and the black hole mass. With this information, accelerations and densities can be later reconstructed as on \autoref{fig: overallOutput}.
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width = 0.52\textwidth]{"../Files/Week 6/properties_s02v70"}
@@ -34,7 +34,7 @@
 	Three factors need to be taken into account to explain these results. First, dynamical friction due to collisional matter has an important impact on the trajectories followed by the black hole, as can be seen with the green line of \autoref{fig: overallOutput} ($a_\text{DF}$). Second, as there is no baryonic mass to accrete, the black hole does not decrease its speed because of momentum conservation, thus there is no contribution to the black hole's acceleration of the third term in \autoref{eq: equationMotion}. Lastly, as seen in \autoref{fig: massprofiles} at short distances, the cumulative mass of the galaxy is governed by stars, from which it is expected for the black hole to reach further regions of space if there are no stars, because of the smaller potential.
 		
 	\subsection{Effect of the power law exponent}	
-		Many studied galaxies have luminosity profiles that follow a power law in distance. Nevertheless, power law density profiles have the exponent $n$ as free parameter, although it is expected to be approximate to 2, as rotation curves of galaxies at large radius, show that the rotation speed of stars becomes independent of their distance to the center \cite{binney2011galactic}. This can be shown by considering a system in which density drops with radius as a function of a $n$ power:
+		Many studied galaxies have luminosity profiles that follow a power law in distance. Nevertheless, power law density profiles have the exponent $n$ as free parameter, although it is expected to be approximate to 2, as rotation curves of galaxies at large radii show that the rotation speed of stars becomes independent of their distance to the center \cite{binney2011galactic}. This can be shown by considering a system in which density drops with radius as a function of a $n$ power:
 		\begin{equation}
 			\rho(r) = \rho_0^\text{gas}\left(\dfrac{r_0}{r}\right)^n
 		\end{equation}
@@ -81,7 +81,7 @@
 	
 		Since $n$ is not fixed, simulations were made for a range of exponents in the power law. Results can be seen in \autoref{fig: powerLaw}, were a clear influence of the exponent can be seen. A confirmation that everything went the way it is supposed to, is that cumulative masses for all of the exponents have the same value at the virial radius (red line in \autoref{fig: powerLawDensities}). At this same distance, the behavior of the mass for each exponent changes, as smaller values of $n$ have a bigger cumulative masses from there on. At any other point, the density for bigger values of $n$ is greater, which means that both dynamical friction and accretion rates increase for the black hole as $n$ get bigger. Also, as $n$ becomes greater, cumulative masses increase, yielding a higher gravitational potential. Both of these effects, take part in the observed results in \autoref{fig: powerLawOrbits}, in which, higher values of $n$ increase return times.
 		
-		There are some spiral galaxies from which an exponent of 2.6 has been calculated as in NGC 253 \cite{sorai2000distribution} others authors have made simulations for black hole escape velocities with $n = 2.2$ \cite{tanaka2009assembly, choksi2017recoiling}. It is from these references, from which the value of $n = 2.2$ for most simulations was selected.
+		There are some spiral galaxies from which an exponent of 2.6 has been calculated as in NGC 253 \cite{sorai2000distribution}. Others authors have made simulations for black hole escape velocities with $n = 2.2$ \cite{tanaka2009assembly, choksi2017recoiling}. It is from these references, from which the value of $n = 2.2$ for most simulations was selected.
 		
 	\subsection{Effect of the stellar fraction}
 		As was mentioned before, the mass of a galaxy at low distances from its center, is ruled by the amount of stars. Because of this, a study of the dependence of the return times with stellar fraction, and initial speed was carried on. For that, simulations with initial speeds from 55 to 90 kpc/Gyr were lunched, for stellar fractions ranging from 1 \% to 10 \%. In order to normalize speeds, initial speeds are divided by the escape velocity. By considering the potential energy at the edge of the galaxy, and the initial energy of the black hole, the escape velocity is written as:
@@ -210,7 +210,7 @@
 		\text{PDF}_\text{Gauss}(x, \mu, \sigma) = \dfrac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x - \mu)^2}{2\sigma^2}}
 	\end{equation}
 	
-	Both the mean and the variance of the fitted gaussians for the distribution of return masses are shown in \autoref{tb: gaussians} for comparison, the distribution of masses for a spherical galaxy with the same initial speeds is shown.
+	Both the mean and the variance of the fitted gaussians for the distribution of return masses are shown in \autoref{tb: gaussians}. For comparison, the distribution of masses for a spherical galaxy with the same initial speeds is shown.
 	\begin{table}[h]
 		\centering
 		\caption{Parameters of the fitted gaussians in \autoref{fig: massDist}.}
@@ -288,7 +288,7 @@
 		\label{fig: massDistAt}
 	\end{figure}
 
-	\autoref{fig: massDistAt}, shows how the probability falls quickly with the mass, this result explains why finding a quasar such as ULAS J1342+0928 at high redshift is difficult, as there is not much time for the black hole to accrete much mass if the seed black hole has complicated dynamics such as kicks.
+	\autoref{fig: massDistAt} shows how the probability falls quickly with the mass, this result explains why finding a quasar such as ULAS J1342+0928 at high redshift is difficult, as there is not much time for the black hole to accrete much mass if the seed black hole has complicated dynamics such as kicks.
 	
 	\subsection{Correlation between mass and time}
 	The spatial distribution of the return times, masses and Lyapunov exponents for each galaxy can be seen in the \autoref{ch: Galaxies}. By inspecting these results, a correlation between the return times and masses can be seen. By considering the Pearson moment of correlation, this behavior can be quantified using \autoref{eq: pearson}.
@@ -335,7 +335,7 @@
 	
 	As for return masses, triaxial galaxies consistently show higher values than those generated by the same initial conditions in an spherical galaxy. Nevertheless, all galaxies have a small tendency to increase its return mass with increasing initial speeds. On the other hand, caution must be taken with \autoref{fig: massSpeedDist}, as mass distributions seem to be much wider than those of the return times, that is just a visual effect due to the logarithmic axis of \autoref{fig: timeSpeedDist}. 
 	
-	Despite the fact that \autoref{fig: speedDist} only shows results for two triaxial galaxies, an interesting behavior is found when comparing these results with those from an spherical galaxy. For small initial speeds, triaxial galaxies show higher return times than their spherical analog, while for high initial speeds this pattern gets inverted for big $T$ galaxies (red curves in \autoref{fig: timeSpeedDist}, red dots in \autoref{fig: relTime}). To study further the effect of circularity in the predicted times, the coefficient triaxial/spherical for the return properties in plotted in \autoref{fig: relatives}. In \autoref{fig: relTime}, however, the argument of a shift between the predictions of triaxial and spherical galaxies can be better seen, since on average relative return times follow a positive slope with respect to higher initial speeds, nevertheless, this also increases uncertainty.
+	Despite the fact that \autoref{fig: speedDist} only shows results for two triaxial galaxies, an interesting behavior is found when comparing these results with those from an spherical galaxy. For small initial speeds, triaxial galaxies show higher return times than their spherical analog, while for high initial speeds this pattern gets inverted for big $T$ galaxies (red curves in \autoref{fig: timeSpeedDist}, red dots in \autoref{fig: relTime}). To study further the effect of circularity in the predicted times, the coefficient triaxial/spherical for the return properties in plotted in \autoref{fig: relatives}. In \autoref{fig: relTime}, however, the argument of a shift between the predictions of triaxial and spherical galaxies can be better seen, since on average relative return times follow a positive slope with respect to higher initial speeds; nevertheless, this also increases uncertainty.
 	\begin{figure}[h!]
 		\centering
 		\begin{subfigure}[b]{0.49\textwidth}
@@ -364,7 +364,7 @@
 		\label{fig: relatives}
 	\end{figure}
 
-	Return masses exhibit the same behavior as initial speeds increase, so does the difference of the predicted values of the return masses of triaxial galaxies with respect to their spherical analog, and uncertainty increases with speed. However, this changes are far smaller than those seen with the relative return times.
+	Return masses exhibit the same behavior. As initial speeds increase, so does the difference of the predicted values of the return masses of triaxial galaxies with respect to their spherical analog, and uncertainty increases with speed. However, this changes are far smaller than those seen with the relative return times.
 	
 	Figures \ref{fig: relTimeDist} and \ref{fig: relMassDist} show the global distribution of the relative return properties. These are very important, as they graphically show how triaxiality affects previous studies of recoiling black holes orbits, such as \citeauthor{choksi2017recoiling}, \citeauthor{tanaka2009assembly} and \citeauthor{gualandris2008ejection}. Since return times for triaxial galaxies can be more than 10 times higher than expected, and galatic geometries in the universe are very diverse, triaxiality needs to be included when studying the dynamics of a recoiling black hole. On the other hand, triaxiality has a lower effect in the return masses, as on average 24 \% bigger masses are expected. Finally, statistical information from figures \ref{fig: relTimeDist} and \ref{fig: relMassDist} is summarized in \autoref{tb: relDist}.
 	\begin{table}[h]
